@@ -1,2 +1,3 @@
 .venv
 pelican-themes
+__pycache__

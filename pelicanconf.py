@@ -1,5 +1,5 @@
 AUTHOR = 'Michael Knott'
-SITENAME = 'A tech journey'
+SITENAME = 'Michael Knott'
 SITEURL = ''
 
 PATH = 'content'
@@ -22,10 +22,17 @@ LINKS = (('Pelican', 'https://getpelican.com/'),
          ('You can modify those links in your config file', '#'),)
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (('twitter', 'https://twitter.com/michaelwknott'),
+          ('github', 'https://github.com/michaelwknott'),
+          ('linkedin','https://www.linkedin.com/in/michael-knott-a8005916/'))
+
 
 DEFAULT_PAGINATION = 10
+
+THEME = "/home/mwk/projects/blog/.venv/lib/python3.10/site-packages/pelican/themes/pelican-clean-blog"
+
+# pelican-clean-blog settings
+HEADER_COLOR = 'black'
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
