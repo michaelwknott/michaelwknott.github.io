@@ -3,7 +3,7 @@ date: 2023-02-08 12:00
 
 Hi, I'm Michael.
 
-I'm a Strength and Conditioning Coach and Python Developer.
+A Strength and Conditioning Coach and Python Developer.
 
 I'm currently using Python to solve performance problems for the coaches and athletes I support.
 
