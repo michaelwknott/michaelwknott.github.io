@@ -9,8 +9,6 @@
 
         <title>Pelican Blog Setup</title>
 
-            <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Full Atom Feed" />
-            <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Categories Atom Feed" />
         <!-- Bootstrap Core CSS -->
         <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
 
@@ -116,7 +114,119 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
     <!-- Post Content -->
     <article>
-        <h1>A note to myself on how I set-up this Pelican blog</h1>
+        <h1>How I Set-up this Pelican Blog</h1>
+<p>This post will act as a personal reminder on how I set-up this blog.</p>
+<h3>Create a GitHub repo</h3>
+<p>I created an empty GitHub repo without a README.md file and used the following format when naming the repo - <code>username.github.io</code>. Username is changed to your GitHub username. My repo has the following name <code>michaelwknott.github.io</code>.</p>
+<h3>Create project directory and Python virtual environment</h3>
+<p>Within my projects directory, I created a new directory called blog:</p>
+<p><code>mkdir blog</code></p>
+<p><code>cd blog</code></p>
+<p>I initialised the directory as a git repositiory, created a Python virtual environment and added the the virtual environment to a .gitignore file:</p>
+<p><code>git init</code></p>
+<p><code>python -m venv .venv --prompt .</code></p>
+<p><code>echo .venv &gt;&gt; .gitignore</code></p>
+<p>I add the .gitignore file to be tracked by git:</p>
+<p><code>git add .</code></p>
+<p>and created an initial commit:</p>
+<p><code>git commit -m "Initial commit"</code></p>
+<p>I linked the blog directory with the GitHub repo, renamed the master branch to main and pushed the main branch to GitHub:</p>
+<p><code>git remote add origin git@github.com:michaelwknott/michaelwknott.github.io.git</code></p>
+<p><code>git branch -M main</code></p>
+<p><code>git push origin main</code></p>
+<h3>Add project dependencies</h3>
+<p>I use pip-tools to manage project dependencies as it provides greater detail on why each dependency is installed. I can easily assess whether a package is directly required by my project or a transitive package that is installed as a dependency.</p>
+<p>I activated my virtual environment and installed pip-tools using the following commands:</p>
+<p><code>source .venv/bin/activate</code></p>
+<p><code>python -m pip install pip-tools</code></p>
+<p>With pip-tools I add the directly required packages to a requirements.in file:</p>
+<p><code>echo "pelican[markdown]"&gt;=4.8.0 &gt;&gt; requirements.in</code>        </p>
+<p><code>echo ghp-import&gt;=2.1.0 &gt;&gt; requirements.in</code></p>
+<p>At the time of writing 4.8.0 was the latest version of Pelican. As I am using markdown to write my blog articles I've followed the dcoumentation guidance and installed markdown with Pelican. ghp-import is used to copy the output directory onto the main branch, which GitHub Pages uses to serve the blog site.</p>
+<p>Next I ran the following command:</p>
+<p><code>pip-compile requirements.in</code></p>
+<p>This created a requirements.txt file with a list of all installed packages and whether they are installed as a direct or transitive dependency.
+With the requirement.txt file created, I ran the following command to install the packages:</p>
+<p><code>python -m pip install -r requirements.txt</code></p>
+<h3>A note on how GitHub Pages works</h3>
+<p>A note on how GitHub Pages works: My blog will be published when changes are pushed to the main branch. See <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">documentation</a></p>
+<p>To publish the blog, Github pages will search for an entry file (index.html file for a Pelican site) in the root of the blog directory (output directory for a Pelican site) on the main branch.</p>
+<p>Due to the above, I created a content branch to store all the Pelican configuration files and raw markdown files. From the content branch I push the output directory to the main branch, which GitHub Pages will use to publish the blog. This separates the configuration and markdown files used to make the blog and the theme files and generated html files required for GitHub Pages to serve the blog as a website.</p>
+<h3>Creating the Pelican blog</h3>
+<p>I created and checked out a new branch using the following command:</p>
+<p><code>git checkout -b content</code></p>
+<p>and ran the following command to generate the Pelican site:</p>
+<p><code>pelican-quickstart</code></p>
+<p>I provided the following answers to the Pelican site generator:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Welcome</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">pelican</span><span class="o">-</span><span class="n">quickstart</span><span class="w"> </span><span class="n">v4</span><span class="mf">.8.0</span><span class="p">.</span>
+
+<span class="n">This</span><span class="w"> </span><span class="n">script</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Pelican</span><span class="o">-</span><span class="n">based</span><span class="w"> </span><span class="n">website</span><span class="p">.</span>
+
+<span class="n">Please</span><span class="w"> </span><span class="n">answer</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">questions</span><span class="w"> </span><span class="n">so</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">script</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">files</span>
+<span class="n">needed</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">Pelican</span><span class="p">.</span>
+
+
+<span class="o">&gt;</span><span class="w"> </span><span class="k">Where</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="n">site</span><span class="vm">?</span><span class="w"> </span><span class="o">[</span><span class="n">.</span><span class="o">]</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">What</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="n">site</span><span class="vm">?</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">Tech</span><span class="w"> </span><span class="n">Journey</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Who</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">author</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="n">site</span><span class="vm">?</span><span class="w"> </span><span class="n">Michael</span><span class="w"> </span><span class="n">Knott</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">What</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="k">language</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">web</span><span class="w"> </span><span class="n">site</span><span class="vm">?</span><span class="w"> </span><span class="o">[</span><span class="n">en</span><span class="o">]</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">specify</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">URL</span><span class="w"> </span><span class="k">prefix</span><span class="vm">?</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.,</span><span class="w"> </span><span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="w">   </span><span class="p">(</span><span class="n">Y</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">n</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">enable</span><span class="w"> </span><span class="n">article</span><span class="w"> </span><span class="n">pagination</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">Y</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">Y</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">How</span><span class="w"> </span><span class="n">many</span><span class="w"> </span><span class="n">articles</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="vm">?</span><span class="w"> </span><span class="o">[</span><span class="n">10</span><span class="o">]</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">What</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="nc">time</span><span class="w"> </span><span class="k">zone</span><span class="vm">?</span><span class="w"> </span><span class="o">[</span><span class="n">Europe/Rome</span><span class="o">]</span><span class="w"> </span><span class="n">GMT</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">generate</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">tasks</span><span class="p">.</span><span class="n">py</span><span class="o">/</span><span class="n">Makefile</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">automate</span><span class="w"> </span><span class="n">generation</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">publishing</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">Y</span><span class="o">/</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">Y</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">upload</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">website</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">FTP</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="n">N</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">upload</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">website</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">SSH</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="n">N</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">upload</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">website</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Dropbox</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="n">N</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">upload</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">website</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">S3</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="n">N</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">upload</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">website</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Rackspace</span><span class="w"> </span><span class="n">Cloud</span><span class="w"> </span><span class="n">Files</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="n">N</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">Do</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">upload</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">website</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">GitHub</span><span class="w"> </span><span class="n">Pages</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="n">y</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="k">Is</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">personal</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="p">(</span><span class="n">username</span><span class="p">.</span><span class="n">github</span><span class="p">.</span><span class="n">io</span><span class="p">)</span><span class="vm">?</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="n">y</span>
+</code></pre></div>
+
+<h3>Add content</h3>
+<p>To add content, I navigated to the content directory and created a new markdown file:</p>
+<p><code>touch pybites-podcast.md</code></p>
+<p>and added the following:</p>
+<div class="highlight"><pre><span></span><code><span class="nl">Title</span><span class="p">:</span><span class="w"> </span><span class="n">Pybites</span><span class="w"> </span><span class="n">Podcast</span>
+<span class="nc">Date</span><span class="err">:</span><span class="w"> </span><span class="mi">2023</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">08</span><span class="w"> </span><span class="mi">12</span><span class="err">:</span><span class="mi">05</span>
+<span class="nl">Category</span><span class="p">:</span><span class="w"> </span><span class="n">Python</span><span class="p">,</span><span class="w"> </span><span class="n">Pybites</span><span class="p">,</span><span class="w"> </span><span class="n">Podcast</span>
+<span class="nl">Summary</span><span class="p">:</span><span class="w"> </span><span class="n">My</span><span class="w"> </span><span class="k">first</span><span class="w"> </span><span class="n">Podcast</span><span class="w"> </span><span class="n">Appearance</span><span class="p">.</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">share</span><span class="w"> </span><span class="n">my</span><span class="w"> </span><span class="n">journey</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">Python</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">my</span><span class="w"> </span><span class="n">experience</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Pybites</span><span class="w"> </span><span class="n">PDM</span><span class="w"> </span><span class="n">programme</span><span class="p">.</span>
+
+
+<span class="err">#</span><span class="w"> </span><span class="n">My</span><span class="w"> </span><span class="k">First</span><span class="w"> </span><span class="n">Podcast</span><span class="w"> </span><span class="n">Appearance</span>
+
+
+<span class="n">Thanks</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">Bob</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">Julian</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">having</span><span class="w"> </span><span class="n">me</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Pybites</span><span class="w"> </span><span class="n">podcast</span><span class="p">.</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">share</span><span class="w"> </span><span class="n">my</span><span class="w"> </span><span class="n">journey</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">Python</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">my</span><span class="w"> </span><span class="n">experience</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Pybites</span><span class="w"> </span><span class="n">PDM</span><span class="w"> </span><span class="n">programme</span><span class="p">.</span>
+
+<span class="n">Click</span><span class="w"> </span><span class="o">[</span><span class="n">here</span><span class="o">]</span><span class="p">(</span><span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">pybit</span><span class="p">.</span><span class="n">es</span><span class="o">/</span><span class="n">articles</span><span class="o">/</span><span class="n">how</span><span class="o">-</span><span class="n">michael</span><span class="o">-</span><span class="n">knott</span><span class="o">-</span><span class="n">used</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="k">to</span><span class="o">-</span><span class="n">enhance</span><span class="o">-</span><span class="n">his</span><span class="o">-</span><span class="n">sports</span><span class="o">-</span><span class="n">coaching</span><span class="o">-</span><span class="n">career</span><span class="o">/</span><span class="p">)</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">listen</span><span class="p">.</span>
+
+<span class="k">Check</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="o">[</span><span class="n">Pybites</span><span class="o">]</span><span class="p">(</span><span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">pybit</span><span class="p">.</span><span class="n">es</span><span class="o">/</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">their</span><span class="w"> </span><span class="o">[</span><span class="n">PDM</span><span class="o">]</span><span class="p">(</span><span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">pybit</span><span class="p">.</span><span class="n">es</span><span class="o">/</span><span class="n">catalogue</span><span class="o">/</span><span class="n">the</span><span class="o">-</span><span class="n">pdm</span><span class="o">-</span><span class="n">program</span><span class="o">/</span><span class="p">)</span><span class="w"> </span><span class="n">programme</span><span class="p">.</span>
+</code></pre></div>
+
+<p>I also and created a directory called pages and added an about.md file:</p>
+<p><code>cd content</code></p>
+<p><code>mkdir pages</code></p>
+<p><code>touch about.md</code></p>
+<p>I added the following to about.md:</p>
+<p>```
+title: About
+date: 2023-02-08 12:00</p>
+<p>Hi, I'm Michael.</p>
+<p>I'm a Strength and Conditioning Coach and Python Developer.</p>
+<p>I'm currently using Python to solve performance problems for the coaches and athletes I support.</p>
+<p>This blog will be a place for me to store and collate the things I learn as I continue to utilise Python on a daily basis. </p>
+<h3>Check the site is properly configured by running a development server</h3>
+<p>To view the website in a locally I ran:</p>
+<p><code>pelican content -o output -s publishconf.py</code></p>
+<p><code>pelican --autoreload --listen</code></p>
+<p>I navigated to localhost8000 in my browser to view the the blog site.</p>
+<h3>Useful links</h3>
+<p>I found the following links useful to set-up the blog:</p>
+<ul>
+<li>A useful <a href="https://opensource.com/article/19/5/run-your-blog-github-pages-python">blog</a> by Erik O'Shaughnessy on how to set-up Pelican with GitHub Pages.</li>
+<li>How to set-up <a href="https://geekyshacklebolt.wordpress.com/2020/08/18/how-to-use-a-custom-pelican-blog-theme/">custom themes</a> for Pelican by Shiva Saxena.</li>
+</ul>
     </article>
 
         <div class="tags">
