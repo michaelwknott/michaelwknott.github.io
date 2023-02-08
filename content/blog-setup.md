@@ -1,6 +1,6 @@
 Title: Pelican Blog Setup
 Date: 2023-02-08 12:00
-Modified:
+Modified: 2023-02-08 12:00
 Category: Notes
 Tags: pelican, blog, notes
 Slug:
