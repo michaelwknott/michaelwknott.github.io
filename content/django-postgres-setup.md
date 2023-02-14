@@ -1,6 +1,5 @@
 Title: Using PostgreSQL with Django
-Date: 2023-02-08 15:00
-Modified: 2023-02-08 15:00
+Date: 2023-02-14 15:30
 Category: Notes
 Tags: django, postgres, blog, notes
 Slug:

@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott - Notes</title><link href="/" rel="alternate"></link><link href="/feeds/notes.atom.xml" rel="self"></link><id>/</id><updated>2023-02-08T14:05:00+00:00</updated><entry><title>Pelican Blog Setup</title><link href="/pelican-blog-setup.html" rel="alternate"></link><published>2023-02-08T12:00:00+00:00</published><updated>2023-02-08T14:05:00+00:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-02-08:/pelican-blog-setup.html</id><summary type="html">&lt;p&gt;The steps I took to set-up this blog.&lt;/p&gt;</summary><content type="html">&lt;h1&gt;How I Set-up this Pelican Blog&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott - Notes</title><link href="/" rel="alternate"></link><link href="/feeds/notes.atom.xml" rel="self"></link><id>/</id><updated>2023-02-08T15:00:00+00:00</updated><entry><title>Using PostgreSQL with Django</title><link href="/using-postgresql-with-django.html" rel="alternate"></link><published>2023-02-08T15:00:00+00:00</published><updated>2023-02-08T15:00:00+00:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-02-08:/using-postgresql-with-django.html</id><summary type="html">&lt;p&gt;Configure PostreSQL for Django&lt;/p&gt;</summary><content type="html">&lt;p&gt;This blog post will act as a personal reminder of configurating Postsgres for a Django project.&lt;/p&gt;
+&lt;p&gt;Start the database:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo service postgresql start&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Log-in to a Postgres interactive session:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo -u postgres psql&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Create a database for the Django project. My project is called ar10_tracker so I'll name my database the same:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CREATE DATABASE ar10_tracker;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Create a user and password to interact with the database:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CREATE USER ar10user WITH PASSWORD 'password';&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We can change configuration settings to optimise the performance of the database. See &lt;a href="https://docs.djangoproject.com/en/4.1/ref/databases/#optimizing-postgresql-s-configuration"&gt;documentation&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ALTER ROLE ar10user SET client_encoding TO 'utf8';&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ALTER ROLE ar10user SET default_transaction_isolation TO 'read committed';&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ALTER ROLE ar10user SET timezone TO 'UTC';&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Next we give the ar10user the required privileges to have full control over the database:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;GRANT ALL PRIVILEGES ON DATABASE ar10_tracker TO ar10user;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The postgres database is now setup and we can exit the interactive session:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;\q&lt;/code&gt;&lt;/p&gt;
+&lt;h3&gt;Add required dependencies&lt;/h3&gt;
+&lt;p&gt;To connect to Postgres I'll need a database adapter. I'm using &lt;a href="https://pypi.org/project/psycopg2/"&gt;psycopg2&lt;/a&gt;. Additionally to configure the database settings I require &lt;a href="https://pypi.org/project/dj-database-url/"&gt;dj_database_url&lt;/a&gt; and &lt;a href="https://pypi.org/project/python-decouple/"&gt;python-decouple&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;echo psycopg2~=2.9.5 &amp;gt;&amp;gt; requirements.in
+echo dj-database-url 1.2.0 &amp;gt;&amp;gt; requirements.in
+echo python-decouple==3.7 &amp;gt;&amp;gt; requirements.in
+pip-compile requirements.in
+python -m pip install requirements.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Generating a secret key for Postgres database&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"&lt;/code&gt;&lt;/p&gt;
+&lt;h3&gt;Utilise a .env file to store sensitive environment variables&lt;/h3&gt;
+&lt;p&gt;The .env file contains the following variables:
+SECRET_KEY=
+DEBUG=
+ALLOWED_HOSTS=
+DATABASE_URL=&lt;/p&gt;
+&lt;h3&gt;Configure Django project settings.py file to use Postgres database&lt;/h3&gt;
+&lt;p&gt;Add the following imports to settings.py:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dj_database_url&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;decouple&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Csv&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Update the DATABASES variable in settings.py:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Update the following default variables:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = &amp;quot;django-insecure-z_)j=_h=5fmfob9l#vm)p)(#w7-w-v!p57eh^=36-jfmcoaf7t&amp;quot;
+
+# SECURITY WARNING: don&amp;#39;t run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;to utilise python-decouple to load environment variables from .env file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;SECRET_KEY = config(&amp;quot;SECRET_KEY&amp;quot;)
+DEBUG = config(&amp;quot;DEBUG&amp;quot;, default=False, cast=bool)
+ALLOWED_HOSTS = config(&amp;quot;ALLOWED_HOSTS&amp;quot;, cast=Csv())
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I used the following article as a guide:
+&lt;a href="https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-20-04"&gt;https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-20-04&lt;/a&gt;&lt;/p&gt;</content><category term="Notes"></category><category term="django"></category><category term="postgres"></category><category term="blog"></category><category term="notes"></category></entry><entry><title>Pelican Blog Setup</title><link href="/pelican-blog-setup.html" rel="alternate"></link><published>2023-02-08T12:00:00+00:00</published><updated>2023-02-08T14:05:00+00:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-02-08:/pelican-blog-setup.html</id><summary type="html">&lt;p&gt;The steps I took to set-up this blog.&lt;/p&gt;</summary><content type="html">&lt;h1&gt;How I Set-up this Pelican Blog&lt;/h1&gt;
 &lt;p&gt;This post will act as a personal reminder on how I set-up this blog.&lt;/p&gt;
 &lt;h3&gt;Create a GitHub repo&lt;/h3&gt;
 &lt;p&gt;I created an empty GitHub repo without a README.md file and used the following format when naming the repo - &lt;code&gt;username.github.io&lt;/code&gt;. Username is changed to your GitHub username. My repo has the following name &lt;code&gt;michaelwknott.github.io&lt;/code&gt;.&lt;/p&gt;
