@@ -172,13 +172,15 @@ This blog will be a place for me to store and collate the things I learn as I co
 
 I ran the following commands to create my second commit and push the changes to GitHub:
 
-git add .
-git commit -m 'initial pelican commit to content'
-git push origin content
+`git add .`
+
+`git commit -m 'initial pelican commit to content'`
+
+`git push origin content`
 
 ### Check the site is properly configured by running a development server
 
-To view the website in a locally I ran:
+To view the website locally I ran:
 
 `pelican content -o output -s publishconf.py`
 

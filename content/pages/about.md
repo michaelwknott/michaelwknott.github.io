@@ -1,9 +1,10 @@
-title: About
+title: About me
 date: 2023-02-08 12:00
+Modified: 2023-02-14 15:10
 
-Hi, I'm Michael.
+Hello, I'm Michael.
 
-A Strength and Conditioning Coach and Python Developer.
+I'm a Strength and Conditioning Coach and Python Developer.
 
 I'm currently using Python to solve performance problems for the coaches and athletes I support.
 
