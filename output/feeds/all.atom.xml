@@ -111,11 +111,11 @@ With the requirement.txt file created, I ran the following command to install th
 
 &lt;h3&gt;Commit the changes&lt;/h3&gt;
 &lt;p&gt;I ran the following commands to create my second commit and push the changes to GitHub:&lt;/p&gt;
-&lt;p&gt;git add .
-git commit -m 'initial pelican commit to content'
-git push origin content&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;git add .&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;git commit -m 'initial pelican commit to content'&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;git push origin content&lt;/code&gt;&lt;/p&gt;
 &lt;h3&gt;Check the site is properly configured by running a development server&lt;/h3&gt;
-&lt;p&gt;To view the website in a locally I ran:&lt;/p&gt;
+&lt;p&gt;To view the website locally I ran:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;pelican content -o output -s publishconf.py&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;pelican --autoreload --listen&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;I navigated to localhost8000 in my browser to view the the blog site.&lt;/p&gt;

@@ -6,7 +6,10 @@ Tags: django, postgres, blog, notes
 Slug:
 Authors: Michael Knott
 Summary: Configure PostreSQL for Django
-Status: Draft
+Status: published
+
+This blog post will act as a personal reminder of configurating Postsgres for a Django project.
+
 
 Start the database:
 
