@@ -2,7 +2,7 @@ Title: Using PostgreSQL with Django
 Date: 2023-02-14 15:30
 Modified: 2023-02-21 13:30
 Category: Notes
-Tags: django, postgres, blog, notes
+Tags: django, postgres, notes
 Slug:
 Authors: Michael Knott
 Summary: Configure PostreSQL for Django
@@ -10,6 +10,7 @@ Status: published
 
 This blog post will act as a personal reminder of configuring Postsgres for a Django project.
 
+### Create Database
 
 Start the database:
 
@@ -82,10 +83,13 @@ python-decouple provides the functionality to separate project settings from cod
 ### Utilise a .env file to store sensitive environment variables
 
 The .env file contains the following variables:
+
+```
 SECRET_KEY=
 DEBUG=
 ALLOWED_HOSTS=
 DATABASE_URL=
+```
 
 ### Configure Django project settings.py file to use Postgres database
 

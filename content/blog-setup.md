@@ -2,7 +2,7 @@ Title: Pelican Blog Setup
 Date: 2023-02-08 12:00
 Modified: 2023-02-08 14:05
 Category: Notes
-Tags: pelican, blog, notes
+Tags: pelican, notes
 Slug:
 Authors: Michael Knott
 Summary: The steps I took to set-up this blog.

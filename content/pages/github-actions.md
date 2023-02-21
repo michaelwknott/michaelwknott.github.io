@@ -5,7 +5,7 @@ Tags: github actions, notes
 Slug:
 Authors: Michael Knott
 Summary: Using GitHub Actions to schedule ISSF World Rankings scraper.
-
+Status: draft
 #
 
 ### Change GitHub repo settings

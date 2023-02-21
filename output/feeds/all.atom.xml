@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2023-02-14T15:30:00+00:00</updated><entry><title>Using PostgreSQL with Django</title><link href="/using-postgresql-with-django.html" rel="alternate"></link><published>2023-02-14T15:30:00+00:00</published><updated>2023-02-14T15:30:00+00:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-02-14:/using-postgresql-with-django.html</id><summary type="html">&lt;p&gt;Configure PostreSQL for Django&lt;/p&gt;</summary><content type="html">&lt;p&gt;This blog post will act as a personal reminder of configurating Postsgres for a Django project.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2023-02-21T13:30:00+00:00</updated><entry><title>Using PostgreSQL with Django</title><link href="/using-postgresql-with-django.html" rel="alternate"></link><published>2023-02-14T15:30:00+00:00</published><updated>2023-02-21T13:30:00+00:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-02-14:/using-postgresql-with-django.html</id><summary type="html">&lt;p&gt;Configure PostreSQL for Django&lt;/p&gt;</summary><content type="html">&lt;p&gt;This blog post will act as a personal reminder of configuring Postsgres for a Django project.&lt;/p&gt;
 &lt;p&gt;Start the database:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;sudo service postgresql start&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Log-in to a Postgres interactive session:&lt;/p&gt;
@@ -7,17 +7,17 @@
 &lt;p&gt;Create a database for the Django project. My project is called ar10_tracker so I'll name my database the same:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;CREATE DATABASE ar10_tracker;&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Create a user and password to interact with the database:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;CREATE USER ar10user WITH PASSWORD 'password';&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CREATE USER myuser WITH PASSWORD 'mypassword';&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;We can change configuration settings to optimise the performance of the database. See &lt;a href="https://docs.djangoproject.com/en/4.1/ref/databases/#optimizing-postgresql-s-configuration"&gt;documentation&lt;/a&gt; for more information.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;ALTER ROLE ar10user SET client_encoding TO 'utf8';&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;ALTER ROLE ar10user SET default_transaction_isolation TO 'read committed';&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;ALTER ROLE ar10user SET timezone TO 'UTC';&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ALTER ROLE myuser SET client_encoding TO 'utf8';&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ALTER ROLE myuser SET default_transaction_isolation TO 'read committed';&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ALTER ROLE myuser SET timezone TO 'UTC';&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Next we give the ar10user the required privileges to have full control over the database:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;GRANT ALL PRIVILEGES ON DATABASE ar10_tracker TO ar10user;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;GRANT ALL PRIVILEGES ON DATABASE ar10_tracker TO myuser;&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The postgres database is now setup and we can exit the interactive session:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;\q&lt;/code&gt;&lt;/p&gt;
 &lt;h3&gt;Add required dependencies&lt;/h3&gt;
-&lt;p&gt;To connect to Postgres I'll need a database adapter. I'm using &lt;a href="https://pypi.org/project/psycopg2/"&gt;psycopg2&lt;/a&gt;. Additionally to configure the database settings I require &lt;a href="https://pypi.org/project/dj-database-url/"&gt;dj_database_url&lt;/a&gt; and &lt;a href="https://pypi.org/project/python-decouple/"&gt;python-decouple&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;To connect to Postgres I'll need a database adapter. I'm using &lt;a href="https://pypi.org/project/psycopg2/"&gt;psycopg2&lt;/a&gt;. Additionally to configure the database settings I require &lt;a href="https://pypi.org/project/dj-database-url/"&gt;dj_database_url&lt;/a&gt; and &lt;a href="https://pypi.org/project/python-decouple/"&gt;python-decouple&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;echo psycopg2~=2.9.5 &amp;gt;&amp;gt; requirements.in
 echo dj-database-url 1.2.0 &amp;gt;&amp;gt; requirements.in
 echo python-decouple==3.7 &amp;gt;&amp;gt; requirements.in
@@ -25,6 +25,21 @@ pip-compile requirements.in
 python -m pip install requirements.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
+&lt;p&gt;dj_database_url is a utility which uses a DATABASE_URL environment variable to create a dictionary containing the data specified in the DATABASE_URL string.&lt;/p&gt;
+&lt;p&gt;For example, passing the url schema for a Postgres database &lt;code&gt;postgres://myuser:mypassword@127:0.0.1:5432/ar10_tracker&lt;/code&gt; to &lt;code&gt;dj_database_url.config()&lt;/code&gt; will return the following dictionary:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;DATABASES = {
+    &amp;#39;default&amp;#39;: {
+        &amp;#39;ENGINE&amp;#39;: &amp;#39;django.db.backends.postgresql&amp;#39;,
+        &amp;#39;NAME&amp;#39;: &amp;#39;ar10_tracker&amp;#39;,
+        &amp;#39;USER&amp;#39;: &amp;#39;myuser&amp;#39;,
+        &amp;#39;PASSWORD&amp;#39;: &amp;#39;mypassword&amp;#39;,
+        &amp;#39;HOST&amp;#39;: &amp;#39;127.0.0.1&amp;#39;,
+        &amp;#39;PORT&amp;#39;: &amp;#39;5432&amp;#39;,
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;python-decouple provides the functionality to separate project settings from code. I can store sensitive data such as database credentials in a separate .env file and load them as environment variables at runtime. In this Django project I'm using python-decouple to load secret key, debug status, allowed hosts and database connection credentials.&lt;/p&gt;
 &lt;h3&gt;Generating a secret key for Postgres database&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"&lt;/code&gt;&lt;/p&gt;
 &lt;h3&gt;Utilise a .env file to store sensitive environment variables&lt;/h3&gt;
@@ -39,9 +54,9 @@ DATABASE_URL=&lt;/p&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;decouple&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Csv&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Update the DATABASES variable in settings.py:&lt;/p&gt;
+&lt;p&gt;Update the DATABASES variable in settings.py to utlise dj_database_url:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;Update the following default variables:&lt;/p&gt;
+&lt;p&gt;The following default variables are removed:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = &amp;quot;django-insecure-z_)j=_h=5fmfob9l#vm)p)(#w7-w-v!p57eh^=36-jfmcoaf7t&amp;quot;
 
@@ -51,7 +66,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;to utilise python-decouple to load environment variables from .env file:&lt;/p&gt;
+&lt;p&gt;and updated to utilise the python-decouple &lt;code&gt;config&lt;/code&gt; function to load environment variables from the .env file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;SECRET_KEY = config(&amp;quot;SECRET_KEY&amp;quot;)
 DEBUG = config(&amp;quot;DEBUG&amp;quot;, default=False, cast=bool)
 ALLOWED_HOSTS = config(&amp;quot;ALLOWED_HOSTS&amp;quot;, cast=Csv())
