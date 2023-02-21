@@ -1,5 +1,6 @@
 Title: Using PostgreSQL with Django
 Date: 2023-02-14 15:30
+Modified: 2023-02-21 13:30
 Category: Notes
 Tags: django, postgres, blog, notes
 Slug:
@@ -7,7 +8,7 @@ Authors: Michael Knott
 Summary: Configure PostreSQL for Django
 Status: published
 
-This blog post will act as a personal reminder of configurating Postsgres for a Django project.
+This blog post will act as a personal reminder of configuring Postsgres for a Django project.
 
 
 Start the database:
@@ -24,19 +25,19 @@ Create a database for the Django project. My project is called ar10_tracker so I
 
 Create a user and password to interact with the database:
 
-`CREATE USER ar10user WITH PASSWORD 'password';`
+`CREATE USER myuser WITH PASSWORD 'mypassword';`
 
 We can change configuration settings to optimise the performance of the database. See [documentation](https://docs.djangoproject.com/en/4.1/ref/databases/#optimizing-postgresql-s-configuration) for more information.
 
-`ALTER ROLE ar10user SET client_encoding TO 'utf8';`
+`ALTER ROLE myuser SET client_encoding TO 'utf8';`
 
-`ALTER ROLE ar10user SET default_transaction_isolation TO 'read committed';`
+`ALTER ROLE myuser SET default_transaction_isolation TO 'read committed';`
 
-`ALTER ROLE ar10user SET timezone TO 'UTC';`
+`ALTER ROLE myuser SET timezone TO 'UTC';`
 
 Next we give the ar10user the required privileges to have full control over the database:
 
-`GRANT ALL PRIVILEGES ON DATABASE ar10_tracker TO ar10user;`
+`GRANT ALL PRIVILEGES ON DATABASE ar10_tracker TO myuser;`
 
 The postgres database is now setup and we can exit the interactive session:
 
@@ -45,7 +46,7 @@ The postgres database is now setup and we can exit the interactive session:
 
 ### Add required dependencies
 
-To connect to Postgres I'll need a database adapter. I'm using [psycopg2](https://pypi.org/project/psycopg2/). Additionally to configure the database settings I require [dj_database_url](https://pypi.org/project/dj-database-url/) and [python-decouple](https://pypi.org/project/python-decouple/)
+To connect to Postgres I'll need a database adapter. I'm using [psycopg2](https://pypi.org/project/psycopg2/). Additionally to configure the database settings I require [dj_database_url](https://pypi.org/project/dj-database-url/) and [python-decouple](https://pypi.org/project/python-decouple/).
 
 ```
 echo psycopg2~=2.9.5 >> requirements.in
@@ -54,6 +55,25 @@ echo python-decouple==3.7 >> requirements.in
 pip-compile requirements.in
 python -m pip install requirements.txt
 ```
+
+dj_database_url is a utility which uses a DATABASE_URL environment variable to create a dictionary containing the data specified in the DATABASE_URL string.
+
+For example, passing the url schema for a Postgres database `postgres://myuser:mypassword@127:0.0.1:5432/ar10_tracker` to `dj_database_url.config()` will return the following dictionary:
+
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ar10_tracker',
+        'USER': 'myuser',
+        'PASSWORD': 'mypassword',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
+```
+
+python-decouple provides the functionality to separate project settings from code. I can store sensitive data such as database credentials in a separate .env file and load them as environment variables at runtime. In this Django project I'm using python-decouple to load secret key, debug status, allowed hosts and database connection credentials.
 
 ### Generating a secret key for Postgres database
 
@@ -76,11 +96,12 @@ import dj_database_url
 from decouple import Csv, config
 ```
 
-Update the DATABASES variable in settings.py:
+Update the DATABASES variable in settings.py to utlise dj_database_url:
 
 `DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}`
 
-Update the following default variables:
+
+The following default variables are removed:
 
 ```
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -92,7 +113,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 ```
 
-to utilise python-decouple to load environment variables from .env file:
+and updated to utilise the python-decouple `config` function to load environment variables from the .env file:
 
 ```
 SECRET_KEY = config("SECRET_KEY")
