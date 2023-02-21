@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-        <title>Michael Knott - Tag blog</title>
+        <title>Schedule Jobs with GitHub Actions</title>
 
             <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Full Atom Feed" />
         <!-- Bootstrap Core CSS -->
@@ -41,7 +41,7 @@
                 <meta name="twitter:image" content="/theme/images/post-bg.jpg">
 </head>
 
-<body class="tag-blog">
+<body class="page-schedule-jobs-with-github-actions">
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
@@ -69,12 +69,13 @@
         <!-- /.container -->
     </nav>
 
+    <!-- Page Header -->
         <header class="intro-header" style="background-color: black">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="page-heading">
-                        <h1>Tag blog</h1>
+                    <div class="post-heading">
+                        <h1>Schedule Jobs with GitHub Actions</h1>
                     </div>
                 </div>
             </div>
@@ -85,35 +86,16 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <div class="post-preview">
-            <a href="/using-postgresql-with-django.html" rel="bookmark" title="Permalink to Using PostgreSQL with Django">
-                <h2 class="post-title">
-                    Using PostgreSQL with Django
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Configure PostreSQL for Django
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Tue 14 February 2023
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/pelican-blog-setup.html" rel="bookmark" title="Permalink to Pelican Blog Setup">
-                <h2 class="post-title">
-                    Pelican Blog Setup
-                </h2>
-            </a>
-                <p class="article-summary">
-                    The steps I took to set-up this blog.
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Wed 08 February 2023
-            </p>
-        </div>
-
+    <article>
+        <h1></h1>
+<h3>Change GitHub repo settings</h3>
+<p>This <a href="https://stackoverflow.com/questions/73687176/permission-denied-to-github-actionsbot-the-requested-url-returned-error-403">stackoverflow post</a> solved the issue with the GitHub Action not running as scheduled:</p>
+<p>To allow the scheduled job to run I needed to change the repo settings to allow both read and write permissions:</p>
+<p><code>Settings
+    -&gt; Action
+        -&gt; General
+            -&gt; Workflow permissions and choose read and write permissions</code></p>
+    </article>
             </div>
         </div>
     </div>
