@@ -2,7 +2,7 @@ Title: Pybites Podcast
 Date: 2023-02-08 12:05
 Category: Python, Pybites, Podcast
 Summary: My first Podcast Appearance. I share my journey with Python and my experience of the Pybites PDM programme.
-
+Status: published
 
 # My First Podcast Appearance
 

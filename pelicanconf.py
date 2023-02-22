@@ -28,9 +28,24 @@ SOCIAL = (('twitter', 'https://twitter.com/michaelwknott'),
 DEFAULT_PAGINATION = 10
 
 THEME = "/home/mwk/projects/blog/.venv/lib/python3.11/site-packages/pelican/themes/pelican-clean-blog"
+# SITESUBTITLE = u'Yet Another Python Blog'
+
+
+# Static files
+EXTRA_PATH_METADATA = {
+    'static/cool-background-black.png': {'path': 'cool-background-black.png'},
+}
+
+STATIC_PATHS = [
+    'images',
+    'static/',
+    ]
 
 # pelican-clean-blog settings
-HEADER_COLOR = 'black'
+HEADER_COVER = 'static/cool-background-black.png'
+# HEADER_COLOR = 'black'
+# COLOR_SCHEME_CSS = 'tomorrow.css'
+
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True

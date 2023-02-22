@@ -6,6 +6,7 @@ Tags: pelican, notes
 Slug:
 Authors: Michael Knott
 Summary: The steps I took to set-up this blog.
+Status: published
 
 # How I Set-up this Pelican Blog
 

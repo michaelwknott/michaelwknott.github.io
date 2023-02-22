@@ -12,7 +12,7 @@ This blog post will act as a personal reminder of configuring Postsgres for a Dj
 
 ### Create Database
 
-Start the database:
+Start Postgres:
 
 `sudo service postgresql start`
 
