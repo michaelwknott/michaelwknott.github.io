@@ -32,10 +32,6 @@ THEME = "/home/mwk/projects/blog/.venv/lib/python3.11/site-packages/pelican/them
 
 
 # Static files
-EXTRA_PATH_METADATA = {
-    'static/cool-background-black.png': {'path': 'cool-background-black.png'},
-}
-
 STATIC_PATHS = [
     'images',
     'static/',

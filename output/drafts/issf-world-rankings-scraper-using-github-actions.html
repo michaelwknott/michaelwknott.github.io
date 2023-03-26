@@ -152,8 +152,9 @@ jobs:
     runs-on: ubuntu-latest 
 </code></pre></div>
 
-<p>Each job consists of several steps that run in sequential order and perform an action or shell command. An action is a reusable program that performs a specific task. For example, <code>actions/checkout@v3</code> checks out the repository's code onto the runner. A shell command is a instruction to the runner's operating system. For example, the bash command <code>python3 scraper.py</code> instructs the Unbuntu operating system to to run the <code>scraper.py</code> script using Python.
-Actions are available at <a href="https://github.com/marketplace?category=&amp;query=&amp;type=actions&amp;verification=">GitHub Marketplace</a> or custom actions can be created using the following <a href="https://docs.github.com/en/actions/creating-actions">documentation</a>.</p>
+<p>Each job consists of several steps that run in sequential order and perform an action or shell command.</p>
+<p>An action is a reusable program that performs a specific task. For example, <code>actions/checkout@v3</code> checks out the repository's code onto the runner. Actions are mapped to the <code>uses</code> key in the YAML workflow file. Actions are available at <a href="https://github.com/marketplace?category=&amp;query=&amp;type=actions&amp;verification=">GitHub Marketplace</a> or custom actions can be created using the following <a href="https://docs.github.com/en/actions/creating-actions">documentation</a>.</p>
+<p>A shell command is a instruction to the runner's operating system. For example, the bash command <code>python3 scraper.py</code> instructs the Unbuntu operating system to to run the <code>scraper.py</code> script using Python. Shell commands are mapped to the <code>run</code> key in the YAML workflow file.</p>
 <p>My <code>scrape_data</code> job has six steps nested within the <code>steps</code> key:</p>
 <div class="highlight"><pre><span></span><code>steps:
 <span class="w">      </span>-<span class="w"> </span>name:<span class="w"> </span>Checkout<span class="w"> </span>code
@@ -180,7 +181,6 @@ Actions are available at <a href="https://github.com/marketplace?category=&amp;q
 <span class="w">          </span>git<span class="w"> </span>push
 </code></pre></div>
 
-<p>This step has </p>
 <p><code>actions/setup-python@v2</code> installs Python on the runner.</p>
 <h4>My Workflow File</h4>
 <p>For clarity the full workflow YAML file is included below:</p>
