@@ -7,7 +7,7 @@
 &lt;ol&gt;
 &lt;li&gt;Recording assessment data related to athlete's fitness qualities&lt;/li&gt;
 &lt;li&gt;Providing feedback to athletes and coaches on fitness progression&lt;/li&gt;
-&lt;li&gt;Prescribing individulised conditioning sessions based upon assessment results&lt;/li&gt;
+&lt;li&gt;Prescribing individualised conditioning sessions based upon assessment results&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Currently the process takes a number of steps involving multiple Excel workbooks and a lot of copy and paste.&lt;/p&gt;
 &lt;p&gt;The goal of this project is to streamline and automate the process to save me time, whilst also improving my knowledge of software design patterns and techniques. As a first iteration the application will need to provide the following functionality: &lt;/p&gt;

@@ -16,7 +16,7 @@ Within my current role I support several athletes that require the prescription 
 
 1. Recording assessment data related to athlete's fitness qualities
 2. Providing feedback to athletes and coaches on fitness progression
-3. Prescribing individulised conditioning sessions based upon assessment results
+3. Prescribing individualised conditioning sessions based upon assessment results
 
 Currently the process takes a number of steps involving multiple Excel workbooks and a lot of copy and paste.
 
