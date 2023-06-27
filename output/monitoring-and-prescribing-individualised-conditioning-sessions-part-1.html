@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-        <title>Using PostgreSQL with Django</title>
+        <title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 1</title>
 
             <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Full Atom Feed" />
             <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Categories Atom Feed" />
@@ -35,35 +35,34 @@
 
 
 
-        <meta name="description" content="Configure PostreSQL for Django">
+        <meta name="description" content="Project Overview">
 
         <meta name="author" content="Michael Knott">
 
-        <meta name="tags" content="django">
-        <meta name="tags" content="postgres">
-        <meta name="tags" content="notes">
+        <meta name="tags" content="projects">
+        <meta name="tags" content="esd">
 
 	                <meta property="og:locale" content="">
 		<meta property="og:site_name" content="Michael Knott">
 
 	<meta property="og:type" content="article">
             <meta property="article:author" content="/author/michael-knott.html">
-	<meta property="og:url" content="/using-postgresql-with-django.html">
-	<meta property="og:title" content="Using PostgreSQL with Django">
-	<meta property="article:published_time" content="2023-02-14 15:30:00+00:00">
-            <meta property="og:description" content="Configure PostreSQL for Django">
+	<meta property="og:url" content="/monitoring-and-prescribing-individualised-conditioning-sessions-part-1.html">
+	<meta property="og:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 1">
+	<meta property="article:published_time" content="2023-06-23 11:30:00+01:00">
+            <meta property="og:description" content="Project Overview">
 
             <meta property="og:image" content="/static/cool-background-black.png">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:site" content="@michaelwknott">
-        <meta name="twitter:title" content="Using PostgreSQL with Django">
+        <meta name="twitter:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 1">
 
             <meta name="twitter:image" content="/static/cool-background-black.png">
 
-            <meta name="twitter:description" content="Configure PostreSQL for Django">
+            <meta name="twitter:description" content="Project Overview">
 </head>
 
-<body class="article-using-postgresql-with-django">
+<body class="article-monitoring-and-prescribing-individualised-conditioning-sessions-part-1">
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
@@ -97,12 +96,11 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Using PostgreSQL with Django</h1>
+                        <h1>Monitoring and Prescribing Individualised Conditioning Sessions: Part 1</h1>
                         <span class="meta">Posted by
                                 <a href="/author/michael-knott.html">Michael Knott</a>
-                             on Tue 14 February 2023
+                             on Fri 23 June 2023
                         </span>
-                            <span class="meta">Updated on Tue 21 February 2023</span>
                         
                     </div>
                 </div>
@@ -116,88 +114,35 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
     <!-- Post Content -->
     <article>
-        <p>This blog post will act as a personal reminder of configuring Postsgres for a Django project.</p>
-<h3>Create Database</h3>
-<p>Start Postgres:</p>
-<p><code>sudo service postgresql start</code></p>
-<p>Log-in to a Postgres interactive session:</p>
-<p><code>sudo -u postgres psql</code></p>
-<p>Create a database for the Django project. My project is called ar10_tracker so I'll name my database the same:</p>
-<p><code>CREATE DATABASE ar10_tracker;</code></p>
-<p>Create a user and password to interact with the database:</p>
-<p><code>CREATE USER myuser WITH PASSWORD 'mypassword';</code></p>
-<p>We can change configuration settings to optimise the performance of the database. See <a href="https://docs.djangoproject.com/en/4.1/ref/databases/#optimizing-postgresql-s-configuration">documentation</a> for more information.</p>
-<p><code>ALTER ROLE myuser SET client_encoding TO 'utf8';</code></p>
-<p><code>ALTER ROLE myuser SET default_transaction_isolation TO 'read committed';</code></p>
-<p><code>ALTER ROLE myuser SET timezone TO 'UTC';</code></p>
-<p>Next we give the ar10user the required privileges to have full control over the database:</p>
-<p><code>GRANT ALL PRIVILEGES ON DATABASE ar10_tracker TO myuser;</code></p>
-<p>The postgres database is now setup and we can exit the interactive session:</p>
-<p><code>\q</code></p>
-<h3>Add required dependencies</h3>
-<p>To connect to Postgres I'll need a database adapter. I'm using <a href="https://pypi.org/project/psycopg2/">psycopg2</a>. Additionally to configure the database settings I require <a href="https://pypi.org/project/dj-database-url/">dj_database_url</a> and <a href="https://pypi.org/project/python-decouple/">python-decouple</a>.</p>
-<div class="highlight"><pre><span></span><code>echo psycopg2~=2.9.5 &gt;&gt; requirements.in
-echo dj-database-url 1.2.0 &gt;&gt; requirements.in
-echo python-decouple==3.7 &gt;&gt; requirements.in
-pip-compile requirements.in
-python -m pip install requirements.txt
-</code></pre></div>
-
-<p>dj_database_url is a utility which uses a DATABASE_URL environment variable to create a dictionary containing the data specified in the DATABASE_URL string.</p>
-<p>For example, passing the url schema for a Postgres database <code>postgres://myuser:mypassword@127:0.0.1:5432/ar10_tracker</code> to <code>dj_database_url.config()</code> will return the following dictionary:</p>
-<div class="highlight"><pre><span></span><code>DATABASES = {
-    &#39;default&#39;: {
-        &#39;ENGINE&#39;: &#39;django.db.backends.postgresql&#39;,
-        &#39;NAME&#39;: &#39;ar10_tracker&#39;,
-        &#39;USER&#39;: &#39;myuser&#39;,
-        &#39;PASSWORD&#39;: &#39;mypassword&#39;,
-        &#39;HOST&#39;: &#39;127.0.0.1&#39;,
-        &#39;PORT&#39;: &#39;5432&#39;,
-    }
-}
-</code></pre></div>
-
-<p>python-decouple provides the functionality to separate project settings from code. I can store sensitive data such as database credentials in a separate .env file and load them as environment variables at runtime. In this Django project I'm using python-decouple to load secret key, debug status, allowed hosts and database connection credentials.</p>
-<h3>Generating a secret key for Postgres database</h3>
-<p><code>python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"</code></p>
-<h3>Utilise a .env file to store sensitive environment variables</h3>
-<p>The .env file contains the following variables:</p>
-<div class="highlight"><pre><span></span><code>SECRET_KEY=
-DEBUG=
-ALLOWED_HOSTS=
-DATABASE_URL=
-</code></pre></div>
-
-<h3>Configure Django project settings.py file to use Postgres database</h3>
-<p>Add the following imports to settings.py:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">dj_database_url</span>
-<span class="kn">from</span> <span class="nn">decouple</span> <span class="kn">import</span> <span class="n">Csv</span><span class="p">,</span> <span class="n">config</span>
-</code></pre></div>
-
-<p>Update the DATABASES variable in settings.py to utlise dj_database_url:</p>
-<p><code>DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}</code></p>
-<p>The following default variables are removed:</p>
-<div class="highlight"><pre><span></span><code># SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = &quot;django-insecure-z_)j=_h=5fmfob9l#vm)p)(#w7-w-v!p57eh^=36-jfmcoaf7t&quot;
-
-# SECURITY WARNING: don&#39;t run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-</code></pre></div>
-
-<p>and updated to utilise the python-decouple <code>config</code> function to load environment variables from the .env file:</p>
-<div class="highlight"><pre><span></span><code>SECRET_KEY = config(&quot;SECRET_KEY&quot;)
-DEBUG = config(&quot;DEBUG&quot;, default=False, cast=bool)
-ALLOWED_HOSTS = config(&quot;ALLOWED_HOSTS&quot;, cast=Csv())
-</code></pre></div>
-
-<p>I used the following article as a guide:
-<a href="https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-20-04">https://www.digitalocean.com/community/tutorials/how-to-use-postgresql-with-your-django-application-on-ubuntu-20-04</a></p>
+        <h2>Upskilling in Python</h2>
+<p>I've been using Python for approximately two years. I feel comfortable with the basics and creating projects for myself. To take the next step I believe I need to create projects which allow collaboration with other developers and involve users other than myself.</p>
+<p>I've recenyly been reading <a href="https://thepythonpro.com/">Practices of the Python Pro</a> by Dane Hillard and <a href="https://www.cosmicpython.com/book/preface.html">Architecture Patterns with Python</a> by Harry Percival and Bob Gregory. Both books outline key principles, techniques and design patterns for developing Python applications. My plan is to utilise the ideas outlined in this book whilst developing my next project. I realise this may result in over-engineering of the project but I believe this is acceptable to further my knowledge and skills.  </p>
+<h3>Project Overview</h3>
+<p>Within my current role I support several athletes that require the prescription of conditioning sessions as part of their training plan. To provide effective support involves three tasks:</p>
+<ol>
+<li>Recording assessment data related to athlete's fitness qualities</li>
+<li>Providing feedback to athletes and coaches on fitness progression</li>
+<li>Prescribing individulised conditioning sessions based upon assessment results</li>
+</ol>
+<p>Currently the process takes a number of steps involving multiple Excel workbooks and a lot of copy and paste.</p>
+<p>The goal of this project is to streamline and automate the process to save me time, whilst also improving my knowledge of software design patterns and techniques. As a first iteration the application will need to provide the following functionality: </p>
+<ul>
+<li>Store athlete data for a variety of assessment results (1km, 2km, 3km and 5m times)</li>
+<li>Calculate fitness metrics from assessment results such as Critical Speed, Maximal Aerobic Speed and Maximal Sprinting Speed</li>
+<li>Provided a summary overview of fitness progression for athlete and coaches</li>
+<li>Prescribe conditioning sessions and individualise target distances or target paces for each athlete</li>
+<li>Create a downloadable sheet of each athlete's target distance/pace to be used during conditioning session set-up</li>
+</ul>
+<p>However, I want ot ensure that I structure the project in an appropriate manner to extend it's functionality at a later date if additional functionality is required.</p>
+<h2>Project Structure</h2>
+<p>I plan to use a three-layered architecture for the project. The three layers consist of a presentation layer to interface with the user, a business model layer containing the logic to implement the required workflows associated with monitoring and prescribing individualised conditioning sessions and a persistance layer to store the required data.</p>
+<p><img alt="Three layered architecture" src="/images/three_layered_architecture.png" style="display: block; margin: 0 auto" title="Three layered architecture"></p>
+<p>For the first version of the project I'm going to create an API for the presentation layer and utilise a relational database for the persistence layer. I'm aiming to create an interface between the business logic layer and the presentation and persistence layers to provide the ability to switch between components. For example, create a CLI for the presentation layer or utilise csv files for the persistence layer.</p>
+<p>As a starting point I believe it will be best to develop the business logic. In <a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions:-part-2.html">part 2</a> this is where i will start.</p>
     </article>
 
         <div class="tags">
-            <p>tags: <a href="/tag/django.html">django</a>, <a href="/tag/postgres.html">postgres</a>, <a href="/tag/notes.html">notes</a></p>
+            <p>tags: <a href="/tag/projects.html">projects</a>, <a href="/tag/esd.html">esd</a></p>
         </div>
 
     <hr>
