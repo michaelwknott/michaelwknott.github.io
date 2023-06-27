@@ -9,7 +9,7 @@ Status: published
 ## Upskilling in Python
 I've been using Python for approximately two years. I feel comfortable with the basics and creating projects for myself. To take the next step I believe I need to create projects which allow collaboration with other developers and involve users other than myself.
 
-I've recenyly been reading [Practices of the Python Pro](https://thepythonpro.com/) by Dane Hillard and [Architecture Patterns with Python](https://www.cosmicpython.com/book/preface.html) by Harry Percival and Bob Gregory. Both books outline key principles, techniques and design patterns for developing Python applications. My plan is to utilise the ideas outlined in this book whilst developing my next project. I realise this may result in over-engineering of the project but I believe this is acceptable to further my knowledge and skills.  
+I've recently been reading [Practices of the Python Pro](https://thepythonpro.com/) by Dane Hillard and [Architecture Patterns with Python](https://www.cosmicpython.com/book/preface.html) by Harry Percival and Bob Gregory. Both books outline key principles, techniques and design patterns for developing Python applications. My plan is to utilise the ideas outlined in this book whilst developing my next project. I realise this may result in over-engineering of the project but I believe this is acceptable to further my knowledge and skills.  
 
 ### Project Overview
 Within my current role I support several athletes that require the prescription of conditioning sessions as part of their training plan. To provide effective support involves three tasks:
