@@ -4,7 +4,7 @@ Category: Python
 Tags: TIL, Python, modulo
 Authors: Michael Knott
 Summary: Calculating the remainder using the Python modulo Operator with a negative operand
-Status: Draft
+Status: Published
 
 ## Using the Modulo Operator to Find the Correct Index in a Circular List
 
@@ -62,7 +62,7 @@ SIZE = 9
 data = [None, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
-If I want to add another element to the back of the list the next available space is at index 0. Using the same expression as previously we can calculate the appropriate index and wrap the element around the back of the list at index 0:
+If I want to add another element to the back of the list the next available space is at index 0. Using the same expression as previously, we can calculate the appropriate index and wrap the element around the back of the list at index 0:
 
 ```
 next_available_back = (FRONT + SIZE) % len(data)
