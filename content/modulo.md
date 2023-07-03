@@ -101,7 +101,7 @@ next_available_front = -1 % 10
 next_available_front = -1
 ```
 
-However, Python's modulo implementation means `next_available_front = -1 % 10` evaluates to 9. This didn't initially cause any issues due to the ability to use negative indexing with Python lists. `data[9]` and `data[-1]` both point to the same element in a list containing 10 elements. However, issues arose when I wanted to implement a method in the Deque class to resize the list. The incorrect mental model of how the modulo operator works resulted in unexpected behaviour when repopulating the resized list. To avoid the same mistake in the future I've included  
+However, Python's modulo implementation means `next_available_front = -1 % 10` evaluates to 9. This didn't initially cause any issues due to the ability to use negative indexing with Python lists. `data[9]` and `data[-1]` both point to the same element in a list containing 10 elements. However, issues arose when I wanted to implement a method in the Deque class to resize the list. The incorrect mental model of how the modulo operator works resulted in unexpected behaviour when repopulating the resized list.
 
 ## Python Modulo Implementation
 
