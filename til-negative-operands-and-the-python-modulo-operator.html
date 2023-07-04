@@ -117,7 +117,7 @@
     <article>
         <h2>Using the Modulo Operator to Find the Correct Index in a Circular List</h2>
 <p>I've been using a fixed length Python list as the underlying storage for my own implentation of a Deque. I'm using the list in a circular fashion so that elements can wrap around the end of the list. This ensures time efficiency when adding elements to the front of the Deque (no need to shift each current element one place to the right) and space efficiency after adding and deleting multiple elements (avoiding the situation where there are a small number of elements in a list with a large capacity).</p>
-<p>For ease of example, I've simplified the code to the following constants and list (see end of article for full ArrayDeque implementation):</p>
+<p>For ease of example, I've simplified the code to the following (see end of article for full ArrayDeque implementation):</p>
 <div class="highlight"><pre><span></span><code># An integer referencing the index of the front of the list
 FRONT = 1
 
@@ -136,6 +136,7 @@ next_available_back = (FRONT + SIZE) % len(data)
 next_available_front = (FRONT - 1) % len(data)
 </code></pre></div>
 
+<h3>Adding elements to the back of the list</h3>
 <p>If I want to add one element to the back of the list, the next available space would be at index 9. The following expression finds the correct index:</p>
 <div class="highlight"><pre><span></span><code>next_available_back = (FRONT + SIZE) % len(data)
 
@@ -146,7 +147,7 @@ next_available_back = 9 % 10
 next_available_back = 9
 </code></pre></div>
 
-<p>Assuming I've added the the integer 10 to the back of the list, the two constants and list have the following state:</p>
+<p>Assuming I've added the integer 10 to the back of the list, the two constants and list have the following state:</p>
 <div class="highlight"><pre><span></span><code># An integer referencing the index of the front of the list
 FRONT = 1
 
@@ -167,7 +168,9 @@ next_available_back = 10 % 10
 next_available_back = 0
 </code></pre></div>
 
-<p>So far, so good. However, the modulo operator behaves differently than I expected when passed a negative operand. Assuming the constants and list have the following state:</p>
+<p>So far, so good. However, the modulo operator behaves differently than I expected when passed a negative operand.</p>
+<h3>Adding elements to the front of the list</h3>
+<p>Assuming the constants and list have the following state:</p>
 <div class="highlight"><pre><span></span><code># An integer referencing the index of the front of the list
 FRONT = 0
 
@@ -178,7 +181,7 @@ SIZE = 8
 data = [1, 2, 3, 4, 5, 6, 7, 8, None, None]
 </code></pre></div>
 
-<p>If I want to add an element to the front of the list I need to find the next available space at the front using <code>next_available_front = (FRONT - 1) % len(data)</code>. Based on my previous experience with the modulo operator I assumed the expression would evaluate as follows:</p>
+<p>If I want to add an element to the front of the list I need to find the next available space using <code>next_available_front = (FRONT - 1) % len(data)</code>. The next available space at the front of the list is at index 9 or -1 if using negative indexing. Based on my previous experience with the modulo operator I assumed the expression would evaluate as follows:</p>
 <div class="highlight"><pre><span></span><code># Incorrect understanding of modulo implementation
 
 next_available_front = (FRONT - 1) % len(data)
@@ -192,17 +195,21 @@ next_available_front = -1
 
 <p>However, Python's modulo implementation means <code>next_available_front = -1 % 10</code> evaluates to 9. This didn't initially cause any issues due to the ability to use negative indexing with Python lists. <code>data[9]</code> and <code>data[-1]</code> both point to the same element in a list containing 10 elements. However, issues arose when I wanted to implement a method in the Deque class to resize the list. The incorrect mental model of how the modulo operator works resulted in unexpected behaviour when repopulating the resized list.</p>
 <h2>Python Modulo Implementation</h2>
-<p>The Python modulo implmentation uses the following expression to calculate the remainder:</p>
+<p>For future reference, the Python modulo implmentation uses the following expression to calculate the remainder:</p>
 <div class="highlight"><pre><span></span><code>remainder = dividend % divisor
 
 remainder = dividend - (divisor * (floor(dividend / divisor)))
 </code></pre></div>
 
-<p>Therefore the remainder will always take on the value of the divisor.</p>
+<p>Therefore the remainder will always take on the value of the divisor.
+With this new understanding I was able to correct my implementation of the method to resize the list.</p>
 <h3>A quick note on floor() function behaviour</h3>
-<p>When passed a postive float, floor() tends towards zero. For example <code>floor(2.66)</code> returns 2.</p>
-<p>When passed a negative float, floor() tends away from zerp. For example, <code>floor(-2.66)</code> returns -3.</p>
+<ul>
+<li>When passed a postive float, floor() moves towards zero. For example, <code>floor(2.66)</code> returns 2. </li>
+<li>When passed a negative float, floor() moves away from zero. For example, <code>floor(-2.66)</code> returns -3.</li>
+</ul>
 <h2>ArrayDeque Implementation</h2>
+<p>For context I've included the ArrayDeque implementation below:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nl">ArrayDeque</span><span class="p">:</span>
 <span class="w">    </span><span class="ss">&quot;&quot;&quot;Deque implementation using a Python list as underlying storage.&quot;&quot;&quot;</span>
 
@@ -250,12 +257,10 @@ remainder = dividend - (divisor * (floor(dividend / divisor)))
 <span class="w">            </span><span class="n">raise</span><span class="w"> </span><span class="n">Empty</span><span class="p">(</span><span class="ss">&quot;ArrayDeque is empty&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_size</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">4</span><span class="err">:</span>
 <span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">_resize</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-
 <span class="w">        </span><span class="k">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="o">[</span><span class="n">self._front</span><span class="o">]</span>
 <span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="o">[</span><span class="n">self._front</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span>
 <span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">_front</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_front</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="p">)</span>
 <span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">_size</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span>
-
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">value</span>
 
 <span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">delete_last</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="err">:</span>
@@ -263,12 +268,10 @@ remainder = dividend - (divisor * (floor(dividend / divisor)))
 <span class="w">            </span><span class="n">raise</span><span class="w"> </span><span class="n">Empty</span><span class="p">(</span><span class="ss">&quot;ArrayDeque is empty&quot;</span><span class="p">)</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_size</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">4</span><span class="err">:</span>
 <span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">_resize</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="p">)</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-
 <span class="w">        </span><span class="k">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_front</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nf">len</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="p">)</span>
 <span class="w">        </span><span class="k">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="o">[</span><span class="n">last</span><span class="o">]</span>
 <span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">_data</span><span class="o">[</span><span class="n">last</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">None</span>
 <span class="w">        </span><span class="n">self</span><span class="p">.</span><span class="n">_size</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span>
-
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">value</span>
 
 <span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">_resize</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">capacity</span><span class="p">)</span><span class="err">:</span>
