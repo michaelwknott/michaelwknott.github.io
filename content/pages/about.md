@@ -1,6 +1,7 @@
-title: About me
+title: About
 date: 2023-02-08 12:00
 Modified: 2023-02-14 15:10
+
 
 Hello, I'm Michael.
 
