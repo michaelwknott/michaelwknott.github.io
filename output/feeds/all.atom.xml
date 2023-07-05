@@ -1,244 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2023-07-05T12:00:00+01:00</updated><entry><title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 2</title><link href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-2.html" rel="alternate"></link><published>2023-07-05T12:00:00+01:00</published><updated>2023-07-05T12:00:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-07-05:/monitoring-and-prescribing-individualised-conditioning-sessions-part-2.html</id><summary type="html">&lt;p&gt;Project Set-up&lt;/p&gt;</summary><content type="html">&lt;p&gt;In &lt;a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions:-part-1.html"&gt;part 1&lt;/a&gt; I outlined the rationale for the project and my plans for structuring the project using a three-layered architecture. Today's post will focus on my project set-up workflow.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2023-07-05T12:00:00+01:00</updated><entry><title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 2</title><link href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-2.html" rel="alternate"></link><published>2023-07-05T12:00:00+01:00</published><updated>2023-07-05T12:00:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-07-05:/monitoring-and-prescribing-individualised-conditioning-sessions-part-2.html</id><summary type="html">&lt;p&gt;Project Set-up&lt;/p&gt;</summary><content type="html">&lt;p&gt;In &lt;a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-1.html"&gt;part 1&lt;/a&gt; I outlined the rationale for the project and my plans for structuring the project using a three-layered architecture. Today's post will focus on my project set-up workflow.&lt;/p&gt;
 &lt;h2&gt;Project Set-up&lt;/h2&gt;
 &lt;ol&gt;
-&lt;li&gt;Create a new virtual environment for the project and upgrade pip, setuptools and wheel.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="o"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;venv&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;venv&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;prompt&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
-
-&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;venv&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;activate&lt;/span&gt;
-
-&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;install&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;U&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;setuptools&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;wheel&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Initiate a git repository in the project directory for version control and add a &lt;code&gt;.gitignore&lt;/code&gt; file. Add the &lt;code&gt;.venv&lt;/code&gt; directory to the &lt;code&gt;.gitignore&lt;/code&gt; file to avoid commiting the virtual environment to version control.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ git init
-
-(esd) esd/$ echo .venv &amp;gt; .gitignore
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Install &lt;code&gt;pip-tools&lt;/code&gt; to manage dependencies. I use pip-tools as it provides a detailed requirements file outlining the source of each dependency installed in the project.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;install&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;tools&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create a &lt;code&gt;requirements.in&lt;/code&gt; and &lt;code&gt;requirements-dev.in&lt;/code&gt; file for project and development dependencies respectively.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ touch requirements.in requirements-dev.in
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Constrain the development dependencies with the main project dependencies to avoid dependency conflicts.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ echo -c requirements.txt &amp;gt;&amp;gt; requirements-dev.in
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Add the required development dependencies to &lt;code&gt;requirements-dev.in&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ echo -e &amp;quot;pre-commit\nblack\nruff\nmypy\npytest&amp;quot; &amp;gt;&amp;gt; requirements-dev.in
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Add the required project dependencies to &lt;code&gt;requirements.in&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;fastapi[all]\nSQLAlchemy&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;requirements&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ow"&gt;in&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Compile the requirements.txt and requirements-dev.txt files. Ensure to compile the requirements.txt first as requirements-dev.in will use this as the constraint file.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ pip-compile requirements.in
-(esd) esd/$ pip-compile requirements-dev.in
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Install dependencies within the virtual environment.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ python -m pip install -r requirements.txt -r requirements-dev.txt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create a &lt;code&gt;pyproject.toml&lt;/code&gt; file and configure development dependencies. I've included defaults from Ruff in the &lt;code&gt;pyproject.toml&lt;/code&gt; configuration to be explicit about settings. &lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ touch pyproject.toml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# pyproject.toml&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mypy&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;python_version&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;3.11&lt;/span&gt;
-&lt;span class="n"&gt;warn_unused_configs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;warn_return_any&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;disallow_untyped_defs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;warn_unused_ignores&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;warn_redundant_casts&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;show_error_context&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;pretty&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;black&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;88&lt;/span&gt;
-&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;py311&amp;#39;&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="c1"&gt;# Enable pycodestyle (`E`), Pyflakes (`F`), pycodestyle warnings (`W`),&lt;/span&gt;
-&lt;span class="c1"&gt;# McCabe complexity (`C901`), pep8-naming (`N`), pydocstyle (`D`),&lt;/span&gt;
-&lt;span class="c1"&gt;# pyupgrade (`UP`) and pylint (`PL`).&lt;/span&gt;
-&lt;span class="k"&gt;select&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;E&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;F&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;W&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;C901&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;N&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;D&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;UP&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;PL&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="k"&gt;ignore&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[]&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Allow autofix for all enabled rules (when `--fix`) is provided.&lt;/span&gt;
-&lt;span class="n"&gt;fixable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ALL&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;unfixable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[]&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Exclude a variety of commonly ignored directories.&lt;/span&gt;
-&lt;span class="k"&gt;exclude&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.bzr&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.direnv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.eggs&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.git&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.git-rewrite&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.hg&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.mypy_cache&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.nox&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.pants.d&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.pytype&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.ruff_cache&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.svn&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.tox&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.venv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;__pypackages__&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;_build&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;buck-out&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;build&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;dist&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;node_modules&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;venv&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="n"&gt;per&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;file&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ignores&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;{}&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Same as Black.&lt;/span&gt;
-&lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;88&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Allow unused variables when underscore-prefixed.&lt;/span&gt;
-&lt;span class="n"&gt;dummy&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;variable&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rgx&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$&amp;quot;&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Assume Python 3.11.&lt;/span&gt;
-&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;py311&amp;quot;&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isort&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="c1"&gt;# Placeholder for future configuration.&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mccabe&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="c1"&gt;# Flag errors (`C901`) whenever the complexity level exceeds 10.&lt;/span&gt;
-&lt;span class="n"&gt;max&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;complexity&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pep8&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;naming&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="c1"&gt;# Placeholder for future configuration.&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pydocstyle&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="c1"&gt;# Use Google-style docstrings.&lt;/span&gt;
-&lt;span class="n"&gt;convention&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;google&amp;quot;&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pylint&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="c1"&gt;# Placeholder for future configuration.&lt;/span&gt;
-
-&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pyupgrade&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
-&lt;span class="c1"&gt;# Placeholder for future configuration.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create a &lt;code&gt;.pre-commit-config.yaml&lt;/code&gt; to configure &lt;code&gt;pre-commit&lt;/code&gt;. Running &lt;code&gt;pre-commit&lt;/code&gt; before each git commit ensures code quality and consistency across the project.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;#&lt;span class="w"&gt; &lt;/span&gt;.&lt;span class="nv"&gt;pre&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;commit&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;config&lt;/span&gt;.&lt;span class="nv"&gt;yaml&lt;/span&gt;
-
-&lt;span class="nv"&gt;repos&lt;/span&gt;:
-&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;repo&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;https&lt;/span&gt;:&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nv"&gt;github&lt;/span&gt;.&lt;span class="nv"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;pre&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;commit&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;pre&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;commit&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;hooks&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;rev&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;v4&lt;/span&gt;.&lt;span class="mi"&gt;4&lt;/span&gt;.&lt;span class="mi"&gt;0&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;hooks&lt;/span&gt;:
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;id&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;check&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;yaml&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;id&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;end&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;of&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;file&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;fixer&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;id&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;trailing&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;whitespace&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;repo&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;https&lt;/span&gt;:&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nv"&gt;github&lt;/span&gt;.&lt;span class="nv"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;psf&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;black&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;rev&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;23&lt;/span&gt;.&lt;span class="mi"&gt;3&lt;/span&gt;.&lt;span class="mi"&gt;0&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;hooks&lt;/span&gt;:
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;id&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;black&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nv"&gt;args&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;[&lt;span class="s1"&gt;&amp;#39;--config=./pyproject.toml&amp;#39;&lt;/span&gt;]
-&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;repo&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;https&lt;/span&gt;:&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nv"&gt;github&lt;/span&gt;.&lt;span class="nv"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;charliermarsh&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;ruff&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;pre&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;commit&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;rev&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;v0&lt;/span&gt;.&lt;span class="mi"&gt;0&lt;/span&gt;.&lt;span class="mi"&gt;276&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;hooks&lt;/span&gt;:
-&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;id&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ruff&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;repo&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;https&lt;/span&gt;:&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="nv"&gt;github&lt;/span&gt;.&lt;span class="nv"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;pre&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;commit&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;mirrors&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;mypy&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;rev&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;v1.4.1&amp;#39;&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;hooks&lt;/span&gt;:
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="w"&gt;   &lt;/span&gt;&lt;span class="nv"&gt;id&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;mypy&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nv"&gt;args&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;[&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="nv"&gt;no&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;strict&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;optional&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="nv"&gt;ignore&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;missing&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;imports&lt;/span&gt;]
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nv"&gt;additional_dependencies&lt;/span&gt;:&lt;span class="w"&gt; &lt;/span&gt;[
-&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="nv"&gt;fastapi&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;.&lt;span class="mi"&gt;99&lt;/span&gt;.&lt;span class="mi"&gt;1&lt;/span&gt;,
-&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="nv"&gt;sqlalchemy&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;.&lt;span class="mi"&gt;0&lt;/span&gt;.&lt;span class="mi"&gt;17&lt;/span&gt;,
-&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="nv"&gt;typing&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;extensions&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;.&lt;span class="mi"&gt;7&lt;/span&gt;.&lt;span class="mi"&gt;1&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
+&lt;li&gt;
+&lt;p&gt;Create a new virtual environment for the project and upgrade pip, setuptools and wheel.&lt;/p&gt;
+&lt;p&gt;```
+esd$ python -m venv .venv --prompt .&lt;/p&gt;
+&lt;p&gt;esd/$ source .venv/bin/activate&lt;/p&gt;
+&lt;p&gt;(esd) esd/$ python -m pip install -U pip setuptools wheel
+```&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Initiate a git repository in the project directory for version control and add a &lt;code&gt;.gitignore&lt;/code&gt; file. Add the &lt;code&gt;.venv&lt;/code&gt; directory to the &lt;code&gt;.gitignore&lt;/code&gt; file to avoid commiting the virtual environment to version control.&lt;/p&gt;
+&lt;p&gt;```
+(esd) esd/$ git init&lt;/p&gt;
+&lt;p&gt;(esd) esd/$ echo .venv &amp;gt; .gitignore
+```&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install &lt;code&gt;pip-tools&lt;/code&gt; to manage dependencies. I use pip-tools as it provides a detailed requirements file outlining the source of each dependency installed in the project.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(esd) esd/$ python -m pip install pip-tools&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;code&gt;requirements.in&lt;/code&gt; and &lt;code&gt;requirements-dev.in&lt;/code&gt; file for project and development dependencies respectively.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(esd) esd/$ touch requirements.in requirements-dev.in&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Constrain the development dependencies with the main project dependencies to avoid dependency conflicts.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(esd) esd/$ echo -c requirements.txt &amp;gt;&amp;gt; requirements-dev.in&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add the required development dependencies to &lt;code&gt;requirements-dev.in&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(esd) esd/$ echo -e "pre-commit\nblack\nruff\nmypy\npytest" &amp;gt;&amp;gt; requirements-dev.in&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Add the required project dependencies to &lt;code&gt;requirements.in&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(esd) esd/$ echo -e "fastapi[all]\nSQLAlchemy" &amp;gt;&amp;gt; requirements.in&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Compile the requirements.txt and requirements-dev.txt files. Ensure to compile the requirements.txt first as requirements-dev.in will use this as the constraint file.&lt;/p&gt;
+&lt;p&gt;```
+(esd) esd/$ pip-compile requirements.in&lt;/p&gt;
+&lt;p&gt;(esd) esd/$ pip-compile requirements-dev.in
+```&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install dependencies within the virtual environment.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;(esd) esd/$ python -m pip install -r requirements.txt -r requirements-dev.txt&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;code&gt;pyproject.toml&lt;/code&gt; file and configure development dependencies. I've included defaults from Ruff in the &lt;code&gt;pyproject.toml&lt;/code&gt; configuration to be explicit about settings. &lt;/p&gt;
+&lt;p&gt;```
+(esd) esd/$ touch pyproject.toml&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;h1&gt;pyproject.toml&lt;/h1&gt;
+&lt;p&gt;[tool.mypy]
+python_version = 3.11
+warn_unused_configs = true
+warn_return_any = true
+disallow_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+show_error_context = true
+pretty = true&lt;/p&gt;
+&lt;p&gt;[tool.black]
+line-length = 88
+target-version = ['py311']&lt;/p&gt;
+&lt;p&gt;[tool.ruff]&lt;/p&gt;
+&lt;h1&gt;Enable pycodestyle (&lt;code&gt;E&lt;/code&gt;), Pyflakes (&lt;code&gt;F&lt;/code&gt;), pycodestyle warnings (&lt;code&gt;W&lt;/code&gt;),&lt;/h1&gt;
+&lt;h1&gt;McCabe complexity (&lt;code&gt;C901&lt;/code&gt;), pep8-naming (&lt;code&gt;N&lt;/code&gt;), pydocstyle (&lt;code&gt;D&lt;/code&gt;),&lt;/h1&gt;
+&lt;h1&gt;pyupgrade (&lt;code&gt;UP&lt;/code&gt;) and pylint (&lt;code&gt;PL&lt;/code&gt;).&lt;/h1&gt;
+&lt;p&gt;select = ["E", "F", "W", "C901", "N", "D", "UP", "PL"]
+ignore = []&lt;/p&gt;
+&lt;h1&gt;Allow autofix for all enabled rules (when &lt;code&gt;--fix&lt;/code&gt;) is provided.&lt;/h1&gt;
+&lt;p&gt;fixable = ["ALL"]
+unfixable = []&lt;/p&gt;
+&lt;h1&gt;Exclude a variety of commonly ignored directories.&lt;/h1&gt;
+&lt;p&gt;exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "&lt;strong&gt;pypackages&lt;/strong&gt;",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+per-file-ignores = {}&lt;/p&gt;
+&lt;h1&gt;Same as Black.&lt;/h1&gt;
+&lt;p&gt;line-length = 88&lt;/p&gt;
+&lt;h1&gt;Allow unused variables when underscore-prefixed.&lt;/h1&gt;
+&lt;p&gt;dummy-variable-rgx = "^(&lt;em&gt;+|(&lt;/em&gt;+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"&lt;/p&gt;
+&lt;h1&gt;Assume Python 3.11.&lt;/h1&gt;
+&lt;p&gt;target-version = "py311"&lt;/p&gt;
+&lt;p&gt;[tool.ruff.isort]&lt;/p&gt;
+&lt;h1&gt;Placeholder for future configuration.&lt;/h1&gt;
+&lt;p&gt;[tool.ruff.mccabe]&lt;/p&gt;
+&lt;h1&gt;Flag errors (&lt;code&gt;C901&lt;/code&gt;) whenever the complexity level exceeds 10.&lt;/h1&gt;
+&lt;p&gt;max-complexity = 10&lt;/p&gt;
+&lt;p&gt;[tool.ruff.pep8-naming]&lt;/p&gt;
+&lt;h1&gt;Placeholder for future configuration.&lt;/h1&gt;
+&lt;p&gt;[tool.ruff.pydocstyle]&lt;/p&gt;
+&lt;h1&gt;Use Google-style docstrings.&lt;/h1&gt;
+&lt;p&gt;convention = "google"&lt;/p&gt;
+&lt;p&gt;[tool.ruff.pylint]&lt;/p&gt;
+&lt;h1&gt;Placeholder for future configuration.&lt;/h1&gt;
+&lt;p&gt;[tool.ruff.pyupgrade]&lt;/p&gt;
+&lt;h1&gt;Placeholder for future configuration.&lt;/h1&gt;
+&lt;p&gt;```&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;code&gt;.pre-commit-config.yaml&lt;/code&gt; to configure &lt;code&gt;pre-commit&lt;/code&gt;. Running &lt;code&gt;pre-commit&lt;/code&gt; before each git commit ensures code quality and consistency across the project.&lt;/p&gt;
+&lt;p&gt;```&lt;/p&gt;
+&lt;h1&gt;.pre-commit-config.yaml&lt;/h1&gt;
+&lt;p&gt;repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+    -   id: black
+        args: ['--config=./pyproject.toml']
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.276
+    hooks:
+    - id: ruff
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.4.1'
+    hooks:
+    -   id: mypy
+        args: [--no-strict-optional, --ignore-missing-imports]
+        additional_dependencies: [
+        fastapi==0.99.1,
+        sqlalchemy==2.0.17,
+        typing-extensions==4.7.1
+        ]
+```&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Use the &lt;code&gt;pre-commit&lt;/code&gt; autoupdate command to update hooks to the latest version and install the git hook scripts.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ pre-commit autoupdate
-
-(esd) esd/$ pre-commit install
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create a &lt;code&gt;.editorconfig&lt;/code&gt; file to ensure consistency in formatting when collaborating with other developers.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$ touch .editorcongig
-
-# .editorconfig
-root = true
-[*]
+&lt;p&gt;```
+(esd) esd/$ pre-commit autoupdate&lt;/p&gt;
+&lt;p&gt;(esd) esd/$ pre-commit install
+```&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a &lt;code&gt;.editorconfig&lt;/code&gt; file to ensure consistency in formatting when collaborating with other developers.&lt;/p&gt;
+&lt;p&gt;```
+(esd) esd/$ touch .editorcongig&lt;/p&gt;
+&lt;h1&gt;.editorconfig&lt;/h1&gt;
+&lt;p&gt;root = true
+[&lt;em&gt;]
 charset = utf-8
 end_of_line = lf
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
-[*.html]
+[&lt;/em&gt;.html]
 indent_size = 2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Configure local settings for VSCode. I currently use VSCode as my text editor/IDE.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;touch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;vscode&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;
-
-&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;vscode&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;
-
-&lt;span class="err"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;python.formatting.provider&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;black&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;[python]&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;editor.formatOnSave&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;editor.codeActionsOnSave&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;{&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;source.organizeImports&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;true&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;editor.rulers&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;
-&lt;span class="n"&gt;        88,&lt;/span&gt;
-&lt;span class="n"&gt;    &lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;python.analysis.typeCheckingMode&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;strict&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;span class="err"&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create project structure. I add &lt;code&gt;athlete.py&lt;/code&gt; and &lt;code&gt;test_athlete.py&lt;/code&gt; files as placeholders in the &lt;code&gt;esd&lt;/code&gt; and &lt;code&gt;tests&lt;/code&gt; directories respectively.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;(esd) esd/$  mkdir esd tests &amp;amp;&amp;amp; touch esd/athlete.py tests/test_athlete.py
-# Project tree after adding esd and tests directories
-
-esd
+```&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Configure local settings for VSCode. I currently use VSCode as my text editor/IDE.&lt;/p&gt;
+&lt;p&gt;```
+(esd) esd/$ touch .vscode/settings.json&lt;/p&gt;
+&lt;h1&gt;.vscode/settings.json&lt;/h1&gt;
+&lt;p&gt;{
+    "python.formatting.provider": "black",
+    "[python]": {
+        "editor.formatOnSave": true,
+    },
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "editor.rulers": [
+        88,
+    ],
+    "python.analysis.typeCheckingMode": "strict",
+}
+```&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create project structure. I add &lt;code&gt;athlete.py&lt;/code&gt; and &lt;code&gt;test_athlete.py&lt;/code&gt; files as placeholders in the &lt;code&gt;esd&lt;/code&gt; and &lt;code&gt;tests&lt;/code&gt; directories respectively.&lt;/p&gt;
+&lt;p&gt;```
+(esd) esd/$  mkdir esd tests &amp;amp;&amp;amp; touch esd/athlete.py tests/test_athlete.py&lt;/p&gt;
+&lt;h1&gt;Project tree after adding esd and tests directories&lt;/h1&gt;
+&lt;p&gt;esd
 ├── .venv
 ├── .vscode
 │   └──settings.json 
@@ -254,41 +219,35 @@ esd
 ├── requirements-dev.txt
 ├── requirements.in
 └── requirements.txt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create a GitHub repository with &lt;code&gt;README.md&lt;/code&gt; and &lt;code&gt;LICENSE&lt;/code&gt; files.&lt;/li&gt;
+```&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create a GitHub repository with &lt;code&gt;README.md&lt;/code&gt; and &lt;code&gt;LICENSE&lt;/code&gt; files.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;![Creating a GitHub Repository]({static}/images/create-github-repo.png "Creating a GitHub repository"){style="display: block; margin: 0 auto"}&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Link &lt;code&gt;esd&lt;/code&gt; project to GitHub repository, add and commit project set-up changes and push changes to GitHub.&lt;/p&gt;
+&lt;p&gt;```&lt;/p&gt;
+&lt;h1&gt;Add files to staging in local repo&lt;/h1&gt;
+&lt;p&gt;(esd) esd/$ git add .&lt;/p&gt;
+&lt;h1&gt;Commit files in local repo&lt;/h1&gt;
+&lt;p&gt;(esd) esd/$ git commit -m "Project set-up"&lt;/p&gt;
+&lt;h1&gt;Link local repository with remote repository on GitHub&lt;/h1&gt;
+&lt;p&gt;(esd) esd/$ git remote add origin git@github.com:michaelwknott/esd.git&lt;/p&gt;
+&lt;h1&gt;Check the link between repositories has worked&lt;/h1&gt;
+&lt;p&gt;(esd) esd/$ git remote -v&lt;/p&gt;
+&lt;h1&gt;Change the name of &lt;code&gt;master&lt;/code&gt; to &lt;code&gt;main&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;(esd) esd/$ git branch -m main&lt;/p&gt;
+&lt;h1&gt;Rebase local repository with the remote main branch. The local repository doesn't have &lt;code&gt;README.md&lt;/code&gt; and &lt;code&gt;LICENSE&lt;/code&gt; and needs these changes before pushing to the remote repository&lt;/h1&gt;
+&lt;p&gt;(esd) esd/$ git pull origin main --rebase&lt;/p&gt;
+&lt;h1&gt;Push changes in local repository to GitHub&lt;/h1&gt;
+&lt;p&gt;(esd) esd/$ git push origin main 
+```&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="cp"&gt;[&lt;/span&gt;&lt;span class="nx"&gt;Creating&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;GitHub&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nx"&gt;Repository&lt;/span&gt;&lt;span class="cp"&gt;]&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;static&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;images&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;create-github-repo&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;png&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Creating a GitHub repository&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;style=&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;block&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;margin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;auto&lt;/span&gt;&lt;span class="err"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Link &lt;code&gt;esd&lt;/code&gt; project to GitHub repository, add and commit project set-up changes and push changes to GitHub.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# Add files to staging in local repo&lt;/span&gt;
-(&lt;span class="n"&gt;esd&lt;/span&gt;) &lt;span class="n"&gt;esd&lt;/span&gt;/$ &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="nb"&gt;add&lt;/span&gt; .
-
-&lt;span class="c1"&gt;# Commit files in local repo&lt;/span&gt;
-(&lt;span class="n"&gt;esd&lt;/span&gt;) &lt;span class="n"&gt;esd&lt;/span&gt;/$ &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;commit&lt;/span&gt; -&lt;span class="sr"&gt;m &amp;quot;Project set-up&amp;quot;&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Link local repository with remote repository on GitHub&lt;/span&gt;
-(&lt;span class="n"&gt;esd&lt;/span&gt;) &lt;span class="n"&gt;esd&lt;/span&gt;/$ &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;remote&lt;/span&gt; &lt;span class="nb"&gt;add&lt;/span&gt; &lt;span class="n"&gt;origin&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="nv"&gt;@github&lt;/span&gt;.&lt;span class="n"&gt;com:michaelwknott&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;esd&lt;/span&gt;.&lt;span class="n"&gt;git&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Check the link between repositories has worked&lt;/span&gt;
-(&lt;span class="n"&gt;esd&lt;/span&gt;) &lt;span class="n"&gt;esd&lt;/span&gt;/$ &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;remote&lt;/span&gt; -&lt;span class="n"&gt;v&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Change the name of `master` to `main`&lt;/span&gt;
-(&lt;span class="n"&gt;esd&lt;/span&gt;) &lt;span class="n"&gt;esd&lt;/span&gt;/$ &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;branch&lt;/span&gt; -&lt;span class="o"&gt;m&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Rebase local repository with the remote main branch. The local repository doesn&amp;#39;t have `README.md` and `LICENSE` and needs these changes before pushing to the remote repository &lt;/span&gt;
-(&lt;span class="n"&gt;esd&lt;/span&gt;) &lt;span class="n"&gt;esd&lt;/span&gt;/$ &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;pull&lt;/span&gt; &lt;span class="n"&gt;origin&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt; --&lt;span class="n"&gt;rebase&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Push changes in local repository to GitHub&lt;/span&gt;
-(&lt;span class="n"&gt;esd&lt;/span&gt;) &lt;span class="n"&gt;esd&lt;/span&gt;/$ &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="nb"&gt;push&lt;/span&gt; &lt;span class="n"&gt;origin&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 &lt;p&gt;The final project structure looks as follows:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;esd
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;```
+esd
 ├── .venv
 ├── .vscode
 │   └──settings.json 
@@ -306,6 +265,7 @@ esd
 ├── requirements-dev.txt
 ├── requirements.in
 └── requirements.txt
+```
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="ESD"></category><category term="projects"></category><category term="esd"></category></entry><entry><title>TIL: Negative Operands and the Python Modulo Operator</title><link href="/til-negative-operands-and-the-python-modulo-operator.html" rel="alternate"></link><published>2023-06-30T14:30:00+01:00</published><updated>2023-06-30T14:30:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-06-30:/til-negative-operands-and-the-python-modulo-operator.html</id><summary type="html">&lt;p&gt;Calculating the remainder using the Python modulo Operator with a negative operand&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Using the Modulo Operator to Find the Correct Index in a Circular List&lt;/h2&gt;
 &lt;p&gt;I've been using a fixed length Python list as the underlying storage for my own implentation of a Deque. I'm using the list in a circular fashion so that elements can wrap around the end of the list. This ensures time efficiency when adding elements to the front of the Deque (no need to shift each current element one place to the right) and space efficiency after adding and deleting multiple elements (avoiding the situation where there are a small number of elements in a list with a large capacity).&lt;/p&gt;
 &lt;p&gt;For ease of example, I've simplified the code to the following (see end of article for full ArrayDeque implementation):&lt;/p&gt;
