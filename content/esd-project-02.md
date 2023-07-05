@@ -6,7 +6,7 @@ Authors: Michael Knott
 Summary: Project Set-up
 Status: Published
 
-In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions:-part-1.html) I outlined the rationale for the project and my plans for structuring the project using a three-layered architecture. Today's post will focus on my project set-up workflow.
+In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-1.html) I outlined the rationale for the project and my plans for structuring the project using a three-layered architecture. Today's post will focus on my project set-up workflow.
 
 
 ## Project Set-up
