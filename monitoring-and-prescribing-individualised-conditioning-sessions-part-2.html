@@ -265,6 +265,13 @@
 
 <span class="err">[</span><span class="n">tool</span><span class="p">.</span><span class="n">ruff</span><span class="p">.</span><span class="n">pyupgrade</span><span class="err">]</span>
 <span class="c1"># Placeholder for future configuration.</span>
+
+<span class="err">[</span><span class="n">tool</span><span class="p">.</span><span class="n">pytest</span><span class="p">.</span><span class="n">ini_options</span><span class="err">]</span>
+<span class="n">minversion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;6.0&quot;</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;-ra -q&quot;</span>
+<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">[</span>
+<span class="w">        </span><span class="s2">&quot;tests&quot;</span><span class="p">,</span>
+<span class="err">]</span>
 </code></pre></div>
 
 </li>
@@ -350,8 +357,8 @@ indent_size = 2
 
 </li>
 <li>
-<p>Create project structure. I add <code>athlete.py</code> and <code>test_athlete.py</code> files as placeholders in the <code>esd</code> and <code>tests</code> directories respectively.</p>
-<div class="highlight"><pre><span></span><code>(esd) esd/$  mkdir esd tests &amp;&amp; touch esd/athlete.py tests/test_athlete.py
+<p>Create project structure. I add <code>__init__.py</code> files in the <code>esd</code> and <code>tests</code> directories to define them as packages.</p>
+<div class="highlight"><pre><span></span><code>(esd) esd/$  mkdir esd tests &amp;&amp; touch esd/__init__.py tests/__init__.py
 
 # Project tree after adding esd and tests directories
 
@@ -360,9 +367,9 @@ esd
 ├── .vscode
 │   └──settings.json 
 ├── esd
-│   └──athlete.py
+│   └──__init__.py
 ├── tests
-│   └──test_athlete.py
+│   └──__init__.py
 ├── .editorconfig
 ├── .gitignore
 ├── .pre-commit-config.yaml
@@ -410,9 +417,9 @@ esd
 ├── .vscode
 │   └──settings.json 
 ├── esd
-│   └──athlete.py
+│   └──__init__.py
 ├── tests
-│   └──test_athlete.py
+│   └──__init__.py
 ├── .editorconfig
 ├── .gitignore
 ├── .pre-commit-config.yaml
