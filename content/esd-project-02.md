@@ -245,7 +245,7 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
 
 1. Create a GitHub repository with `README.md` and `LICENSE` files.
 
-        ![Creating a GitHub Repository]({static}/images/create-github-repo.png "Creating a GitHub repository"){style="display: block; margin: 0 auto"}
+    ![Creating a GitHub Repository]({static}/images/create-github-repo.png "Creating a GitHub repository"){style="display: block; margin: 0 auto"}
 
 1.  Link `esd` project to GitHub repository, add and commit project set-up changes and push changes to GitHub.
 
@@ -271,7 +271,7 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         (esd) esd/$ git push origin main 
 
 
-The final project structure looks as follows:
+1. The final project structure looks as follows:
 
         esd
         ├── .venv
