@@ -144,6 +144,13 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         [tool.ruff.pyupgrade]
         # Placeholder for future configuration.
 
+        [tool.pytest.ini_options]
+        minversion = "6.0"
+        addopts = "-ra -q"
+        testpaths = [
+                "tests",
+        ]
+
 
 1. Create a `.pre-commit-config.yaml` to configure `pre-commit`. Running `pre-commit` before each git commit ensures code quality and consistency across the project.
 
@@ -220,9 +227,9 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         }
 
 
-1. Create project structure. I add `athlete.py` and `test_athlete.py` files as placeholders in the `esd` and `tests` directories respectively.
+1. Create project structure. I add `__init__.py` files in the `esd` and `tests` directories to define them as packages.
 
-        (esd) esd/$  mkdir esd tests && touch esd/athlete.py tests/test_athlete.py
+        (esd) esd/$  mkdir esd tests && touch esd/__init__.py tests/__init__.py
         
         # Project tree after adding esd and tests directories
 
@@ -231,9 +238,9 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         ├── .vscode
         │   └──settings.json 
         ├── esd
-        │   └──athlete.py
+        │   └──__init__.py
         ├── tests
-        │   └──test_athlete.py
+        │   └──__init__.py
         ├── .editorconfig
         ├── .gitignore
         ├── .pre-commit-config.yaml
@@ -278,9 +285,9 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         ├── .vscode
         │   └──settings.json 
         ├── esd
-        │   └──athlete.py
+        │   └──__init__.py
         ├── tests
-        │   └──test_athlete.py
+        │   └──__init__.py
         ├── .editorconfig
         ├── .gitignore
         ├── .pre-commit-config.yaml
