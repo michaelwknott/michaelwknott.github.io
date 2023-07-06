@@ -3,7 +3,7 @@ Date: 2023-06-30 14:30
 Category: Python
 Tags: TIL, Python, modulo
 Authors: Michael Knott
-Summary: Calculating the remainder using the Python modulo Operator with a negative operand
+Summary: Calculating the Remainder using the Python modulo Operator with a Negative Operand
 Status: Published
 
 ## Using the Modulo Operator to Find the Correct Index in a Circular List
