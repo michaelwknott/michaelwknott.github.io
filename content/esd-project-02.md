@@ -66,13 +66,11 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
 
         [tool.mypy]
         python_version = 3.11
-        warn_unused_configs = true
-        warn_return_any = true
-        disallow_untyped_defs = true
-        warn_unused_ignores = true
-        warn_redundant_casts = true
-        show_error_context = true
+        strict = true
         pretty = true
+
+        [[tool.mypy.overrides]]
+        directories = "tests"  # Allow untyped tests.
 
         [tool.black]
         line-length = 88
@@ -93,7 +91,7 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         "PL"     # pylint
         ]
 
-        ignore = []
+        ignore = ["D100", "D104"]
 
         # Allow autofix for all enabled rules (when `--fix`) is provided.
         fixable = ["ALL"]
@@ -134,18 +132,14 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
 
         [tool.ruff.extend-per-file-ignores]
         "test_*.py" = [
-        "D100",  # Missing docstring in public module
         "D101",  # Missing docstring in public class
         "D102",  # Missing docstring in public method
         "D103",  # Missing docstring in public function
-        "D104",  # Missing docstring in public package
         ]
         "conftest.py" = [
-        "D100",  # Missing docstring in public module
         "D101",  # Missing docstring in public class
         "D102",  # Missing docstring in public method
         "D103",  # Missing docstring in public function
-        "D104",  # Missing docstring in public package
         ]
 
         [tool.ruff.mccabe]
