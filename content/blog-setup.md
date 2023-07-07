@@ -23,7 +23,7 @@ Within my projects directory, I created a new directory called blog:
 
 `cd blog`
 
-I initialised the directory as a git repositiory, created a Python virtual environment and added the the virtual environment to a .gitignore file:
+I initialised the directory as a git repository, created a Python virtual environment and added the the virtual environment to a .gitignore file:
 
 `git init`
 
@@ -64,7 +64,7 @@ With pip-tools I add the directly required packages to a requirements.in file:
 
 `echo ghp-import>=2.1.0 >> requirements.in`
 
-At the time of writing 4.8.0 was the latest version of Pelican. As I am using markdown to write my blog articles I've followed the dcoumentation guidance and installed markdown with Pelican. ghp-import is used to copy the output directory onto the main branch, which GitHub Pages uses to serve the blog site.
+At the time of writing 4.8.0 was the latest version of Pelican. As I am using markdown to write my blog articles I've followed the documentation guidance and installed markdown with Pelican. ghp-import is used to copy the output directory onto the main branch, which GitHub Pages uses to serve the blog site.
 
 Next I ran the following command:
 
@@ -220,7 +220,7 @@ With the repo cloned, I navigated back to my blog directory and installed the pe
 
 `pelican-themes --install /home/mwk/projects/pelican-themes/pelican-clean-blog --verbose`
 
-pelican-themes is the command line tool for managing themes. The documentation is available [here](https://docs.getpelican.com/en/stable/pelican-themes.html). You use the --install (-i) command to install themes. It takes the path (/home/mwk/projects/pelican-themes/pelican-clean-blog) to the theme as an arguement.
+pelican-themes is the command line tool for managing themes. The documentation is available [here](https://docs.getpelican.com/en/stable/pelican-themes.html). You use the --install (-i) command to install themes. It takes the path (/home/mwk/projects/pelican-themes/pelican-clean-blog) to the theme as an argument.
 
 I ran the following command to get the path to the pelican-clean-blog theme:
 
@@ -234,7 +234,7 @@ I add the path to the THEME variable in pelicanconf.py file:
 
 `THEME = "/home/mwk/projects/blog/.venv/lib/python3.11/site-packages/pelican/themes/pelican-clean-blog"`
 
-To finish I added all changes to version control, commited the changes and pushed the content branch to GitHub. Finally, I rebuilt the site and pushed the main branch to GitHub using the following commands:
+To finish I added all changes to version control, committed the changes and pushed the content branch to GitHub. Finally, I rebuilt the site and pushed the main branch to GitHub using the following commands:
 
 `pelican content -o output -s publishconf.py`
 

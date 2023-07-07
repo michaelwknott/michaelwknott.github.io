@@ -9,7 +9,7 @@ Status: Published
 ## Using the Modulo Operator to Find the Correct Index in a Circular List
 
 
-I've been using a fixed length Python list as the underlying storage for my own implentation of a Deque. I'm using the list in a circular fashion so that elements can wrap around the end of the list. This ensures time efficiency when adding elements to the front of the Deque (no need to shift each current element one place to the right) and space efficiency after adding and deleting multiple elements (avoiding the situation where there are a small number of elements in a list with a large capacity).
+I've been using a fixed length Python list as the underlying storage for my own implementation of a Deque. I'm using the list in a circular fashion so that elements can wrap around the end of the list. This ensures time efficiency when adding elements to the front of the Deque (no need to shift each current element one place to the right) and space efficiency after adding and deleting multiple elements (avoiding the situation where there are a small number of elements in a list with a large capacity).
 
 For ease of example, I've simplified the code to the following (see end of article for full ArrayDeque implementation):
 
@@ -111,7 +111,7 @@ However, Python's modulo implementation means `next_available_front = -1 % 10` e
 
 ## Python Modulo Implementation
 
-For future reference, the Python modulo implmentation uses the following expression to calculate the remainder:
+For future reference, the Python modulo implementation uses the following expression to calculate the remainder:
 
 ```
 remainder = dividend % divisor
@@ -125,7 +125,7 @@ With this new understanding I was able to correct my implementation of the metho
 
 ### A quick note on floor() function behaviour
 
-+ When passed a postive float, floor() moves towards zero. For example, `floor(2.66)` returns 2. 
++ When passed a positive float, floor() moves towards zero. For example, `floor(2.66)` returns 2. 
 + When passed a negative float, floor() moves away from zero. For example, `floor(-2.66)` returns -3.
 
 ## ArrayDeque Implementation

@@ -20,7 +20,7 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         (esd) esd/$ python -m pip install -U pip setuptools wheel
 
 
-1. Initiate a git repository in the project directory for version control and add a `.gitignore` file. Add the `.venv` directory to the `.gitignore` file to avoid commiting the virtual environment to version control.
+1. Initiate a git repository in the project directory for version control and add a `.gitignore` file. Add the `.venv` directory to the `.gitignore` file to avoid committing the virtual environment to version control.
 
         (esd) esd/$ git init
 
