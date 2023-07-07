@@ -79,10 +79,20 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         target-version = ['py311']
 
         [tool.ruff]
-        # Enable pycodestyle (`E`), Pyflakes (`F`), pycodestyle warnings (`W`),
-        # McCabe complexity (`C901`), pep8-naming (`N`), pydocstyle (`D`),
-        # pyupgrade (`UP`) and pylint (`PL`).
-        select = ["E", "F", "W", "C901", "N", "D", "UP", "PL"]
+        # Assume Python 3.11.
+        target-version = "py311"
+
+        select = [
+        "E",     # pycodestyle
+        "F",     # Pyflakes
+        "W",     # pycodestyle warnings
+        "C901",  # McCabe complexity
+        "N",     # pep8-naming
+        "D",     # pydocstyle
+        "UP",    # pyupgrade
+        "PL"     # pylint
+        ]
+
         ignore = []
 
         # Allow autofix for all enabled rules (when `--fix`) is provided.
@@ -91,28 +101,29 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
 
         # Exclude a variety of commonly ignored directories.
         exclude = [
-            ".bzr",
-            ".direnv",
-            ".eggs",
-            ".git",
-            ".git-rewrite",
-            ".hg",
-            ".mypy_cache",
-            ".nox",
-            ".pants.d",
-            ".pytype",
-            ".ruff_cache",
-            ".svn",
-            ".tox",
-            ".venv",
-            "__pypackages__",
-            "_build",
-            "buck-out",
-            "build",
-            "dist",
-            "node_modules",
-            "venv",
+        ".bzr",
+        ".direnv",
+        ".eggs",
+        ".git",
+        ".git-rewrite",
+        ".hg",
+        ".mypy_cache",
+        ".nox",
+        ".pants.d",
+        ".pytype",
+        ".ruff_cache",
+        ".svn",
+        ".tox",
+        ".venv",
+        "__pypackages__",
+        "_build",
+        "buck-out",
+        "build",
+        "dist",
+        "node_modules",
+        "venv",
         ]
+
         per-file-ignores = {}
 
         # Same as Black.
@@ -121,36 +132,45 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         # Allow unused variables when underscore-prefixed.
         dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-        # Assume Python 3.11.
-        target-version = "py311"
-
-        [tool.ruff.isort]
-        # Placeholder for future configuration.
+        [tool.ruff.extend-per-file-ignores]
+        "test_*.py" = [
+        "D100",  # Missing docstring in public module
+        "D101",  # Missing docstring in public class
+        "D102",  # Missing docstring in public method
+        "D103",  # Missing docstring in public function
+        "D104",  # Missing docstring in public package
+        ]
+        "conftest.py" = [
+        "D100",  # Missing docstring in public module
+        "D101",  # Missing docstring in public class
+        "D102",  # Missing docstring in public method
+        "D103",  # Missing docstring in public function
+        "D104",  # Missing docstring in public package
+        ]
 
         [tool.ruff.mccabe]
         # Flag errors (`C901`) whenever the complexity level exceeds 10.
         max-complexity = 10
 
-        [tool.ruff.pep8-naming]
-        # Placeholder for future configuration.
-
         [tool.ruff.pydocstyle]
         # Use Google-style docstrings.
         convention = "google"
-
-        [tool.ruff.pylint]
-        # Placeholder for future configuration.
-
-        [tool.ruff.pyupgrade]
-        # Placeholder for future configuration.
 
         [tool.pytest.ini_options]
         minversion = "6.0"
         addopts = "-ra -q"
         testpaths = [
-                "tests",
+        "tests",
         ]
 
+        # Placeholders for future configuration if required.
+        [tool.ruff.isort]
+
+        [tool.ruff.pep8-naming]
+
+        [tool.ruff.pylint]
+
+        [tool.ruff.pyupgrade]
 
 1. Create a `.pre-commit-config.yaml` to configure `pre-commit`. Running `pre-commit` before each git commit ensures code quality and consistency across the project.
 

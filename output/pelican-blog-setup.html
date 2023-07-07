@@ -124,7 +124,7 @@
 <p>Within my projects directory, I created a new directory called blog:</p>
 <p><code>mkdir blog</code></p>
 <p><code>cd blog</code></p>
-<p>I initialised the directory as a git repositiory, created a Python virtual environment and added the the virtual environment to a .gitignore file:</p>
+<p>I initialised the directory as a git repository, created a Python virtual environment and added the the virtual environment to a .gitignore file:</p>
 <p><code>git init</code></p>
 <p><code>python -m venv .venv --prompt .</code></p>
 <p><code>echo .venv &gt;&gt; .gitignore</code></p>
@@ -144,7 +144,7 @@
 <p>With pip-tools I add the directly required packages to a requirements.in file:</p>
 <p><code>echo "pelican[markdown]"&gt;=4.8.0 &gt;&gt; requirements.in</code>        </p>
 <p><code>echo ghp-import&gt;=2.1.0 &gt;&gt; requirements.in</code></p>
-<p>At the time of writing 4.8.0 was the latest version of Pelican. As I am using markdown to write my blog articles I've followed the dcoumentation guidance and installed markdown with Pelican. ghp-import is used to copy the output directory onto the main branch, which GitHub Pages uses to serve the blog site.</p>
+<p>At the time of writing 4.8.0 was the latest version of Pelican. As I am using markdown to write my blog articles I've followed the documentation guidance and installed markdown with Pelican. ghp-import is used to copy the output directory onto the main branch, which GitHub Pages uses to serve the blog site.</p>
 <p>Next I ran the following command:</p>
 <p><code>pip-compile requirements.in</code></p>
 <p>This created a requirements.txt file with a list of all installed packages and whether they are installed as a direct or transitive dependency.
@@ -248,14 +248,14 @@ With the requirement.txt file created, I ran the following command to install th
 <p><code>git clone git@github.com:gilsondev/pelican-clean-blog.git</code></p>
 <p>With the repo cloned, I navigated back to my blog directory and installed the pelican theme:</p>
 <p><code>pelican-themes --install /home/mwk/projects/pelican-themes/pelican-clean-blog --verbose</code></p>
-<p>pelican-themes is the command line tool for managing themes. The documentation is available <a href="https://docs.getpelican.com/en/stable/pelican-themes.html">here</a>. You use the --install (-i) command to install themes. It takes the path (/home/mwk/projects/pelican-themes/pelican-clean-blog) to the theme as an arguement.</p>
+<p>pelican-themes is the command line tool for managing themes. The documentation is available <a href="https://docs.getpelican.com/en/stable/pelican-themes.html">here</a>. You use the --install (-i) command to install themes. It takes the path (/home/mwk/projects/pelican-themes/pelican-clean-blog) to the theme as an argument.</p>
 <p>I ran the following command to get the path to the pelican-clean-blog theme:</p>
 <p><code>pelican-themes --list --verbose</code></p>
 <p>This returned a list of paths to all the currently installed themes:</p>
 <p><code>/home/mwk/projects/blog/.venv/lib/python3.11/site-packages/pelican/themes/pelican-clean-blog</code></p>
 <p>I add the path to the THEME variable in pelicanconf.py file:</p>
 <p><code>THEME = "/home/mwk/projects/blog/.venv/lib/python3.11/site-packages/pelican/themes/pelican-clean-blog"</code></p>
-<p>To finish I added all changes to version control, commited the changes and pushed the content branch to GitHub. Finally, I rebuilt the site and pushed the main branch to GitHub using the following commands:</p>
+<p>To finish I added all changes to version control, committed the changes and pushed the content branch to GitHub. Finally, I rebuilt the site and pushed the main branch to GitHub using the following commands:</p>
 <p><code>pelican content -o output -s publishconf.py</code></p>
 <p><code>ghp-import -m "Generate Pelican site" --no-jekyll -b main output</code></p>
 <p><code>git push origin main</code></p>

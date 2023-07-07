@@ -210,7 +210,7 @@ ALLOWED_HOSTS = config(&amp;quot;ALLOWED_HOSTS&amp;quot;, cast=Csv())
 &lt;p&gt;Within my projects directory, I created a new directory called blog:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;mkdir blog&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;cd blog&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;I initialised the directory as a git repositiory, created a Python virtual environment and added the the virtual environment to a .gitignore file:&lt;/p&gt;
+&lt;p&gt;I initialised the directory as a git repository, created a Python virtual environment and added the the virtual environment to a .gitignore file:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;git init&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;python -m venv .venv --prompt .&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;echo .venv &amp;gt;&amp;gt; .gitignore&lt;/code&gt;&lt;/p&gt;
@@ -230,7 +230,7 @@ ALLOWED_HOSTS = config(&amp;quot;ALLOWED_HOSTS&amp;quot;, cast=Csv())
 &lt;p&gt;With pip-tools I add the directly required packages to a requirements.in file:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;echo "pelican[markdown]"&amp;gt;=4.8.0 &amp;gt;&amp;gt; requirements.in&lt;/code&gt;        &lt;/p&gt;
 &lt;p&gt;&lt;code&gt;echo ghp-import&amp;gt;=2.1.0 &amp;gt;&amp;gt; requirements.in&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;At the time of writing 4.8.0 was the latest version of Pelican. As I am using markdown to write my blog articles I've followed the dcoumentation guidance and installed markdown with Pelican. ghp-import is used to copy the output directory onto the main branch, which GitHub Pages uses to serve the blog site.&lt;/p&gt;
+&lt;p&gt;At the time of writing 4.8.0 was the latest version of Pelican. As I am using markdown to write my blog articles I've followed the documentation guidance and installed markdown with Pelican. ghp-import is used to copy the output directory onto the main branch, which GitHub Pages uses to serve the blog site.&lt;/p&gt;
 &lt;p&gt;Next I ran the following command:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;pip-compile requirements.in&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;This created a requirements.txt file with a list of all installed packages and whether they are installed as a direct or transitive dependency.
@@ -334,14 +334,14 @@ With the requirement.txt file created, I ran the following command to install th
 &lt;p&gt;&lt;code&gt;git clone git@github.com:gilsondev/pelican-clean-blog.git&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;With the repo cloned, I navigated back to my blog directory and installed the pelican theme:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;pelican-themes --install /home/mwk/projects/pelican-themes/pelican-clean-blog --verbose&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;pelican-themes is the command line tool for managing themes. The documentation is available &lt;a href="https://docs.getpelican.com/en/stable/pelican-themes.html"&gt;here&lt;/a&gt;. You use the --install (-i) command to install themes. It takes the path (/home/mwk/projects/pelican-themes/pelican-clean-blog) to the theme as an arguement.&lt;/p&gt;
+&lt;p&gt;pelican-themes is the command line tool for managing themes. The documentation is available &lt;a href="https://docs.getpelican.com/en/stable/pelican-themes.html"&gt;here&lt;/a&gt;. You use the --install (-i) command to install themes. It takes the path (/home/mwk/projects/pelican-themes/pelican-clean-blog) to the theme as an argument.&lt;/p&gt;
 &lt;p&gt;I ran the following command to get the path to the pelican-clean-blog theme:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;pelican-themes --list --verbose&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;This returned a list of paths to all the currently installed themes:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;/home/mwk/projects/blog/.venv/lib/python3.11/site-packages/pelican/themes/pelican-clean-blog&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;I add the path to the THEME variable in pelicanconf.py file:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;THEME = "/home/mwk/projects/blog/.venv/lib/python3.11/site-packages/pelican/themes/pelican-clean-blog"&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;To finish I added all changes to version control, commited the changes and pushed the content branch to GitHub. Finally, I rebuilt the site and pushed the main branch to GitHub using the following commands:&lt;/p&gt;
+&lt;p&gt;To finish I added all changes to version control, committed the changes and pushed the content branch to GitHub. Finally, I rebuilt the site and pushed the main branch to GitHub using the following commands:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;pelican content -o output -s publishconf.py&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;ghp-import -m "Generate Pelican site" --no-jekyll -b main output&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;git push origin main&lt;/code&gt;&lt;/p&gt;
