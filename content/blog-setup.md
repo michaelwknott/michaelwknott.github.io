@@ -249,7 +249,3 @@ I found the following links useful to set-up the blog:
 
 + A useful [blog](https://opensource.com/article/19/5/run-your-blog-github-pages-python) by Erik O'Shaughnessy on how to set-up Pelican with GitHub Pages.
 + How to set-up [custom themes](https://geekyshacklebolt.wordpress.com/2020/08/18/how-to-use-a-custom-pelican-blog-theme/) for Pelican by Shiva Saxena.
-
-
-
-

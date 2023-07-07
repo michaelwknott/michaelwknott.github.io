@@ -10,7 +10,7 @@ Status: Published
 
 ## GitHub Projects
 
-I like using GitHub Projects to plan and guide the development process. I originally came across GitHub Projects during my time in the PyBites PDM programme and have been using it for projects ever since (Thank you to Robin Beer and Bob Beldebos for putting the training video together). I can't link the training video but here's a [link](https://www.robin-beer.de/github-projects.html#github-projects) to an article by Robin on the topic. GitHub Projects has had an update since the article was published but it still gives a good overview of the functionality.
+I like using GitHub Projects to plan and guide the development process. I originally came across GitHub Projects during my time in the PyBites PDM programme and have been using it for projects ever since (Thank you to Robin Beer and Bob Belderbos for putting the training video together). I can't link the training video but here's a [link](https://www.robin-beer.de/github-projects.html#github-projects) to an article by Robin on the topic. GitHub Projects has had an update since the article was published but it still gives a good overview of the functionality.
 
 Using GitHub Projects offers me the advantage of gaining a visual overview of project status and significantly reduces the mental burden by having all project planning mapped out in a single space. At a glance I can quickly see what issues are prioritised and the progress I've made. I find it extremely motivating to see issues move into the 'Done' column.
 
