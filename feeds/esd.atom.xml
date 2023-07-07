@@ -85,13 +85,11 @@
 
 &lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mypy&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;python_version&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;3.11&lt;/span&gt;
-&lt;span class="n"&gt;warn_unused_configs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;warn_return_any&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;disallow_untyped_defs&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;warn_unused_ignores&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;warn_redundant_casts&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
-&lt;span class="n"&gt;show_error_context&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
+&lt;span class="n"&gt;strict&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
 &lt;span class="n"&gt;pretty&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="no"&gt;true&lt;/span&gt;
+
+&lt;span class="err"&gt;[[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mypy&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;overrides&lt;/span&gt;&lt;span class="err"&gt;]]&lt;/span&gt;
+&lt;span class="n"&gt;directories&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;tests&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Allow untyped tests.&lt;/span&gt;
 
 &lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;black&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
 &lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;88&lt;/span&gt;
@@ -112,7 +110,7 @@
 &lt;span class="s2"&gt;&amp;quot;PL&amp;quot;&lt;/span&gt;&lt;span class="w"&gt;     &lt;/span&gt;&lt;span class="c1"&gt;# pylint&lt;/span&gt;
 &lt;span class="err"&gt;]&lt;/span&gt;
 
-&lt;span class="k"&gt;ignore&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[]&lt;/span&gt;
+&lt;span class="k"&gt;ignore&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;D100&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;D104&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
 
 &lt;span class="c1"&gt;# Allow autofix for all enabled rules (when `--fix`) is provided.&lt;/span&gt;
 &lt;span class="n"&gt;fixable&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;ALL&amp;quot;&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
@@ -153,18 +151,14 @@
 
 &lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;extend&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;per&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;file&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ignores&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
 &lt;span class="s2"&gt;&amp;quot;test_*.py&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;
-&lt;span class="s2"&gt;&amp;quot;D100&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public module&lt;/span&gt;
 &lt;span class="s2"&gt;&amp;quot;D101&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public class&lt;/span&gt;
 &lt;span class="s2"&gt;&amp;quot;D102&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public method&lt;/span&gt;
 &lt;span class="s2"&gt;&amp;quot;D103&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public function&lt;/span&gt;
-&lt;span class="s2"&gt;&amp;quot;D104&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public package&lt;/span&gt;
 &lt;span class="err"&gt;]&lt;/span&gt;
 &lt;span class="s2"&gt;&amp;quot;conftest.py&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;[&lt;/span&gt;
-&lt;span class="s2"&gt;&amp;quot;D100&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public module&lt;/span&gt;
 &lt;span class="s2"&gt;&amp;quot;D101&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public class&lt;/span&gt;
 &lt;span class="s2"&gt;&amp;quot;D102&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public method&lt;/span&gt;
 &lt;span class="s2"&gt;&amp;quot;D103&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public function&lt;/span&gt;
-&lt;span class="s2"&gt;&amp;quot;D104&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c1"&gt;# Missing docstring in public package&lt;/span&gt;
 &lt;span class="err"&gt;]&lt;/span&gt;
 
 &lt;span class="err"&gt;[&lt;/span&gt;&lt;span class="n"&gt;tool&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ruff&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mccabe&lt;/span&gt;&lt;span class="err"&gt;]&lt;/span&gt;
