@@ -18,3 +18,4 @@ This page is inspired by the 'Reading List' pattern in Apprenticeship Patterns: 
 These books have been recommended by friends, colleagues or appear regularly in bibliographies and reference lists. It will guide what I read next and will change over time as I identify gaps in my knowledge or develop new areas of interest.
 
 + Thomas, D., & Hunt, A. (2019). The Pragmatic Programmer: your journey to mastery, 20th Anniversary Edition. Addison-Wesley Professional.
++ Fowler, M., & Beck, K. (2018). Refactoring: Improving the design of existing code. Boston etc. Addison-Wesley. 
