@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 4</title>
+
+            <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Full Atom Feed" />
+            <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Categories Atom Feed" />
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="Business Logic">
+
+        <meta name="author" content="Michael Knott">
+
+        <meta name="tags" content="projects">
+        <meta name="tags" content="esd">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Michael Knott">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/michael-knott.html">
+	<meta property="og:url" content="/drafts/monitoring-and-prescribing-individualised-conditioning-sessions-part-4.html">
+	<meta property="og:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 4">
+	<meta property="article:published_time" content="2023-07-12 09:00:00+01:00">
+            <meta property="og:description" content="Business Logic">
+
+            <meta property="og:image" content="/static/cool-background-black.png">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@michaelwknott">
+        <meta name="twitter:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 4">
+
+            <meta name="twitter:image" content="/static/cool-background-black.png">
+
+            <meta name="twitter:description" content="Business Logic">
+</head>
+
+<body class="article-monitoring-and-prescribing-individualised-conditioning-sessions-part-4">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Michael Knott</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/about.html">About</a></li>
+                            <li><a href="/pages/reading-list.html">Reading List</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/static/cool-background-black.png')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Monitoring and Prescribing Individualised Conditioning Sessions: Part 4</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/michael-knott.html">Michael Knott</a>
+                             on Wed 12 July 2023
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>Calculating Maximum Aerobic Speed, Anaerobic Speed Reserve and Maximum Sprinting Speed</h2>
+<p>I decided to start the project by implementing the logic for calculating Maximum Aerobic Speed (MAS), Anaerobic Speed Reserve (ASR) and Maximum Sprinting Speed (MSS). The following formulas are used to calculate each metric:</p>
+<p>MAS = time trial distance (m) / time trial time (s)
+MSS = sprint distance (m) / sprint time (s)
+ASR = MAS (m/s) - ASR (m/s)</p>
+<p>Currently, conditioning workouts and athlete fitness data is saved in Excel spreadsheets and is available as csv files. However, for this part of the project I assumed this data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic to required to calculate MAS, ASR and MSS.</p>
+<p>An athlete's fitness profile has the following fields:
++ name
++ sport
++ one km time (the time in minutes and seconds to complete the one km time trial)
++ two km time (the time in minutes and seconds to complete the two km time trial)
++ three km time (the time in minutes and seconds to complete the three km time trial)
++ 5m flying sprint time (the time seconds to complete the 5m flying sprint)</p>
+<p>A conditioning workout has the following fields:
++ workout name (the workout type including work and rest interval durations)
++ work interval time (the work interval duration)
++ work interval percentage Maximum Aerobic Speed (the percentage MAS for the work interval)
++ work interval percentage Anaerobic Speed Reserve (the percentage ASR for the work interval)
++ rest interval time (the rest interval duration)
++ rest interval percentage MAS (the percentage MAS for the rest interval)
++ rest interval percentage ASR the percentage ASR for the rest interval</p>
+<p>For example,
+<strong>Athlete Fitness Profile</strong>
+        name = "John Smith
+        one_km_time = "02:59"
+        two_km_time = "07:01"
+        three_km_time = "10:29"
+        5m_flying_sprint_time = 0.6</p>
+<p><strong>Workout</strong>
+        workout_name = "Passive Long Intervals - Normal (3 mins work / 3 mins rest)
+        work_interval_time = 3
+        work_interval_percentage_mas = 100
+        work_interval_percentage_asr = 0
+        rest_interval_time = 3
+        rest_interval_percentage_mas = 0
+        rest_interval_percentage_asr = 0</p>
+<h2>Logic</h2>
+<p>With the assumption that I had queried the database and I had the required athlete and workout records in memory, I needed to create a Python object for each record to implement the domain logic.</p>
+<p>I used a dataclass object for each athlete's fitness profile and created the ability to dynamically calculate MAS, ASR and MSS using properties.</p>
+<div class="highlight"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">athlete</span><span class="p">.</span><span class="n">py</span>
+
+<span class="nv">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nl">FitnessProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="ss">&quot;&quot;&quot;Represents an athlete&#39;s fitness profile.</span>
+
+<span class="ss">    Attributes:</span>
+<span class="ss">        name: A str of the athlete&#39;s name.</span>
+<span class="ss">        time_trial_distance: An int of the time trial distance in meters.</span>
+<span class="ss">        sprint_distance: An int of the sprint distance in meters.</span>
+<span class="ss">        time_trial_time: An int of the time taken to complete the 2km time trial.</span>
+<span class="ss">        sprint_time: A float of the time taken to complete the 5m sprint.</span>
+
+<span class="ss">    Properties:</span>
+<span class="ss">        max_aerobic_speed: A float representing MAS in meters per second.</span>
+<span class="ss">        max_sprinting_speed: A float representing MSS in meters per second.</span>
+<span class="ss">        anaerobic_speed_reserve: A float representing ASR in meters per second.</span>
+<span class="ss">    &quot;&quot;&quot;</span>
+
+<span class="w">    </span><span class="nl">name</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span>
+<span class="w">    </span><span class="nl">time_trial_distance</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span>
+<span class="w">    </span><span class="nl">sprint_distance</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span>
+<span class="w">    </span><span class="nl">time_trial_time</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span>
+<span class="w">    </span><span class="nl">sprint_time</span><span class="p">:</span><span class="w"> </span><span class="nc">float</span>
+
+<span class="w">    </span><span class="nv">@property</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">max_aerobic_speed</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">float</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;Maximal Aerobic Speed in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">time_trial_time</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">time_trial_distance</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">time_trial_time</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">        </span><span class="k">else</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="w">    </span><span class="nv">@property</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">max_sprinting_speed</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">float</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;Maximum Sprinting Speed in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">sprint_time</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sprint_distance</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">sprint_time</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">        </span><span class="k">else</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="w">    </span><span class="nv">@property</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">anaerobic_speed_reserve</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">float</span><span class="err">:</span>
+<span class="w">        </span><span class="ss">&quot;&quot;&quot;Anaerobic Speed Reserve in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">max_aerobic_speed</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">max_sprinting_speed</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="k">else</span><span class="err">:</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">max_sprinting_speed</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">max_aerobic_speed</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+
+<p>I also used a dataclass to represent a workout and again used a property to dynamically calculate the workout name:</p>
+<div class="highlight"><pre><span></span><code><span class="err">@</span><span class="n">dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="n">Workout</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Workout type and it&#39;s associated training variables.&quot;&quot;&quot;</span>
+
+<span class="w">    </span><span class="n">workout_type</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span>
+<span class="w">    </span><span class="n">work_interval_time</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">int</span>
+<span class="w">    </span><span class="n">work_interval_percentage_mas</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span>
+<span class="w">    </span><span class="n">work_interval_percentage_asr</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">None</span>
+<span class="w">    </span><span class="n">rest_interval_time</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">int</span>
+<span class="w">    </span><span class="n">rest_interval_percentage_mas</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span>
+<span class="w">    </span><span class="n">rest_interval_percentage_asr</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">None</span>
+
+<span class="w">    </span><span class="err">@</span><span class="n">property</span>
+<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Name and description of workout.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A string containing workout name and description.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">            </span><span class="n">f</span><span class="s2">&quot;{self.workout_type}: &quot;</span>
+<span class="w">            </span><span class="n">f</span><span class="s2">&quot;{self.work_interval_time} mins work / &quot;</span>
+<span class="w">            </span><span class="n">f</span><span class="s2">&quot;{self.rest_interval_time} mins rest&quot;</span>
+<span class="w">        </span><span class="p">)</span>
+</code></pre></div>
+
+<h2>Challenges</h2>
+<p>Whilst writing this blog post I've realised that I haven't converted 1km, 2km and 3km time trial times from a string to an integer. As I'm assuming data is in memory I've not needed to do this and I've created tests that are passed integers for the time trial times.</p>
+<p>One thing I haven't implemented is how to convert a number of database records (e.g. a SQLAlchemy Result object) into individual <code>FitnessProfile</code> instances.</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/projects.html">projects</a>, <a href="/tag/esd.html">esd</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://twitter.com/michaelwknott">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/michaelwknott">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/michael-knott-a8005916/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>. <br />        &copy;  Michael Knott
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
