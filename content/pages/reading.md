@@ -19,3 +19,10 @@ These books have been recommended by friends, colleagues or appear regularly in 
 
 + Thomas, D., & Hunt, A. (2019). The Pragmatic Programmer: your journey to mastery, 20th Anniversary Edition. Addison-Wesley Professional.
 + Fowler, M., & Beck, K. (2018). Refactoring: Improving the design of existing code. Boston etc. Addison-Wesley. 
+
+### Books I've Read
+
+A record of the books I've read.
+
+#### 2023
++ Sielski, L., M. (2022). Should you Become a Software Developer? A book you should read before you decide to learn to code.

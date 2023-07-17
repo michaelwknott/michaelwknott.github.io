@@ -28,7 +28,7 @@ SOCIAL = (('twitter', 'https://twitter.com/michaelwknott'),
 DEFAULT_PAGINATION = 10
 
 THEME = "/home/mwk/projects/blog/.venv/lib/python3.11/site-packages/pelican/themes/pelican-clean-blog"
-# SITESUBTITLE = u'Yet Another Python Blog'
+SITESUBTITLE = u'Python Developer'
 
 
 # Static files
