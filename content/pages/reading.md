@@ -22,7 +22,7 @@ These books have been recommended by friends, colleagues or appear regularly in 
 
 ### Books I've Read
 
-A record of the books I've read.
+A record of the books I've read, with the occasional link to a blog post where I've captured intriguing concepts and key takeaways.
 
 #### 2023
 + Sielski, L., M. (2022). Should you Become a Software Developer? A book you should read before you decide to learn to code.
