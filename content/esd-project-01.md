@@ -1,5 +1,6 @@
 Title: Monitoring and Prescribing Individualised Conditioning Sessions: Part 1
 Date: 2023-06-23 11:30
+Modified: 2023-07-17 10:16
 Category: ESD
 Tags: projects, esd
 Authors: Michael Knott
@@ -35,4 +36,4 @@ I plan to use a three-layered architecture for the project. The three layers con
 
 ![Three layered architecture]({static}/images/three_layered_architecture.png "Three layered architecture"){style="display: block; margin: 0 auto"}
 
-For the first version of the project I'm going to create an API for the presentation layer and utilise a relational database for the persistence layer. I'm aiming to create an interface between the business logic layer and the presentation and persistence layers to provide the ability to switch between components. For example, create a CLI for the presentation layer or utilise csv files for the persistence layer.
+For the first version of the project I'm going to create a CLI for the presentation layer and utilise csv files for the persistence layer. I'm aiming to create an interface between the business logic layer and the presentation and persistence layers to provide the ability to switch between components. For example, create a web app for the presentation layer or utilise a database for the persistence layer.
