@@ -4,7 +4,7 @@ Category: ESD
 Tags: projects, esd
 Authors: Michael Knott
 Summary: Prescribing Individualised Conditioning Sessions using MAS
-Status: Draft
+Status: published
 
 ## Prescribing Individualised Conditioning Sessions
 
