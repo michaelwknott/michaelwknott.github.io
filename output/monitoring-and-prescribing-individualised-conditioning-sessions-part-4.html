@@ -115,7 +115,8 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
     <!-- Post Content -->
     <article>
-        <h2>Prescribing Individualised Conditioning Sessions</h2>
+        <p><a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-1.html">Part 1</a> covered project rationale, <a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-2.html">Part 2</a> outlined my project set-up workflow and <a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-3.html">Part 3</a> showed my use of GitHub Projects. This post outlines my implementation of the domain logic for prescribing individualised conditioning sessions.</p>
+<h2>Prescribing Individualised Conditioning Sessions</h2>
 <p>I decided to start the project by implementing the functionality to prescribe individualised conditioning sessions based upon assessment results. This involved calculating each athletes Maximum Aerobic Speed (MAS), Anaerobic Speed Reserve (ASR) and Maximum Sprinting Speed (MSS) from their fitness assessment data and using these metrics with workout training variables to calculate target work and rest interval distances.</p>
 <h3>Assumptions</h3>
 <p>For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic to required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.</p>
