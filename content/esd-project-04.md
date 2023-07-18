@@ -239,7 +239,12 @@ def _convert_minutes_to_seconds(work_interval_time: int) -> int:
 
 ### Future Considerations
 
-I'm not completely happy with the names I've chosen for the dataclass methods. I'm trying to give each method a descriptive name, however I feel they are currently too long.
+I'm not completely happy with the names I've chosen for the dataclass methods. I'm trying to give each method a descriptive name, however I feel they are currently too long. This could also be applied to variable names in the `calculate_rest_interval_distances`
+and `calculate_work_interval_distances`.
+
+The `calculate_rest_interval_distances` and `calculate_work_interval_distances` functions accept a `Workout` and `FitnessProfile` object as arguments. However, they don't require all of the information within the object. I believe I should consider re-writing the functions to accept only the information they require.
+
+Similarly, the `calculate_rest_interval_distances` and `calculate_work_interval_distances` functions complete similar work and there is duplication of code. I think I could create a single function to calculate target distances and reduce duplication.
 
 I assumed that 2km time trial times are already an integer data type. This assumption spreads to the tests I've written where I pass the required data types when instantiating AthleteProfile and Workout instances. In the future I will need to create the functionality to change the data types when coupling the logic to the persistence layer.
 
