@@ -37,7 +37,6 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
 
 1.  Constrain the development dependencies with the main project dependencies to avoid dependency conflicts.
 
-
         (esd) esd/$ echo -c requirements.txt >> requirements-dev.in
 
 1. Add the required development dependencies to `requirements-dev.in`.
@@ -46,7 +45,7 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
 
 1. Add the required project dependencies to `requirements.in`.
 
-        (esd) esd/$ echo -e "fastapi[all]\nSQLAlchemy" >> requirements.in
+        (esd) esd/$ echo SQLAlchemy >> requirements.in
 
 1. Compile the requirements.txt and requirements-dev.txt files. Ensure to compile the requirements.txt first as requirements-dev.in will use this as the constraint file.
 
@@ -220,7 +219,7 @@ In [part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individua
         [*.html]
         indent_size = 2
 
-1. Configure local settings for VSCode. I currently use VSCode as my text editor/IDE.
+1. Configure local settings for IDE. I currently use VSCode as my text editor/IDE.
 
         (esd) esd/$ touch .vscode/settings.json
 
