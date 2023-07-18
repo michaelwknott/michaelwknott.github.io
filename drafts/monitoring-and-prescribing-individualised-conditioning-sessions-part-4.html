@@ -49,7 +49,7 @@
             <meta property="article:author" content="/author/michael-knott.html">
 	<meta property="og:url" content="/drafts/monitoring-and-prescribing-individualised-conditioning-sessions-part-4.html">
 	<meta property="og:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 4">
-	<meta property="article:published_time" content="2023-07-12 09:00:00+01:00">
+	<meta property="article:published_time" content="2023-07-18 10:00:00+01:00">
             <meta property="og:description" content="Prescribing Individualised Conditioning Sessions using MAS">
 
             <meta property="og:image" content="/static/cool-background-black.png">
@@ -100,7 +100,7 @@
                         <h1>Monitoring and Prescribing Individualised Conditioning Sessions: Part 4</h1>
                         <span class="meta">Posted by
                                 <a href="/author/michael-knott.html">Michael Knott</a>
-                             on Wed 12 July 2023
+                             on Tue 18 July 2023
                         </span>
                         
                     </div>
@@ -119,22 +119,27 @@
 <p>I decided to start the project by implementing the functionality to prescribe individualised conditioning sessions based upon assessment results. This involved calculating each athletes Maximum Aerobic Speed (MAS), Anaerobic Speed Reserve (ASR) and Maximum Sprinting Speed (MSS) from their fitness assessment data and using these metrics with workout training variables to calculate target work and rest interval distances.</p>
 <h3>Assumptions</h3>
 <p>For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic to required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.</p>
-<p>When implemented a fitness assessment record will have the following fields:
-+ athlete name
-+ sport
-+ date
-+ time trial name
-+ time trial distance
-+ time trial time</p>
-<p>and fields for a workout record will be:
-+ workout name (the workout type including work and rest interval durations)
-+ work interval time (the work interval duration)
-+ work interval percentage Maximum Aerobic Speed (the percentage MAS for the work interval)
-+ work interval percentage Anaerobic Speed Reserve (the percentage ASR for the work interval)
-+ rest interval time (the rest interval duration)
-+ rest interval percentage MAS (the percentage MAS for the rest interval)
-+ rest interval percentage ASR the percentage ASR for the rest interval</p>
-<p>2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes:</p>
+<p>When implemented, a fitness assessment record will have the following fields:</p>
+<ul>
+<li>athlete name</li>
+<li>sport</li>
+<li>active</li>
+<li>date</li>
+<li>time trial name</li>
+<li>time trial distance</li>
+<li>time trial time</li>
+</ul>
+<p>and the fields for a workout record will be:</p>
+<ul>
+<li>workout name (the workout type including work and rest interval durations)</li>
+<li>work interval time (the work interval duration)</li>
+<li>work interval percentage Maximum Aerobic Speed (the percentage MAS for the work interval)</li>
+<li>work interval percentage Anaerobic Speed Reserve (the percentage ASR for the work interval)</li>
+<li>rest interval time (the rest interval duration)</li>
+<li>rest interval percentage MAS (the percentage MAS for the rest interval)</li>
+<li>rest interval percentage ASR the percentage ASR for the rest interval</li>
+</ul>
+<p>2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'active' fields to the Python object as these will only be required to filter queries):</p>
 <div class="highlight"><pre><span></span><code>    name = &quot;John Smith&quot;
     time_trial_distance = 2000
     time_trial_time = &quot;07:01&quot;
@@ -143,7 +148,7 @@
 </code></pre></div>
 
 <p>and a workout record mapped to a Python object will have:</p>
-<div class="highlight"><pre><span></span><code>    workout_name = &quot;Passive Long Intervals - Normal (3 mins work / 3 mins rest)
+<div class="highlight"><pre><span></span><code>    workout_name = &quot;Passive Long Intervals - Normal (3 mins work / 3 mins rest)&quot;
     work_interval_time = 3
     work_interval_percentage_mas = 100
     work_interval_percentage_asr = 0
@@ -154,19 +159,19 @@
 
 <h3>MAS, ASR and MSS Calculations</h3>
 <p>The following formulas are used to calculate each fitness metric:</p>
-<p>MAS = time trial distance (m) / time trial time (s)
-MSS = sprint distance (m) / sprint time (s)
-ASR = MAS (m/s) - ASR (m/s)</p>
+<p><em>MAS</em> = time trial distance (m) / time trial time (s)</p>
+<p><em>MSS</em> = sprint distance (m) / sprint time (s)</p>
+<p><em>ASR</em> = MSS (m/s) - ASR (m/s)</p>
 <p>As the fitness record from the persistance layer doesn't contain these fields I will need to calculate these metrics when mapping the fitness record to a Python object. </p>
 <h3>Work and Rest Interval Target Distance Calculations</h3>
-<p>To calculate work and rest interval target distances involves multiplying an athlete's MAS (m/s) by the <code>Workout</code> <code>work_interval_percentage</code> and <code>rest_interval_target_distance</code> to get the individualised target intensity for the session.</p>
-<p>individual_work_target_intensity = athlete_mas * <code>work_interval_percentage</code> 
-individual_rest_target_intensity = athlete_mas * <code>rest_interval_percentage</code></p>
+<p>Calculating work and rest interval target distances involves multiplying an athlete's MAS (m/s) by the <code>Workout</code> <code>work_interval_percentage</code> and <code>rest_interval_percentage</code> to get the individualised target intensity for the session.</p>
+<p><em>individual_work_target_intensity</em> = athlete_mas * <code>work_interval_percentage</code> 
+<em>individual_rest_target_intensity</em> = athlete_mas * <code>rest_interval_percentage</code></p>
 <p>This value is multiplied by the workout <code>work_interval_time</code> (in seconds) and <code>rest_interval_time</code> (in seconds) to get the target distances.</p>
-<p>work_interval_target_distance = individual_work_target_intensity * <code>work_interval_time</code>
-rest_interval_target_distance = individual_rest_target_intensity * <code>rest_interval_time</code></p>
+<p><em>work_interval_target_distance</em> = individual_work_target_intensity * <code>work_interval_time</code>
+<em>rest_interval_target_distance</em> = individual_rest_target_intensity * <code>rest_interval_time</code></p>
 <h3>Mapping Fitness and Workout Records to Python Objects</h3>
-<p>With the assumption that I had queried the database and I had the athlete and workout records in memory, I needed to create a Python object for each record to implement the domain logic.</p>
+<p>With the assumption that the database had been queried and I had the athlete and workout records in memory, I needed to create a Python object for each record to implement the domain logic.</p>
 <p>I used a dataclass object for each athlete's fitness profile and created the ability to dynamically calculate MAS, ASR and MSS using properties.</p>
 <div class="highlight"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">athlete</span><span class="p">.</span><span class="n">py</span>
 
@@ -248,9 +253,9 @@ rest_interval_target_distance = individual_rest_target_intensity * <code>rest_in
 </code></pre></div>
 
 <h3>Calculating Workout Target Distances for Each Athlete</h3>
-<p>With the <code>FitnessProfile</code> and <code>Workout</code> objects in place I created two functions to calculate work and rest interval distances. Each function returns a dictionary mapping the name of an athlete to the work or rest interval target distances. I believe I'll be able to pass the dictionaries as context to the jinja templates to create a downloadable sheet of each athlete's target distance/pace to be used during conditioning session set-up.</p>
+<p>With the <code>FitnessProfile</code> and <code>Workout</code> objects in place I created two functions to calculate work and rest interval distances. Each function returns a dictionary mapping the name of an athlete to the work or rest interval target distances. I believe I'll be able to pass the dictionaries as context to the jinja templates to create a downloadable sheet of each athlete's target distances to be used during conditioning session set-up.</p>
 <p>I had originally planned to also implement logic to calculate target distances using MAS and ASR, as well as provide the ability to calculate target pace as an extra option. However, implementing this logic was slowing down the project. I decided to leave this functionality for now and added <a href="https://github.com/michaelwknott/esd/issues/8">ASR calculations</a> and <a href="https://github.com/michaelwknott/esd/issues/9">pace calculations</a> issues to the ESD GitHub project for implementation at a later date.</p>
-<p>I also created a helper function to convert work and rest interval time from minutes to seconds <code>_convert_minutes_to_seconds</code>. The time in seconds is multiplied by each athlete's work and rest interval MAS to calculate the target distance:</p>
+<p>I also created <code>_convert_minutes_to_seconds</code> as a helper function to convert work and rest interval time from minutes to seconds. This was required as time (in seconds) is multiplied by each athlete's work and rest interval MAS to calculate the target distance:</p>
 <div class="highlight"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">calculate_work_interval_distances</span><span class="p">(</span>
 <span class="w">    </span><span class="nl">workout</span><span class="p">:</span><span class="w"> </span><span class="n">Workout</span><span class="p">,</span><span class="w"> </span><span class="nl">fitness_profiles</span><span class="p">:</span><span class="w"> </span><span class="n">Collection</span><span class="o">[</span><span class="n">FitnessProfile</span><span class="o">]</span>
 <span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">dict</span><span class="o">[</span><span class="n">str, float</span><span class="o">]</span><span class="err">:</span>
@@ -268,11 +273,11 @@ rest_interval_target_distance = individual_rest_target_intensity * <code>rest_in
 <span class="w">        </span><span class="n">work_interval_mas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
 <span class="w">            </span><span class="n">profile</span><span class="p">.</span><span class="n">max_aerobic_speed</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">workout</span><span class="p">.</span><span class="n">work_interval_percentage_mas</span>
 <span class="w">        </span><span class="p">)</span>
-<span class="w">        </span><span class="n">profile_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span>
+<span class="w">        </span><span class="n">work_interval_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span>
 <span class="w">            </span><span class="n">work_interval_mas</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_convert_minutes_to_seconds</span><span class="p">(</span><span class="n">workout</span><span class="p">.</span><span class="n">work_interval_time</span><span class="p">),</span>
 <span class="w">            </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">        </span><span class="p">)</span>
-<span class="w">        </span><span class="n">work_distances</span><span class="o">[</span><span class="n">profile.name</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">profile_distance</span>
+<span class="w">        </span><span class="n">work_distances</span><span class="o">[</span><span class="n">profile.name</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">work_interval_distance</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">work_distances</span>
 
 
@@ -315,8 +320,8 @@ rest_interval_target_distance = individual_rest_target_intensity * <code>rest_in
 
 <h3>Future Considerations</h3>
 <p>I'm not completely happy with the names I've chosen for the dataclass methods. I'm trying to give each method a descriptive name, however I feel they are currently too long.</p>
-<p>I assumed that 1km, 2km and 3km time trial times are already an integer data type. This assumption spreads to the tests I've written where I pass the required data types when instantiating AthleteProfile and Workout instances. In the future I will need to create the functionality to change the data types when linking the logic to the persistence layer.</p>
-<p>I'll also need to convert a number of database records (e.g. a SQLAlchemy Result object or lines in a csv file) into individual <code>FitnessProfile</code> instances. I believe this should be straight forward as Result objects and files are iterables that can be used in a for loop.</p>
+<p>I assumed that 2km time trial times are already an integer data type. This assumption spreads to the tests I've written where I pass the required data types when instantiating AthleteProfile and Workout instances. In the future I will need to create the functionality to change the data types when coupling the logic to the persistence layer.</p>
+<p>I'll also need to convert a number of database records (e.g. lines in a csv file or a SQLAlchemy Result object) into individual <code>FitnessProfile</code> instances. I believe this should be straight forward as Result objects and files are iterables that can be used in a for loop.</p>
     </article>
 
         <div class="tags">
