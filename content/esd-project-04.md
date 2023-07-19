@@ -14,13 +14,13 @@ I decided to start the project by implementing the functionality to prescribe in
 
 ### Assumptions
 
-For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic to required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.
+For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.
 
 When implemented, a fitness assessment record will have the following fields:
 
 + athlete name
 + sport
-+ active
++ status
 + date
 + time trial name
 + time trial distance
@@ -36,7 +36,7 @@ and the fields for a workout record will be:
 + rest interval percentage MAS (the percentage MAS for the rest interval)
 + rest interval percentage ASR the percentage ASR for the rest interval
 
-2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'active' fields to the Python object as these will only be required to filter queries):
+2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'status' fields to the Python object as these will only be required to filter queries):
 
         name = "John Smith"
         time_trial_distance = 2000
@@ -70,7 +70,8 @@ As the fitness record from the persistance layer doesn't contain these fields I 
 
 Calculating work and rest interval target distances involves multiplying an athlete's MAS (m/s) by the `Workout` `work_interval_percentage` and `rest_interval_percentage` to get the individualised target intensity for the session.
 
-*individual_work_target_intensity* = athlete_mas * `work_interval_percentage` 
+*individual_work_target_intensity* = athlete_mas * `work_interval_percentage`
+
 *individual_rest_target_intensity* = athlete_mas * `rest_interval_percentage`
 
 This value is multiplied by the workout `work_interval_time` (in seconds) and `rest_interval_time` (in seconds) to get the target distances.
