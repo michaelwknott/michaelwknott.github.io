@@ -119,12 +119,12 @@
 <h2>Prescribing Individualised Conditioning Sessions</h2>
 <p>I decided to start the project by implementing the functionality to prescribe individualised conditioning sessions based upon assessment results. This involved calculating each athletes Maximum Aerobic Speed (MAS), Anaerobic Speed Reserve (ASR) and Maximum Sprinting Speed (MSS) from their fitness assessment data and using these metrics with workout training variables to calculate target work and rest interval distances.</p>
 <h3>Assumptions</h3>
-<p>For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic to required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.</p>
+<p>For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.</p>
 <p>When implemented, a fitness assessment record will have the following fields:</p>
 <ul>
 <li>athlete name</li>
 <li>sport</li>
-<li>active</li>
+<li>status</li>
 <li>date</li>
 <li>time trial name</li>
 <li>time trial distance</li>
@@ -140,7 +140,7 @@
 <li>rest interval percentage MAS (the percentage MAS for the rest interval)</li>
 <li>rest interval percentage ASR the percentage ASR for the rest interval</li>
 </ul>
-<p>2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'active' fields to the Python object as these will only be required to filter queries):</p>
+<p>2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'status' fields to the Python object as these will only be required to filter queries):</p>
 <div class="highlight"><pre><span></span><code>    name = &quot;John Smith&quot;
     time_trial_distance = 2000
     time_trial_time = &quot;07:01&quot;
@@ -166,8 +166,8 @@
 <p>As the fitness record from the persistance layer doesn't contain these fields I will need to calculate these metrics when mapping the fitness record to a Python object. </p>
 <h3>Work and Rest Interval Target Distance Calculations</h3>
 <p>Calculating work and rest interval target distances involves multiplying an athlete's MAS (m/s) by the <code>Workout</code> <code>work_interval_percentage</code> and <code>rest_interval_percentage</code> to get the individualised target intensity for the session.</p>
-<p><em>individual_work_target_intensity</em> = athlete_mas * <code>work_interval_percentage</code> 
-<em>individual_rest_target_intensity</em> = athlete_mas * <code>rest_interval_percentage</code></p>
+<p><em>individual_work_target_intensity</em> = athlete_mas * <code>work_interval_percentage</code></p>
+<p><em>individual_rest_target_intensity</em> = athlete_mas * <code>rest_interval_percentage</code></p>
 <p>This value is multiplied by the workout <code>work_interval_time</code> (in seconds) and <code>rest_interval_time</code> (in seconds) to get the target distances.</p>
 <p><em>work_interval_target_distance</em> = individual_work_target_intensity * <code>work_interval_time</code>
 <em>rest_interval_target_distance</em> = individual_rest_target_intensity * <code>rest_interval_time</code></p>

@@ -3,12 +3,12 @@
 &lt;h2&gt;Prescribing Individualised Conditioning Sessions&lt;/h2&gt;
 &lt;p&gt;I decided to start the project by implementing the functionality to prescribe individualised conditioning sessions based upon assessment results. This involved calculating each athletes Maximum Aerobic Speed (MAS), Anaerobic Speed Reserve (ASR) and Maximum Sprinting Speed (MSS) from their fitness assessment data and using these metrics with workout training variables to calculate target work and rest interval distances.&lt;/p&gt;
 &lt;h3&gt;Assumptions&lt;/h3&gt;
-&lt;p&gt;For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic to required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.&lt;/p&gt;
+&lt;p&gt;For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.&lt;/p&gt;
 &lt;p&gt;When implemented, a fitness assessment record will have the following fields:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;athlete name&lt;/li&gt;
 &lt;li&gt;sport&lt;/li&gt;
-&lt;li&gt;active&lt;/li&gt;
+&lt;li&gt;status&lt;/li&gt;
 &lt;li&gt;date&lt;/li&gt;
 &lt;li&gt;time trial name&lt;/li&gt;
 &lt;li&gt;time trial distance&lt;/li&gt;
@@ -24,7 +24,7 @@
 &lt;li&gt;rest interval percentage MAS (the percentage MAS for the rest interval)&lt;/li&gt;
 &lt;li&gt;rest interval percentage ASR the percentage ASR for the rest interval&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'active' fields to the Python object as these will only be required to filter queries):&lt;/p&gt;
+&lt;p&gt;2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'status' fields to the Python object as these will only be required to filter queries):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;    name = &amp;quot;John Smith&amp;quot;
     time_trial_distance = 2000
     time_trial_time = &amp;quot;07:01&amp;quot;
@@ -50,8 +50,8 @@
 &lt;p&gt;As the fitness record from the persistance layer doesn't contain these fields I will need to calculate these metrics when mapping the fitness record to a Python object. &lt;/p&gt;
 &lt;h3&gt;Work and Rest Interval Target Distance Calculations&lt;/h3&gt;
 &lt;p&gt;Calculating work and rest interval target distances involves multiplying an athlete's MAS (m/s) by the &lt;code&gt;Workout&lt;/code&gt; &lt;code&gt;work_interval_percentage&lt;/code&gt; and &lt;code&gt;rest_interval_percentage&lt;/code&gt; to get the individualised target intensity for the session.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;individual_work_target_intensity&lt;/em&gt; = athlete_mas * &lt;code&gt;work_interval_percentage&lt;/code&gt; 
-&lt;em&gt;individual_rest_target_intensity&lt;/em&gt; = athlete_mas * &lt;code&gt;rest_interval_percentage&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;individual_work_target_intensity&lt;/em&gt; = athlete_mas * &lt;code&gt;work_interval_percentage&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;individual_rest_target_intensity&lt;/em&gt; = athlete_mas * &lt;code&gt;rest_interval_percentage&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;This value is multiplied by the workout &lt;code&gt;work_interval_time&lt;/code&gt; (in seconds) and &lt;code&gt;rest_interval_time&lt;/code&gt; (in seconds) to get the target distances.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;work_interval_target_distance&lt;/em&gt; = individual_work_target_intensity * &lt;code&gt;work_interval_time&lt;/code&gt;
 &lt;em&gt;rest_interval_target_distance&lt;/em&gt; = individual_rest_target_intensity * &lt;code&gt;rest_interval_time&lt;/code&gt;&lt;/p&gt;
