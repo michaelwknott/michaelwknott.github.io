@@ -147,6 +147,7 @@ Sarah Thompson,Hockey,True,2022/12/07,5m flying sprint,5,0.61
 <p>One way to group data is to use the <code>groupby</code> function from the Itertools library. The <code>groupby</code> function accepts a positional argument and keyword argument (<code>key</code>). The positional argument expects an iterable and the keyword argument requires a function. The function passed to <code>key</code> should return a value that is used to identify groups. The <code>groupby</code> function returns an iterator of tuples. Each tuple contains a value (returned by the function passed to the keyword argument <code>key</code>) and an iterator (<code>itertools._grouper</code>) which contains the grouped data.</p>
 <p>The code below opens the csv file, uses the <code>groupby</code> function to group the data by <code>athlete_name</code> and prints the <code>key_value</code> and <code>group</code> from the iterator returned by the <code>groupby</code> function:  </p>
 <div class="highlight"><pre><span></span><code><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">path</span>
 
 <span class="k">def</span> <span class="nf">group_results_by_name</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -185,6 +186,7 @@ Sarah Thompson,Hockey,True,2022/12/07,5m flying sprint,5,0.61
 
 <p>results in the following output:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">path</span>
 
 <span class="k">def</span> <span class="nf">group_results_by_name</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -214,7 +216,7 @@ Sarah Thompson,Hockey,True,2022/12/07,5m flying sprint,5,0.61
 <h3>Ordering csv Data</h3>
 <p>As the data from the csv file will be unordered I need to sort the data before using the <code>groupby</code> function. The following code opens the csv file and returns the data sorted by <code>athlete_name</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># script.py</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="k">def</span> <span class="nf">sort_file_by_athlete_name</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span>
