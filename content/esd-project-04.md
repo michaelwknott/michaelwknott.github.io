@@ -85,87 +85,86 @@ With the assumption that the database had been queried and I had the athlete and
 
 I used a dataclass object for each athlete's fitness profile and created the ability to dynamically calculate MAS, ASR and MSS using properties.
 
-```
-# athlete.py
+    :::python
+    # athlete.py
 
-@dataclass
-class FitnessProfile:
-    """Represents an athlete's fitness profile.
+    @dataclass
+    class FitnessProfile:
+        """Represents an athlete's fitness profile.
 
-    Attributes:
-        name: A str of the athlete's name.
-        time_trial_distance: An int of the time trial distance in meters.
-        sprint_distance: An int of the sprint distance in meters.
-        time_trial_time: An int of the time taken to complete the 2km time trial.
-        sprint_time: A float of the time taken to complete the 5m sprint.
+        Attributes:
+            name: A str of the athlete's name.
+            time_trial_distance: An int of the time trial distance in meters.
+            sprint_distance: An int of the sprint distance in meters.
+            time_trial_time: An int of the time taken to complete the 2km time trial.
+            sprint_time: A float of the time taken to complete the 5m sprint.
 
-    Properties:
-        max_aerobic_speed: A float representing MAS in meters per second.
-        max_sprinting_speed: A float representing MSS in meters per second.
-        anaerobic_speed_reserve: A float representing ASR in meters per second.
-    """
+        Properties:
+            max_aerobic_speed: A float representing MAS in meters per second.
+            max_sprinting_speed: A float representing MSS in meters per second.
+            anaerobic_speed_reserve: A float representing ASR in meters per second.
+        """
 
-    name: str
-    time_trial_distance: int
-    sprint_distance: int
-    time_trial_time: int
-    sprint_time: float
+        name: str
+        time_trial_distance: int
+        sprint_distance: int
+        time_trial_time: int
+        sprint_time: float
 
-    @property
-    def max_aerobic_speed(self) -> float:
-        """Maximal Aerobic Speed in m/s (rounded to 2 decimal places)."""
-        if self.time_trial_time != 0:
-            return round(self.time_trial_distance / self.time_trial_time, 2)
-        else:
-            return 0
+        @property
+        def max_aerobic_speed(self) -> float:
+            """Maximal Aerobic Speed in m/s (rounded to 2 decimal places)."""
+            if self.time_trial_time != 0:
+                return round(self.time_trial_distance / self.time_trial_time, 2)
+            else:
+                return 0
 
-    @property
-    def max_sprinting_speed(self) -> float:
-        """Maximum Sprinting Speed in m/s (rounded to 2 decimal places)."""
-        if self.sprint_time != 0:
-            return round(self.sprint_distance / self.sprint_time, 2)
-        else:
-            return 0
+        @property
+        def max_sprinting_speed(self) -> float:
+            """Maximum Sprinting Speed in m/s (rounded to 2 decimal places)."""
+            if self.sprint_time != 0:
+                return round(self.sprint_distance / self.sprint_time, 2)
+            else:
+                return 0
 
-    @property
-    def anaerobic_speed_reserve(self) -> float:
-        """Anaerobic Speed Reserve in m/s (rounded to 2 decimal places)."""
-        if self.max_aerobic_speed == 0 or self.max_sprinting_speed == 0:
-            return 0
-        else:
-            return round(self.max_sprinting_speed - self.max_aerobic_speed, 2)
-```
+        @property
+        def anaerobic_speed_reserve(self) -> float:
+            """Anaerobic Speed Reserve in m/s (rounded to 2 decimal places)."""
+            if self.max_aerobic_speed == 0 or self.max_sprinting_speed == 0:
+                return 0
+            else:
+                return round(self.max_sprinting_speed - self.max_aerobic_speed, 2)
+
 
 I also used a dataclass to represent a workout and a property to dynamically calculate the workout name:
 
-```
-# session.py
+    :::python
+    # session.py
 
-@dataclass
-class Workout:
-    """Workout type and it's associated training variables."""
+    @dataclass
+    class Workout:
+        """Workout type and it's associated training variables."""
 
-    workout_type: str
-    work_interval_time: int
-    work_interval_percentage_mas: float
-    work_interval_percentage_asr: float | None
-    rest_interval_time: int
-    rest_interval_percentage_mas: float
-    rest_interval_percentage_asr: float | None
+        workout_type: str
+        work_interval_time: int
+        work_interval_percentage_mas: float
+        work_interval_percentage_asr: float | None
+        rest_interval_time: int
+        rest_interval_percentage_mas: float
+        rest_interval_percentage_asr: float | None
 
-    @property
-    def name(self) -> str:
-        """Name and description of workout.
+        @property
+        def name(self) -> str:
+            """Name and description of workout.
 
-        Returns:
-            A string containing workout name and description.
-        """
-        return (
-            f"{self.workout_type}: "
-            f"{self.work_interval_time} mins work / "
-            f"{self.rest_interval_time} mins rest"
-        )
-```
+            Returns:
+                A string containing workout name and description.
+            """
+            return (
+                f"{self.workout_type}: "
+                f"{self.work_interval_time} mins work / "
+                f"{self.rest_interval_time} mins rest"
+            )
 
 ### Calculating Workout Target Distances for Each Athlete
 
@@ -175,68 +174,67 @@ With the `FitnessProfile` and `Workout` objects in place I created two functions
 
 I also created `_convert_minutes_to_seconds` as a helper function to convert work and rest interval time from minutes to seconds. This was required as time (in seconds) is multiplied by each athlete's work and rest interval MAS to calculate the target distance:
 
-```
-def calculate_work_interval_distances(
-    workout: Workout, fitness_profiles: Collection[FitnessProfile]
-) -> dict[str, float]:
-    """Calculate work interval distances for each athlete.
+    :::python
+    def calculate_work_interval_distances(
+        workout: Workout, fitness_profiles: Collection[FitnessProfile]
+    ) -> dict[str, float]:
+        """Calculate work interval distances for each athlete.
 
-    Args:
-        workout: The training variables for the workout.
-        fitness_profiles: The fitness profile for each athlete completing the workout.
+        Args:
+            workout: The training variables for the workout.
+            fitness_profiles: The fitness profile for each athlete completing the workout.
 
-    Returns:
-        A dictionary of athlete names mapped to work interval distances.
-    """
-    work_distances = {}
-    for profile in fitness_profiles:
-        work_interval_mas = (
-            profile.max_aerobic_speed * workout.work_interval_percentage_mas
-        )
-        work_interval_distance = round(
-            work_interval_mas * _convert_minutes_to_seconds(workout.work_interval_time),
-            0,
-        )
-        work_distances[profile.name] = work_interval_distance
-    return work_distances
-
-
-def calculate_rest_interval_distances(
-    workout: Workout, fitness_profiles: Collection[FitnessProfile]
-) -> dict[str, float]:
-    """Calculate rest interval distances for each athlete.
-
-    Args:
-        workout: The training variables for the workout.
-        fitness_profiles: The fitness profile for each athlete completing the workout.
-
-    Returns:
-        A dictionary of athlete names mapped to rest interval distances.
-    """
-    rest_distances = {}
-    for profile in fitness_profiles:
-        rest_interval_mas = (
-            profile.max_aerobic_speed * workout.rest_interval_percentage_mas
-        )
-        rest_interval_distance = round(
-            rest_interval_mas * _convert_minutes_to_seconds(workout.rest_interval_time),
-            0,
-        )
-        rest_distances[profile.name] = rest_interval_distance
-    return rest_distances
+        Returns:
+            A dictionary of athlete names mapped to work interval distances.
+        """
+        work_distances = {}
+        for profile in fitness_profiles:
+            work_interval_mas = (
+                profile.max_aerobic_speed * workout.work_interval_percentage_mas
+            )
+            work_interval_distance = round(
+                work_interval_mas * _convert_minutes_to_seconds(workout.work_interval_time),
+                0,
+            )
+            work_distances[profile.name] = work_interval_distance
+        return work_distances
 
 
-def _convert_minutes_to_seconds(work_interval_time: int) -> int:
-    """Convert minutes to seconds.
+    def calculate_rest_interval_distances(
+        workout: Workout, fitness_profiles: Collection[FitnessProfile]
+    ) -> dict[str, float]:
+        """Calculate rest interval distances for each athlete.
 
-    Args:
-        work_interval_time: The work interval time in minutes.
+        Args:
+            workout: The training variables for the workout.
+            fitness_profiles: The fitness profile for each athlete completing the workout.
 
-    Returns:
-        The work interval time in seconds.
-    """
-    return work_interval_time * 60
-```
+        Returns:
+            A dictionary of athlete names mapped to rest interval distances.
+        """
+        rest_distances = {}
+        for profile in fitness_profiles:
+            rest_interval_mas = (
+                profile.max_aerobic_speed * workout.rest_interval_percentage_mas
+            )
+            rest_interval_distance = round(
+                rest_interval_mas * _convert_minutes_to_seconds(workout.rest_interval_time),
+                0,
+            )
+            rest_distances[profile.name] = rest_interval_distance
+        return rest_distances
+
+
+    def _convert_minutes_to_seconds(work_interval_time: int) -> int:
+        """Convert minutes to seconds.
+
+        Args:
+            work_interval_time: The work interval time in minutes.
+
+        Returns:
+            The work interval time in seconds.
+        """
+        return work_interval_time * 60
 
 ### Future Considerations
 

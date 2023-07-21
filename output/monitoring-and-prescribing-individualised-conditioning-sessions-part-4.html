@@ -9,8 +9,6 @@
 
         <title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 4</title>
 
-            <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Full Atom Feed" />
-            <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Categories Atom Feed" />
         <!-- Bootstrap Core CSS -->
         <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
 
@@ -18,7 +16,7 @@
         <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
 
         <!-- Code highlight color scheme -->
-            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+            <link href="/theme/css/code_blocks/tomorrow_night.css" rel="stylesheet">
 
 
         <!-- Custom Fonts -->
@@ -119,12 +117,12 @@
 <h2>Prescribing Individualised Conditioning Sessions</h2>
 <p>I decided to start the project by implementing the functionality to prescribe individualised conditioning sessions based upon assessment results. This involved calculating each athletes Maximum Aerobic Speed (MAS), Anaerobic Speed Reserve (ASR) and Maximum Sprinting Speed (MSS) from their fitness assessment data and using these metrics with workout training variables to calculate target work and rest interval distances.</p>
 <h3>Assumptions</h3>
-<p>For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic to required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.</p>
+<p>For this part of the project I assumed athlete fitness data and workout data had already been queried and loaded into memory. I could then ignore anything related to data input/output and persistance and concentrate on the logic required to calculate MAS, ASR, MSS and target distances for each athlete completing the workout.</p>
 <p>When implemented, a fitness assessment record will have the following fields:</p>
 <ul>
 <li>athlete name</li>
 <li>sport</li>
-<li>active</li>
+<li>status</li>
 <li>date</li>
 <li>time trial name</li>
 <li>time trial distance</li>
@@ -140,7 +138,7 @@
 <li>rest interval percentage MAS (the percentage MAS for the rest interval)</li>
 <li>rest interval percentage ASR the percentage ASR for the rest interval</li>
 </ul>
-<p>2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'active' fields to the Python object as these will only be required to filter queries):</p>
+<p>2km time trial and 5m sprint fitness assessment records mapped to a Python object will have the following attributes (I won't map the 'sport' and 'status' fields to the Python object as these will only be required to filter queries):</p>
 <div class="highlight"><pre><span></span><code>    name = &quot;John Smith&quot;
     time_trial_distance = 2000
     time_trial_time = &quot;07:01&quot;
@@ -166,157 +164,157 @@
 <p>As the fitness record from the persistance layer doesn't contain these fields I will need to calculate these metrics when mapping the fitness record to a Python object. </p>
 <h3>Work and Rest Interval Target Distance Calculations</h3>
 <p>Calculating work and rest interval target distances involves multiplying an athlete's MAS (m/s) by the <code>Workout</code> <code>work_interval_percentage</code> and <code>rest_interval_percentage</code> to get the individualised target intensity for the session.</p>
-<p><em>individual_work_target_intensity</em> = athlete_mas * <code>work_interval_percentage</code> 
-<em>individual_rest_target_intensity</em> = athlete_mas * <code>rest_interval_percentage</code></p>
+<p><em>individual_work_target_intensity</em> = athlete_mas * <code>work_interval_percentage</code></p>
+<p><em>individual_rest_target_intensity</em> = athlete_mas * <code>rest_interval_percentage</code></p>
 <p>This value is multiplied by the workout <code>work_interval_time</code> (in seconds) and <code>rest_interval_time</code> (in seconds) to get the target distances.</p>
 <p><em>work_interval_target_distance</em> = individual_work_target_intensity * <code>work_interval_time</code>
 <em>rest_interval_target_distance</em> = individual_rest_target_intensity * <code>rest_interval_time</code></p>
 <h3>Mapping Fitness and Workout Records to Python Objects</h3>
 <p>With the assumption that the database had been queried and I had the athlete and workout records in memory, I needed to create a Python object for each record to implement the domain logic.</p>
 <p>I used a dataclass object for each athlete's fitness profile and created the ability to dynamically calculate MAS, ASR and MSS using properties.</p>
-<div class="highlight"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">athlete</span><span class="p">.</span><span class="n">py</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># athlete.py</span>
 
-<span class="nv">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nl">FitnessProfile</span><span class="p">:</span>
-<span class="w">    </span><span class="ss">&quot;&quot;&quot;Represents an athlete&#39;s fitness profile.</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">FitnessProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an athlete&#39;s fitness profile.</span>
 
-<span class="ss">    Attributes:</span>
-<span class="ss">        name: A str of the athlete&#39;s name.</span>
-<span class="ss">        time_trial_distance: An int of the time trial distance in meters.</span>
-<span class="ss">        sprint_distance: An int of the sprint distance in meters.</span>
-<span class="ss">        time_trial_time: An int of the time taken to complete the 2km time trial.</span>
-<span class="ss">        sprint_time: A float of the time taken to complete the 5m sprint.</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: A str of the athlete&#39;s name.</span>
+<span class="sd">        time_trial_distance: An int of the time trial distance in meters.</span>
+<span class="sd">        sprint_distance: An int of the sprint distance in meters.</span>
+<span class="sd">        time_trial_time: An int of the time taken to complete the 2km time trial.</span>
+<span class="sd">        sprint_time: A float of the time taken to complete the 5m sprint.</span>
 
-<span class="ss">    Properties:</span>
-<span class="ss">        max_aerobic_speed: A float representing MAS in meters per second.</span>
-<span class="ss">        max_sprinting_speed: A float representing MSS in meters per second.</span>
-<span class="ss">        anaerobic_speed_reserve: A float representing ASR in meters per second.</span>
-<span class="ss">    &quot;&quot;&quot;</span>
+<span class="sd">    Properties:</span>
+<span class="sd">        max_aerobic_speed: A float representing MAS in meters per second.</span>
+<span class="sd">        max_sprinting_speed: A float representing MSS in meters per second.</span>
+<span class="sd">        anaerobic_speed_reserve: A float representing ASR in meters per second.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="w">    </span><span class="nl">name</span><span class="p">:</span><span class="w"> </span><span class="nf">str</span>
-<span class="w">    </span><span class="nl">time_trial_distance</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span>
-<span class="w">    </span><span class="nl">sprint_distance</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span>
-<span class="w">    </span><span class="nl">time_trial_time</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span>
-<span class="w">    </span><span class="nl">sprint_time</span><span class="p">:</span><span class="w"> </span><span class="nc">float</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">time_trial_distance</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">sprint_distance</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">time_trial_time</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">sprint_time</span><span class="p">:</span> <span class="nb">float</span>
 
-<span class="w">    </span><span class="nv">@property</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">max_aerobic_speed</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">float</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;Maximal Aerobic Speed in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">time_trial_time</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">time_trial_distance</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">time_trial_time</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="w">        </span><span class="k">else</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_aerobic_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maximal Aerobic Speed in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_trial_time</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_trial_distance</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_trial_time</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
 
-<span class="w">    </span><span class="nv">@property</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">max_sprinting_speed</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">float</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;Maximum Sprinting Speed in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">sprint_time</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sprint_distance</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">sprint_time</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="w">        </span><span class="k">else</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_sprinting_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Maximum Sprinting Speed in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprint_time</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sprint_distance</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sprint_time</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
 
-<span class="w">    </span><span class="nv">@property</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">anaerobic_speed_reserve</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">float</span><span class="err">:</span>
-<span class="w">        </span><span class="ss">&quot;&quot;&quot;Anaerobic Speed Reserve in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">max_aerobic_speed</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">max_sprinting_speed</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">        </span><span class="k">else</span><span class="err">:</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">max_sprinting_speed</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">max_aerobic_speed</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">anaerobic_speed_reserve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Anaerobic Speed Reserve in m/s (rounded to 2 decimal places).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_aerobic_speed</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_sprinting_speed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_sprinting_speed</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_aerobic_speed</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </code></pre></div>
 
 <p>I also used a dataclass to represent a workout and a property to dynamically calculate the workout name:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># session.py</span>
 
-<span class="err">@</span><span class="n">dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="n">Workout</span><span class="p">:</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Workout</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Workout type and it&#39;s associated training variables.&quot;&quot;&quot;</span>
 
-<span class="w">    </span><span class="n">workout_type</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span>
-<span class="w">    </span><span class="n">work_interval_time</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">int</span>
-<span class="w">    </span><span class="n">work_interval_percentage_mas</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span>
-<span class="w">    </span><span class="n">work_interval_percentage_asr</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">None</span>
-<span class="w">    </span><span class="n">rest_interval_time</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">int</span>
-<span class="w">    </span><span class="n">rest_interval_percentage_mas</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span>
-<span class="w">    </span><span class="n">rest_interval_percentage_asr</span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">float</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">None</span>
+    <span class="n">workout_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">work_interval_time</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">work_interval_percentage_mas</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">work_interval_percentage_asr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">rest_interval_time</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">rest_interval_percentage_mas</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">rest_interval_percentage_asr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>
 
-<span class="w">    </span><span class="err">@</span><span class="n">property</span>
-<span class="w">    </span><span class="n">def</span><span class="w"> </span><span class="n">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nb">str</span><span class="p">:</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Name and description of workout.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A string containing workout name and description.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
-<span class="w">            </span><span class="n">f</span><span class="s2">&quot;{self.workout_type}: &quot;</span>
-<span class="w">            </span><span class="n">f</span><span class="s2">&quot;{self.work_interval_time} mins work / &quot;</span>
-<span class="w">            </span><span class="n">f</span><span class="s2">&quot;{self.rest_interval_time} mins rest&quot;</span>
-<span class="w">        </span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">workout_type</span><span class="si">}</span><span class="s2">: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">work_interval_time</span><span class="si">}</span><span class="s2"> mins work / &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rest_interval_time</span><span class="si">}</span><span class="s2"> mins rest&quot;</span>
+        <span class="p">)</span>
 </code></pre></div>
 
 <h3>Calculating Workout Target Distances for Each Athlete</h3>
 <p>With the <code>FitnessProfile</code> and <code>Workout</code> objects in place I created two functions to calculate work and rest interval distances. Each function returns a dictionary mapping the name of an athlete to the work or rest interval target distances. I believe I'll be able to pass the dictionaries as context to the jinja templates to create a downloadable sheet of each athlete's target distances to be used during conditioning session set-up.</p>
 <p>I had originally planned to also implement logic to calculate target distances using MAS and ASR, as well as provide the ability to calculate target pace as an extra option. However, implementing this logic was slowing down the project. I decided to leave this functionality for now and added <a href="https://github.com/michaelwknott/esd/issues/8">ASR calculations</a> and <a href="https://github.com/michaelwknott/esd/issues/9">pace calculations</a> issues to the ESD GitHub project for implementation at a later date.</p>
 <p>I also created <code>_convert_minutes_to_seconds</code> as a helper function to convert work and rest interval time from minutes to seconds. This was required as time (in seconds) is multiplied by each athlete's work and rest interval MAS to calculate the target distance:</p>
-<div class="highlight"><pre><span></span><code><span class="n">def</span><span class="w"> </span><span class="n">calculate_work_interval_distances</span><span class="p">(</span>
-<span class="w">    </span><span class="nl">workout</span><span class="p">:</span><span class="w"> </span><span class="n">Workout</span><span class="p">,</span><span class="w"> </span><span class="nl">fitness_profiles</span><span class="p">:</span><span class="w"> </span><span class="n">Collection</span><span class="o">[</span><span class="n">FitnessProfile</span><span class="o">]</span>
-<span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">dict</span><span class="o">[</span><span class="n">str, float</span><span class="o">]</span><span class="err">:</span>
-<span class="w">    </span><span class="ss">&quot;&quot;&quot;Calculate work interval distances for each athlete.</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">calculate_work_interval_distances</span><span class="p">(</span>
+    <span class="n">workout</span><span class="p">:</span> <span class="n">Workout</span><span class="p">,</span> <span class="n">fitness_profiles</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate work interval distances for each athlete.</span>
 
-<span class="ss">    Args:</span>
-<span class="ss">        workout: The training variables for the workout.</span>
-<span class="ss">        fitness_profiles: The fitness profile for each athlete completing the workout.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        workout: The training variables for the workout.</span>
+<span class="sd">        fitness_profiles: The fitness profile for each athlete completing the workout.</span>
 
-<span class="ss">    Returns:</span>
-<span class="ss">        A dictionary of athlete names mapped to work interval distances.</span>
-<span class="ss">    &quot;&quot;&quot;</span>
-<span class="w">    </span><span class="n">work_distances</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{}</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">profile</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">fitness_profiles</span><span class="p">:</span>
-<span class="w">        </span><span class="n">work_interval_mas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
-<span class="w">            </span><span class="n">profile</span><span class="p">.</span><span class="n">max_aerobic_speed</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">workout</span><span class="p">.</span><span class="n">work_interval_percentage_mas</span>
-<span class="w">        </span><span class="p">)</span>
-<span class="w">        </span><span class="n">work_interval_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span>
-<span class="w">            </span><span class="n">work_interval_mas</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_convert_minutes_to_seconds</span><span class="p">(</span><span class="n">workout</span><span class="p">.</span><span class="n">work_interval_time</span><span class="p">),</span>
-<span class="w">            </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">        </span><span class="p">)</span>
-<span class="w">        </span><span class="n">work_distances</span><span class="o">[</span><span class="n">profile.name</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">work_interval_distance</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">work_distances</span>
-
-
-<span class="n">def</span><span class="w"> </span><span class="n">calculate_rest_interval_distances</span><span class="p">(</span>
-<span class="w">    </span><span class="nl">workout</span><span class="p">:</span><span class="w"> </span><span class="n">Workout</span><span class="p">,</span><span class="w"> </span><span class="nl">fitness_profiles</span><span class="p">:</span><span class="w"> </span><span class="n">Collection</span><span class="o">[</span><span class="n">FitnessProfile</span><span class="o">]</span>
-<span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">dict</span><span class="o">[</span><span class="n">str, float</span><span class="o">]</span><span class="err">:</span>
-<span class="w">    </span><span class="ss">&quot;&quot;&quot;Calculate rest interval distances for each athlete.</span>
-
-<span class="ss">    Args:</span>
-<span class="ss">        workout: The training variables for the workout.</span>
-<span class="ss">        fitness_profiles: The fitness profile for each athlete completing the workout.</span>
-
-<span class="ss">    Returns:</span>
-<span class="ss">        A dictionary of athlete names mapped to rest interval distances.</span>
-<span class="ss">    &quot;&quot;&quot;</span>
-<span class="w">    </span><span class="n">rest_distances</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{}</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">profile</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nl">fitness_profiles</span><span class="p">:</span>
-<span class="w">        </span><span class="n">rest_interval_mas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
-<span class="w">            </span><span class="n">profile</span><span class="p">.</span><span class="n">max_aerobic_speed</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">workout</span><span class="p">.</span><span class="n">rest_interval_percentage_mas</span>
-<span class="w">        </span><span class="p">)</span>
-<span class="w">        </span><span class="n">rest_interval_distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">round</span><span class="p">(</span>
-<span class="w">            </span><span class="n">rest_interval_mas</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_convert_minutes_to_seconds</span><span class="p">(</span><span class="n">workout</span><span class="p">.</span><span class="n">rest_interval_time</span><span class="p">),</span>
-<span class="w">            </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">        </span><span class="p">)</span>
-<span class="w">        </span><span class="n">rest_distances</span><span class="o">[</span><span class="n">profile.name</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rest_interval_distance</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rest_distances</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A dictionary of athlete names mapped to work interval distances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">work_distances</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">fitness_profiles</span><span class="p">:</span>
+        <span class="n">work_interval_mas</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">profile</span><span class="o">.</span><span class="n">max_aerobic_speed</span> <span class="o">*</span> <span class="n">workout</span><span class="o">.</span><span class="n">work_interval_percentage_mas</span>
+        <span class="p">)</span>
+        <span class="n">work_interval_distance</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="n">work_interval_mas</span> <span class="o">*</span> <span class="n">_convert_minutes_to_seconds</span><span class="p">(</span><span class="n">workout</span><span class="o">.</span><span class="n">work_interval_time</span><span class="p">),</span>
+            <span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">work_distances</span><span class="p">[</span><span class="n">profile</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">work_interval_distance</span>
+    <span class="k">return</span> <span class="n">work_distances</span>
 
 
-<span class="n">def</span><span class="w"> </span><span class="n">_convert_minutes_to_seconds</span><span class="p">(</span><span class="nl">work_interval_time</span><span class="p">:</span><span class="w"> </span><span class="nc">int</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">int</span><span class="err">:</span>
-<span class="w">    </span><span class="ss">&quot;&quot;&quot;Convert minutes to seconds.</span>
+<span class="k">def</span> <span class="nf">calculate_rest_interval_distances</span><span class="p">(</span>
+    <span class="n">workout</span><span class="p">:</span> <span class="n">Workout</span><span class="p">,</span> <span class="n">fitness_profiles</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate rest interval distances for each athlete.</span>
 
-<span class="ss">    Args:</span>
-<span class="ss">        work_interval_time: The work interval time in minutes.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        workout: The training variables for the workout.</span>
+<span class="sd">        fitness_profiles: The fitness profile for each athlete completing the workout.</span>
 
-<span class="ss">    Returns:</span>
-<span class="ss">        The work interval time in seconds.</span>
-<span class="ss">    &quot;&quot;&quot;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">work_interval_time</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A dictionary of athlete names mapped to rest interval distances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rest_distances</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">fitness_profiles</span><span class="p">:</span>
+        <span class="n">rest_interval_mas</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">profile</span><span class="o">.</span><span class="n">max_aerobic_speed</span> <span class="o">*</span> <span class="n">workout</span><span class="o">.</span><span class="n">rest_interval_percentage_mas</span>
+        <span class="p">)</span>
+        <span class="n">rest_interval_distance</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="n">rest_interval_mas</span> <span class="o">*</span> <span class="n">_convert_minutes_to_seconds</span><span class="p">(</span><span class="n">workout</span><span class="o">.</span><span class="n">rest_interval_time</span><span class="p">),</span>
+            <span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">rest_distances</span><span class="p">[</span><span class="n">profile</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rest_interval_distance</span>
+    <span class="k">return</span> <span class="n">rest_distances</span>
+
+
+<span class="k">def</span> <span class="nf">_convert_minutes_to_seconds</span><span class="p">(</span><span class="n">work_interval_time</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert minutes to seconds.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        work_interval_time: The work interval time in minutes.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The work interval time in seconds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">work_interval_time</span> <span class="o">*</span> <span class="mi">60</span>
 </code></pre></div>
 
 <h3>Future Considerations</h3>

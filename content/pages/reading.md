@@ -10,6 +10,7 @@ This page is inspired by the 'Reading List' pattern in Apprenticeship Patterns: 
 
 + Hillard, D. (2020). Practices of the Python Pro. Manning.
 + Percival, H., & Gregory, B. (2020). Architecture Patterns with Python: Enabling Test-Driven Development, Domain-Driven Design, and Event-Driven Microservices. O’Reilly Media.
++ Giordani, L. (2021). Clean Architectures in Python (2nd ed.). The Digital Cat Books. [https://www.thedigitalcatbooks.com](https://www.thedigitalcatbooks.com/pycabook-introduction/)
 + Goodrich, M. T., Tamassia, R., & Goldwasser, M. H. (2013). Data Structures and Algorithms in Python. John Wiley & Sons.
 + Hoover, D., & Oshineye, A. (2009). Apprenticeship Patterns: Guidance for the Aspiring Software Craftsman. O’Reilly Media.
 

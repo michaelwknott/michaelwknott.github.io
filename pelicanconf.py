@@ -40,8 +40,7 @@ STATIC_PATHS = [
 # pelican-clean-blog settings
 HEADER_COVER = 'static/cool-background-black.png'
 # HEADER_COLOR = 'black'
-# COLOR_SCHEME_CSS = 'tomorrow.css'
-
+COLOR_SCHEME_CSS = 'tomorrow_night.css'
 
 # Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
+# RELATIVE_URLS = True

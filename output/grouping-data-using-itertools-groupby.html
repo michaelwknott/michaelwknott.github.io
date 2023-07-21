@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Grouping Data using Itertools groupby</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/tomorrow_night.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="Grouping athlete data using Itertools groupby">
+
+        <meta name="author" content="Michael Knott">
+
+        <meta name="tags" content="Python">
+        <meta name="tags" content="Itertools">
+        <meta name="tags" content="Notes">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Michael Knott">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/michael-knott.html">
+	<meta property="og:url" content="/grouping-data-using-itertools-groupby.html">
+	<meta property="og:title" content="Grouping Data using Itertools groupby">
+	<meta property="article:published_time" content="2023-07-21 13:00:00+01:00">
+            <meta property="og:description" content="Grouping athlete data using Itertools groupby">
+
+            <meta property="og:image" content="/static/cool-background-black.png">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@michaelwknott">
+        <meta name="twitter:title" content="Grouping Data using Itertools groupby">
+
+            <meta name="twitter:image" content="/static/cool-background-black.png">
+
+            <meta name="twitter:description" content="Grouping athlete data using Itertools groupby">
+</head>
+
+<body class="article-grouping-data-using-itertools-groupby">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Michael Knott</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/about.html">About</a></li>
+                            <li><a href="/pages/reading-list.html">Reading List</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/static/cool-background-black.png')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Grouping Data using Itertools groupby</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/michael-knott.html">Michael Knott</a>
+                             on Fri 21 July 2023
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>Grouping Data</h2>
+<p>I've got a csv file containing athlete fitness assessment data. Each line contains a record related to a single assessment with the following fields:</p>
+<ul>
+<li>athlete_name</li>
+<li>sport</li>
+<li>status</li>
+<li>date</li>
+<li>time_trial_name</li>
+<li>time_trial_distance</li>
+<li>time_trial_time</li>
+</ul>
+<p>Currently there are multiple records for each athlete consisting of a 2km time trial or 5m flying sprint. I've included dummy data below:</p>
+<div class="highlight"><pre><span></span><code># fitness_results.csv
+
+athlete_name,sport,status,date,time_trial_name,time_trial_distance,time_trial_time
+John Doe,Boxing,True,2022/05/12,2km time trial,2000,510
+John Doe,Boxing,True,2023/06/18,5m flying sprint,5,0.67
+Jane Smith,Hockey,True,2022/07/03,2km time trial,2000,460
+Jane Smith,Hockey,True,2022/08/22,5m flying sprint,5,0.52
+Michael Johnson,Boxing,True,2022/09/09,2km time trial,2000,490
+Michael Johnson,Boxing,True,2022/10/17,5m flying sprint,5,0.72
+Sarah Thompson,Hockey,True,2022/11/25,2km time trial,2000,520
+Sarah Thompson,Hockey,True,2022/12/07,5m flying sprint,5,0.61
+...
+</code></pre></div>
+
+<p>I need to ingest the csv file and group the records by athlete name.</p>
+<h3>Itertools Groupby Function</h3>
+<p>One way to group data is to use the <code>groupby</code> function from the Itertools library. The <code>groupby</code> function accepts a positional argument and keyword argument (<code>key</code>). The positional argument expects an iterable and the keyword argument requires a function. The function passed to <code>key</code> should return a value that is used to identify groups. The <code>groupby</code> function returns an iterator of tuples. Each tuple contains a value (returned by the function passed to the keyword argument <code>key</code>) and an iterator (<code>itertools._grouper</code>) which contains the grouped data.</p>
+<p>The code below opens the csv file, uses the <code>groupby</code> function to group the data by <code>athlete_name</code> and prints the <code>key_value</code> and <code>group</code> from the iterator returned by the <code>groupby</code> function:  </p>
+<div class="highlight"><pre><span></span><code><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">path</span>
+
+<span class="k">def</span> <span class="nf">group_results_by_name</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>  <span class="c1"># skip header row</span>
+        <span class="k">for</span> <span class="n">key_value</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">key_value</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;fitness_results.csv&quot;</span><span class="p">)</span>
+    <span class="n">group_results_by_name</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span>
+
+<span class="c1"># Terminal output</span>
+<span class="n">John</span> <span class="n">Doe</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f6d9d1ec910</span><span class="o">&gt;</span>
+<span class="n">Jane</span> <span class="n">Smith</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f6d9d1ee770</span><span class="o">&gt;</span>
+<span class="n">Michael</span> <span class="n">Johnson</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f6d9d1ec910</span><span class="o">&gt;</span>
+<span class="n">Sarah</span> <span class="n">Thompson</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f6d9d1ee770</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<h3>Unordered Data</h3>
+<p>One caveat is that the <code>groupby</code> function requires ordered data as it creates a new group every time the key function returns a new value. For example, changing the order to the csv data:</p>
+<div class="highlight"><pre><span></span><code># unordered_fitness_results.csv
+
+athlete_name,sport,status,date,time_trial_name,time_trial_distance,time_trial_time
+John Doe,Boxing,True,2022/05/12,2km time trial,2000,510
+Jane Smith,Hockey,True,2022/07/03,2km time trial,2000,460
+John Doe,Boxing,True,2023/06/18,5m flying sprint,5,0.67
+Jane Smith,Hockey,True,2022/08/22,5m flying sprint,5,0.52
+Michael Johnson,Boxing,True,2022/10/17,5m flying sprint,5,0.72
+Sarah Thompson,Hockey,True,2022/11/25,2km time trial,2000,520
+Michael Johnson,Boxing,True,2022/09/09,2km time trial,2000,490
+Sarah Thompson,Hockey,True,2022/12/07,5m flying sprint,5,0.61
+...
+</code></pre></div>
+
+<p>results in the following output:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">path</span>
+
+<span class="k">def</span> <span class="nf">group_results_by_name</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>  <span class="c1"># skip header row</span>
+        <span class="k">for</span> <span class="n">key_value</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">key_value</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;unordered_fitness_results.csv&quot;</span><span class="p">)</span>
+    <span class="n">group_results_by_name</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span>
+
+
+<span class="c1"># Terminal output</span>
+<span class="n">John</span> <span class="n">Doe</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f4d618a0880</span><span class="o">&gt;</span>
+<span class="n">Jane</span> <span class="n">Smith</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f4d618a26e0</span><span class="o">&gt;</span>
+<span class="n">John</span> <span class="n">Doe</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f4d618a0880</span><span class="o">&gt;</span>
+<span class="n">Jane</span> <span class="n">Smith</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f4d618a26e0</span><span class="o">&gt;</span>
+<span class="n">Michael</span> <span class="n">Johnson</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f4d618a0880</span><span class="o">&gt;</span>
+<span class="n">Sarah</span> <span class="n">Thompson</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f4d618a26e0</span><span class="o">&gt;</span>
+<span class="n">Michael</span> <span class="n">Johnson</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f4d618a0880</span><span class="o">&gt;</span>
+<span class="n">Sarah</span> <span class="n">Thompson</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">itertools</span><span class="o">.</span><span class="n">_grouper</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f4d618a26e0</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>Due to the unordered data, the <code>groupby</code> function created multiple groups per <code>athlete_name</code>.</p>
+<h3>Ordering csv Data</h3>
+<p>As the data from the csv file will be unordered I need to sort the data before using the <code>groupby</code> function. The following code opens the csv file and returns the data sorted by <code>athlete_name</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span> <span class="nf">sort_file_by_athlete_name</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>  <span class="c1"># skip header row</span>
+        <span class="n">sorted_records</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">sorted_records</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+        <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;unordered_fitness_results.csv&quot;</span><span class="p">)</span>
+        <span class="n">sorted_records</span> <span class="o">=</span> <span class="n">sort_file_by_athlete_name</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sorted_records</span><span class="p">)</span>
+
+<span class="c1"># Terminal output</span>
+<span class="p">[[</span><span class="s1">&#39;Jane Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/07/03&#39;</span><span class="p">,</span> <span class="s1">&#39;2km time trial&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;460&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Jane Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/08/22&#39;</span><span class="p">,</span> <span class="s1">&#39;5m flying sprint&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;0.52&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;John Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Boxing&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/05/12&#39;</span><span class="p">,</span> <span class="s1">&#39;2km time trial&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;510&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;John Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Boxing&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2023/06/18&#39;</span><span class="p">,</span> <span class="s1">&#39;5m flying sprint&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;0.67&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Michael Johnson&#39;</span><span class="p">,</span> <span class="s1">&#39;Boxing&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/09/09&#39;</span><span class="p">,</span> <span class="s1">&#39;2km time trial&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;490&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Michael Johnson&#39;</span><span class="p">,</span> <span class="s1">&#39;Boxing&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/10/17&#39;</span><span class="p">,</span> <span class="s1">&#39;5m flying sprint&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;0.72&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Sarah Thompson&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/11/25&#39;</span><span class="p">,</span> <span class="s1">&#39;2km time trial&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;520&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Sarah Thompson&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/12/07&#39;</span><span class="p">,</span> <span class="s1">&#39;5m flying sprint&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;0.61&#39;</span><span class="p">]]</span>
+</code></pre></div>
+
+<h3>Grouping Ordered Data</h3>
+<p>With the data sorted, I can update the <code>group_results_by_name</code> function to store the groups in a dictionary:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># script.py</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span> <span class="nf">sort_file_by_athlete_name</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>  <span class="c1"># skip header row</span>
+        <span class="n">sorted_records</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">sorted_records</span>
+
+<span class="k">def</span> <span class="nf">group_results_by_name</span><span class="p">(</span><span class="n">sorted_records</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">key_value</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key_value</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">sorted_records</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+        <span class="n">FILEPATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;unordered_fitness_results.csv&quot;</span><span class="p">)</span>
+        <span class="n">sorted_records</span> <span class="o">=</span> <span class="n">sort_file_by_athlete_name</span><span class="p">(</span><span class="n">FILEPATH</span><span class="p">)</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">group_results_by_name</span><span class="p">(</span><span class="n">sorted_records</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span>
+
+<span class="c1"># Terminal output</span>
+<span class="p">{</span><span class="s1">&#39;Jane Smith&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="s1">&#39;Jane Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/07/03&#39;</span><span class="p">,</span> <span class="s1">&#39;2km time trial&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;460&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Jane Smith&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/08/22&#39;</span><span class="p">,</span> <span class="s1">&#39;5m flying sprint&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;0.52&#39;</span><span class="p">]],</span> <span class="s1">&#39;John Doe&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="s1">&#39;John Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Boxing&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/05/12&#39;</span><span class="p">,</span> <span class="s1">&#39;2km time trial&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;510&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;John Doe&#39;</span><span class="p">,</span> <span class="s1">&#39;Boxing&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2023/06/18&#39;</span><span class="p">,</span> <span class="s1">&#39;5m flying sprint&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;0.67&#39;</span><span class="p">]],</span> <span class="s1">&#39;Michael Johnson&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="s1">&#39;Michael Johnson&#39;</span><span class="p">,</span> <span class="s1">&#39;Boxing&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/09/09&#39;</span><span class="p">,</span> <span class="s1">&#39;2km time trial&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;490&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Michael Johnson&#39;</span><span class="p">,</span> <span class="s1">&#39;Boxing&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/10/17&#39;</span><span class="p">,</span> <span class="s1">&#39;5m flying sprint&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;0.72&#39;</span><span class="p">]],</span> <span class="s1">&#39;Sarah Thompson&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="s1">&#39;Sarah Thompson&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/11/25&#39;</span><span class="p">,</span> <span class="s1">&#39;2km time trial&#39;</span><span class="p">,</span> <span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="s1">&#39;520&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Sarah Thompson&#39;</span><span class="p">,</span> <span class="s1">&#39;Hockey&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;2022/12/07&#39;</span><span class="p">,</span> <span class="s1">&#39;5m flying sprint&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;0.61&#39;</span><span class="p">]]}</span>
+</code></pre></div>
+
+<p>I now have the data grouped by <code>athlete_name</code> which can be used for further analysis.</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/python.html">Python</a>, <a href="/tag/itertools.html">Itertools</a>, <a href="/tag/notes.html">Notes</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://twitter.com/michaelwknott">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/michaelwknott">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/michael-knott-a8005916/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>. <br />        &copy;  Michael Knott
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
