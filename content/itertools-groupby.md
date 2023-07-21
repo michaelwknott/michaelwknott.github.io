@@ -43,6 +43,7 @@ The code below opens the csv file, uses the `groupby` function to group the data
 
     :::python
     # script.py
+    from itertools import groupby
     from pathlib import path
 
     def group_results_by_name(filepath: Path) -> None:
@@ -83,6 +84,7 @@ results in the following output:
 
     :::python
     # script.py
+    from itertools import groupby
     from pathlib import path
 
     def group_results_by_name(filepath: Path) -> None:
@@ -115,7 +117,7 @@ As the data from the csv file will be unordered I need to sort the data before u
 
     :::python
     # script.py
-    from collections.abc import Iterator
+    from itertools import groupby
     from pathlib import Path
 
     def sort_file_by_athlete_name(filepath: Path) -> list[list]
