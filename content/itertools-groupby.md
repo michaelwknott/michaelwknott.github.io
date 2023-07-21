@@ -43,6 +43,7 @@ The code below opens the csv file, uses the `groupby` function to group the data
 
     :::python
     # script.py
+    import csv
     from itertools import groupby
     from pathlib import path
 
@@ -50,7 +51,7 @@ The code below opens the csv file, uses the `groupby` function to group the data
         with open(filepath) as f:
             reader = csv.reader(f)
             next(reader)  # skip header row
-            for key_value, group in groupby(reader, key=lambda row: row[0]):
+            for key_value, group in groupby(reader, key=lambda row: row[0])
                 print(key_value, group)
     
     if __name__ == "__main__":
@@ -84,6 +85,7 @@ results in the following output:
 
     :::python
     # script.py
+    import csv
     from itertools import groupby
     from pathlib import path
 
@@ -91,7 +93,7 @@ results in the following output:
         with open(filepath) as f:
             reader = csv.reader(f)
             next(reader)  # skip header row
-            for key_value, group in groupby(reader, key=lambda row: row[0]):
+            for key_value, group in groupby(reader, key=lambda row: row[0])
                 print(key_value, group)
     
     if __name__ == "__main__":
@@ -117,10 +119,11 @@ As the data from the csv file will be unordered I need to sort the data before u
 
     :::python
     # script.py
+    import csv
     from itertools import groupby
     from pathlib import Path
 
-    def sort_file_by_athlete_name(filepath: Path) -> list[list]
+    def sort_file_by_athlete_name(filepath: Path) -> list[list]:
         with open(filepath) as f:
             reader = csv.reader(f)
             next(reader)  # skip header row
@@ -141,17 +144,18 @@ With the data sorted, I can update the `group_results_by_name` function to store
 
     :::python
     # script.py
+    import csv
     from collections.abc import Iterator
     from pathlib import Path
 
-    def sort_file_by_athlete_name(filepath: Path) -> list[list]
+    def sort_file_by_athlete_name(filepath: Path) -> list[list]:
         with open(filepath) as f:
             reader = csv.reader(f)
             next(reader)  # skip header row
             sorted_records = sorted(reader, key=lambda record: record[0])
         return sorted_records
     
-    def group_results_by_name(sorted_records: list[list]) -> dict[str, Iterator]
+    def group_results_by_name(sorted_records: list[list]) -> dict[str, Iterator]:
         results = {
             key_value: list(group)
             for key_value, group in groupby(sorted_records, key=lambda row: row[0])
@@ -168,3 +172,30 @@ With the data sorted, I can update the `group_results_by_name` function to store
     {'Jane Smith': [['Jane Smith', 'Hockey', 'True', '2022/07/03', '2km time trial', '2000', '460'], ['Jane Smith', 'Hockey', 'True', '2022/08/22', '5m flying sprint', '5', '0.52']], 'John Doe': [['John Doe', 'Boxing', 'True', '2022/05/12', '2km time trial', '2000', '510'], ['John Doe', 'Boxing', 'True', '2023/06/18', '5m flying sprint', '5', '0.67']], 'Michael Johnson': [['Michael Johnson', 'Boxing', 'True', '2022/09/09', '2km time trial', '2000', '490'], ['Michael Johnson', 'Boxing', 'True', '2022/10/17', '5m flying sprint', '5', '0.72']], 'Sarah Thompson': [['Sarah Thompson', 'Hockey', 'True', '2022/11/25', '2km time trial', '2000', '520'], ['Sarah Thompson', 'Hockey', 'True', '2022/12/07', '5m flying sprint', '5', '0.61']]}
 
 I now have the data grouped by `athlete_name` which can be used for further analysis.
+
+### A Simpler Approach
+
+As seen above, using groupby with unordered data requires the additional step of sorting data prior to grouping. A simpler solution is to use a defaultdict from the collections module. The code below shows an implementation using defaultdict:
+
+    :::python
+    # script.py
+    import csv
+    from collections import defaultdict
+    from pathlib import Path
+
+    def group_records(filepath: Path) -> defaultdict[str, list[list]]:
+        grouped_records = defaultdict(list)
+        with open(filepath) as f:
+            reader = csv.reader(f)
+            next(reader)  # skip header row
+            for record in reader:
+                grouped_records[record[0]].append(record)
+        return grouped_records
+    
+    if __name__ == "__main__":
+            FILEPATH = Path("unordered_fitness_results.csv")
+            grouped_records = group_records(FILEPATH)
+            print(grouped_records)
+    
+    # Terminal output
+    defaultdict(<class 'list'>, {'John Doe': [['John Doe', 'Boxing', 'True', '2022/05/12', '2km time trial', '2000', '510'], ['John Doe', 'Boxing', 'True', '2023/06/18', '5m flying sprint', '5', '0.67']], 'Jane Smith': [['Jane Smith', 'Hockey', 'True', '2022/07/03', '2km time trial', '2000', '460'], ['Jane Smith', 'Hockey', 'True', '2022/08/22', '5m flying sprint', '5', '0.52']], 'Michael Johnson': [['Michael Johnson', 'Boxing', 'True', '2022/10/17', '5m flying sprint', '5', '0.72'], ['Michael Johnson', 'Boxing', 'True', '2022/09/09', '2km time trial', '2000', '490']], 'Sarah Thompson': [['Sarah Thompson', 'Hockey', 'True', '2022/11/25', '2km time trial', '2000', '520'], ['Sarah Thompson', 'Hockey', 'True', '2022/12/07', '5m flying sprint', '5', '0.61']]})
