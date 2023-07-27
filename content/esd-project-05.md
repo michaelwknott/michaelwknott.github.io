@@ -1,16 +1,16 @@
 Title: Monitoring and Prescribing Individualised Conditioning Sessions: Part 5
-Date: 2023-07-19 10:00
+Date: 2023-07-27 13:15
 Category: ESD
 Tags: projects, esd
 Authors: Michael Knott
-Summary: Implementing the Persistence Layer
-Status: draft
+Summary: Implementing the Repository Pattern for the Persistence Layer
+Status: published
 
-## Implementing the Persistence Layer
+## Implementing the Repository Pattern
 
 With the basic domain logic in place I needed to load athlete fitness and workout data into memory. The first iteration of the project uses csv files as the persistence layer. Future iterations will require interacting with a database. To provide the ability to extend the functionality I used the Repository Pattern as an abstraction for the persistence layer.
 
-### Abstract Repository
+### Abstract Repository: Iteration 1
 
 I decided to use an abstract base class (ABC) to create the abstraction layer. However, I'm aware that [pep 544](https://peps.python.org/pep-0544/) introduced Protocols and structural subtyping which could possibly be utilised in this case. This is an area I'll need to explore further to understand the specific use cases of Protocols.
 
@@ -77,6 +77,8 @@ The first challenge I faced related to the number of methods to create in the AB
             )
 
 
+### Abstract Repository: Iteration 2
+
 However, I believe this created unnecessary duplication which could be removed through the addition of a parameter (`entity_type`) to the method signatures defining whether a fitness assessment or workout record was required. To ensure consistency of the arguments passed to the `entity_type` parameter I created a Enum.
 
     :::python
@@ -111,28 +113,99 @@ However, I believe this created unnecessary duplication which could be removed t
                 "Persistence layer needs to implement an add method."
             )
 
-### CsvRepository
+### Abstract Repository: Iteration 3
+
+I felt uncomfortable with my implementation of the `AbstractRepository`. I wasn't sure whether I should create a generic abstraction or a separate abstraction for each of the domain objects (`FitnessProfile` and `Workout`). Further research revealed that I needed to create a generic AbstractRepository that could be used to create a concrete repository (a repository class that is instantiated) for each domain object. This resulted in the following implementation:
 
 
-I created two csv files with dummy fitness results and workouts. The first line of the csv files contains headers and is followed by athlete fitness or workout data.
+    :::python
+    Entity = TypeVar("Entity", FitnessProfile, Workout)
 
-    # fitness_assessments.csv
 
-    athlete_name,sport,status,date,time_trial_name,time_trial_distance,time_trial_time
-    John Doe,Boxing,True,2022/05/12,2km time trial,2000,510
-    John Doe,Boxing,True,2023/06/18,5m flying sprint,5,0.67
-    Jane Smith,Hockey,True,2022/07/03,2km time trial,2000,460
-    Jane Smith,Hockey,True,2022/08/22,5m flying sprint,5,0.52
+    class AbstractRepository(ABC):
+        """Interface for persistence layer."""
 
-    # conditioning_workouts.csv
+        @abstractmethod
+        def get(self, id: str) -> Entity:
+            """Get a single entity from the persistence layer."""
+            raise NotImplementedError("Persistence layer needs to implement a get method.")
 
-    workout_name,work_interval_time,work_interval_percentage_mas,work_interval_percentage_asr,rest_interval_time,rest_interval_percentage_mas,rest_interval_percentage_asr
-    Passive Long Intervals - Normal,2,100,0,2,0,0
-    Passive Long Intervals - Extensive,2,100,0,1,0,0
-    Passive Long Intervals - Intensive,2,100,0,3,0,0
+        @abstractmethod
+        def get_all(self) -> Sequence[Entity]:
+            """Get a sequence of entities from the persistence layer."""
+            raise NotImplementedError(
+                "Persistence layer needs to implement a get_all method."
+            )
 
-The fitness_assessments.csv file contains multiple records of 2km time trial and 5m flying sprint records for each athlete. I needed to ingest the data and group by athlete name. Then I needed to find the latest 2km time trial and 5m flying sprint records and use these to create a FitnessProfile object.
+        @abstractmethod
+        def add(self, entity: Entity) -> None:
+            """Add a single entity record to persistence layer."""
+            raise NotImplementedError("Persistence layer needs to implement an add method")
 
-I'll often be prescribing conditioning sessions by sport. I need the ability to filter the records by sport. I believe I should do this when loading the data into memory. I can then create FitnessProfile objects and assign to an attribute in the CsvRepository class.
 
-The groupby function from itertools may be useful here.
+### Abstract Repository: Iteration 4
+
+In the third iteration of `AbstractRepository` I used `typing.TypeVar` to define a new type that would allow either a `FitnessProfile` or `Workout` type. Although `FitnessProfile` or `Workout` are the only domain objects that currently exist in the project, I wanted to ensure that `AbstractRepository` could accept additional types at a later date.
+
+To achieve this I created a generic type `T` which I used in the `AbstractRepository` class definition. This means that any subclass of `AbstractRepository` will work with a specific type of entity defined by `T`.
+
+    :::python
+    T = TypeVar("T")
+
+
+    class AbstractRepository(ABC, Generic[T]):
+        """Interface for persistence layer."""
+
+        @abstractmethod
+        def get(self, id: str) -> T:
+            """Get a single entity from the persistence layer."""
+            raise NotImplementedError("Persistence layer needs to implement a get method.")
+
+        @abstractmethod
+        def get_all(self) -> Sequence[T]:
+            """Get a sequence of entities from the persistence layer."""
+            raise NotImplementedError(
+                "Persistence layer needs to implement a get_all method."
+            )
+
+        @abstractmethod
+        def add(self, entity: T) -> None:
+            """Add a single entity record to persistence layer."""
+            raise NotImplementedError("Persistence layer needs to implement an add method.")
+
+As an example, if we have a `CSVFitnessProfileRepository` that implements the `AbstractRepository` interface I can define it as follows:
+
+
+    :::python
+    class CsvFitnessProfileRepository(AbstractRepository[FitnessProfile]):
+        """CSV implementation of FitnessProfile repository."""
+
+        def __init__(self, folder: str):
+            """Initialise CsvRepository with fitness profiles.
+
+            Args:
+                folder: The directory path for the folder containing the CSV files.
+            """
+            self._filepath = Path(folder) / "fitness_assessments.csv"
+            self._fitness_profiles: list[FitnessProfile] = []
+            self._load()
+
+        def _load(self):
+            # logic to load csv data
+
+        def get(self, id: str) -> FitnessProfile:
+            """Get a single entity from the persistence layer."""
+            pass
+
+        def get_all(self) -> Sequence[FitnessProfile]:
+            """Get a sequence of entities from the persistence layer."""
+            pass
+
+        def add(self, entity: FitnessProfile) -> None:
+            """Add a single entity record to persistence layer."""
+            pass
+
+
+By passing `AbstractRepository[FitnessProfile]` in the class definition, the repository expects to work with objects of type `FitnessProfile`. The simple change from `Entity = TypeVar("Entity", FitnessProfile, Workout)` to `T = TypeVar("T")` provides the extensibility to create concrete repositories if new domain objects/entities are created without changing existing code.
+
+The following GitHub [issue](https://github.com/michaelwknott/esd/issues/15) outlines the progression in my though patterns and provides links to useful blog post that supported the above implementation of the Repository pattern.

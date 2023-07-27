@@ -2,12 +2,12 @@
 <html lang="en">
 
 <head>
-        <meta charset="utf-8">
+            <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-        <title>Michael Knott - Articles in the ESD category</title>
+        <title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 6</title>
 
         <!-- Bootstrap Core CSS -->
         <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
@@ -31,16 +31,36 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-                <meta property="og:locale" content="">
+
+
+        <meta name="description" content="Implementing the CSV.........">
+
+        <meta name="author" content="Michael Knott">
+
+        <meta name="tags" content="projects">
+        <meta name="tags" content="esd">
+
+	                <meta property="og:locale" content="">
 		<meta property="og:site_name" content="Michael Knott">
-            <meta name="twitter:card" content="summary_large_image">
-            <meta name="twitter:site" content="@michaelwknott">
-            <meta name="twitter:title" content="Michael Knott">
-            <meta name="twitter:description" content="Python Developer">
-                <meta name="twitter:image" content="/static/cool-background-black.png">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/michael-knott.html">
+	<meta property="og:url" content="/drafts/monitoring-and-prescribing-individualised-conditioning-sessions-part-6.html">
+	<meta property="og:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 6">
+	<meta property="article:published_time" content="2023-07-27 13:00:00+01:00">
+            <meta property="og:description" content="Implementing the CSV.........">
+
+            <meta property="og:image" content="/static/cool-background-black.png">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@michaelwknott">
+        <meta name="twitter:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 6">
+
+            <meta name="twitter:image" content="/static/cool-background-black.png">
+
+            <meta name="twitter:description" content="Implementing the CSV.........">
 </head>
 
-<body class="category-esd">
+<body class="article-monitoring-and-prescribing-individualised-conditioning-sessions-part-6">
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
@@ -75,7 +95,12 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Articles in the ESD category</h1>
+                        <h1>Monitoring and Prescribing Individualised Conditioning Sessions: Part 6</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/michael-knott.html">Michael Knott</a>
+                             on Thu 27 July 2023
+                        </span>
+                        
                     </div>
                 </div>
             </div>
@@ -86,76 +111,35 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <div class="post-preview">
-            <a href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-5.html" rel="bookmark" title="Permalink to Monitoring and Prescribing Individualised Conditioning Sessions: Part 5">
-                <h2 class="post-title">
-                    Monitoring and Prescribing Individualised Conditioning Sessions: Part 5
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Implementing the Repository Pattern for the Persistence Layer
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Thu 27 July 2023
-            </p>
+    <!-- Post Content -->
+    <article>
+        <h3>CsvRepository</h3>
+<p>I created two csv files with dummy fitness results and workouts. The first line of the csv files contains headers and is followed by athlete fitness or workout data.</p>
+<div class="highlight"><pre><span></span><code># fitness_assessments.csv
+
+athlete_name,sport,status,date,time_trial_name,time_trial_distance,time_trial_time
+John Doe,Boxing,True,2022/05/12,2km time trial,2000,510
+John Doe,Boxing,True,2023/06/18,5m flying sprint,5,0.67
+Jane Smith,Hockey,True,2022/07/03,2km time trial,2000,460
+Jane Smith,Hockey,True,2022/08/22,5m flying sprint,5,0.52
+
+# conditioning_workouts.csv
+
+workout_name,work_interval_time,work_interval_percentage_mas,work_interval_percentage_asr,rest_interval_time,rest_interval_percentage_mas,rest_interval_percentage_asr
+Passive Long Intervals - Normal,2,100,0,2,0,0
+Passive Long Intervals - Extensive,2,100,0,1,0,0
+Passive Long Intervals - Intensive,2,100,0,3,0,0
+</code></pre></div>
+
+<p>The fitness_assessments.csv file contains multiple records of 2km time trial and 5m flying sprint records for each athlete. I needed to ingest the data and group by athlete name. Then I needed to find the latest 2km time trial and 5m flying sprint records and use these to create a FitnessProfile object.</p>
+<p>I'll often be prescribing conditioning sessions by sport. I need the ability to filter the records by sport. I believe I should do this when loading the data into memory. I can then create FitnessProfile objects and assign to an attribute in the CsvRepository class.</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/projects.html">projects</a>, <a href="/tag/esd.html">esd</a></p>
         </div>
-        <div class="post-preview">
-            <a href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-4.html" rel="bookmark" title="Permalink to Monitoring and Prescribing Individualised Conditioning Sessions: Part 4">
-                <h2 class="post-title">
-                    Monitoring and Prescribing Individualised Conditioning Sessions: Part 4
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Prescribing Individualised Conditioning Sessions using MAS
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Tue 18 July 2023
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-3.html" rel="bookmark" title="Permalink to Monitoring and Prescribing Individualised Conditioning Sessions: Part 3">
-                <h2 class="post-title">
-                    Monitoring and Prescribing Individualised Conditioning Sessions: Part 3
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Using GitHub Projects and Issues to Guide Development
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Thu 06 July 2023
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-2.html" rel="bookmark" title="Permalink to Monitoring and Prescribing Individualised Conditioning Sessions: Part 2">
-                <h2 class="post-title">
-                    Monitoring and Prescribing Individualised Conditioning Sessions: Part 2
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Project Set-up
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Wed 05 July 2023
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-1.html" rel="bookmark" title="Permalink to Monitoring and Prescribing Individualised Conditioning Sessions: Part 1">
-                <h2 class="post-title">
-                    Monitoring and Prescribing Individualised Conditioning Sessions: Part 1
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Project Overview
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Fri 23 June 2023
-            </p>
-        </div>
+
+    <hr>
 
             </div>
         </div>
