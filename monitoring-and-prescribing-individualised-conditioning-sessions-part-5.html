@@ -35,7 +35,7 @@
 
 
 
-        <meta name="description" content="Implementing the Persistence Layer">
+        <meta name="description" content="Implementing the Repository Pattern for the Persistence Layer">
 
         <meta name="author" content="Michael Knott">
 
@@ -47,10 +47,10 @@
 
 	<meta property="og:type" content="article">
             <meta property="article:author" content="/author/michael-knott.html">
-	<meta property="og:url" content="/drafts/monitoring-and-prescribing-individualised-conditioning-sessions-part-5.html">
+	<meta property="og:url" content="/monitoring-and-prescribing-individualised-conditioning-sessions-part-5.html">
 	<meta property="og:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 5">
-	<meta property="article:published_time" content="2023-07-19 10:00:00+01:00">
-            <meta property="og:description" content="Implementing the Persistence Layer">
+	<meta property="article:published_time" content="2023-07-27 13:15:00+01:00">
+            <meta property="og:description" content="Implementing the Repository Pattern for the Persistence Layer">
 
             <meta property="og:image" content="/static/cool-background-black.png">
         <meta name="twitter:card" content="summary_large_image">
@@ -59,7 +59,7 @@
 
             <meta name="twitter:image" content="/static/cool-background-black.png">
 
-            <meta name="twitter:description" content="Implementing the Persistence Layer">
+            <meta name="twitter:description" content="Implementing the Repository Pattern for the Persistence Layer">
 </head>
 
 <body class="article-monitoring-and-prescribing-individualised-conditioning-sessions-part-5">
@@ -100,7 +100,7 @@
                         <h1>Monitoring and Prescribing Individualised Conditioning Sessions: Part 5</h1>
                         <span class="meta">Posted by
                                 <a href="/author/michael-knott.html">Michael Knott</a>
-                             on Wed 19 July 2023
+                             on Thu 27 July 2023
                         </span>
                         
                     </div>
@@ -115,9 +115,9 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
     <!-- Post Content -->
     <article>
-        <h2>Implementing the Persistence Layer</h2>
+        <h2>Implementing the Repository Pattern</h2>
 <p>With the basic domain logic in place I needed to load athlete fitness and workout data into memory. The first iteration of the project uses csv files as the persistence layer. Future iterations will require interacting with a database. To provide the ability to extend the functionality I used the Repository Pattern as an abstraction for the persistence layer.</p>
-<h3>Abstract Repository</h3>
+<h3>Abstract Repository: Iteration 1</h3>
 <p>I decided to use an abstract base class (ABC) to create the abstraction layer. However, I'm aware that <a href="https://peps.python.org/pep-0544/">pep 544</a> introduced Protocols and structural subtyping which could possibly be utilised in this case. This is an area I'll need to explore further to understand the specific use cases of Protocols.</p>
 <p>The first challenge I faced related to the number of methods to create in the ABC. I have fitness assessment and workout records that I need to 'get', 'list' and 'add' from or to the persistence layer. I initially created the ABC with individual 'get', 'list' and 'add' methods for fitness assessment and workout records.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">AbstractRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
@@ -180,6 +180,7 @@
         <span class="p">)</span>
 </code></pre></div>
 
+<h3>Abstract Repository: Iteration 2</h3>
 <p>However, I believe this created unnecessary duplication which could be removed through the addition of a parameter (<code>entity_type</code>) to the method signatures defining whether a fitness assessment or workout record was required. To ensure consistency of the arguments passed to the <code>entity_type</code> parameter I created a Enum.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">EntityType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represent the type of entity to be retrieved from persistence layer.&quot;&quot;&quot;</span>
@@ -213,27 +214,91 @@
         <span class="p">)</span>
 </code></pre></div>
 
-<h3>CsvRepository</h3>
-<p>I created two csv files with dummy fitness results and workouts. The first line of the csv files contains headers and is followed by athlete fitness or workout data.</p>
-<div class="highlight"><pre><span></span><code># fitness_assessments.csv
+<h3>Abstract Repository: Iteration 3</h3>
+<p>I felt uncomfortable with my implementation of the <code>AbstractRepository</code>. I wasn't sure whether I should create a generic abstraction or a separate abstraction for each of the domain objects (<code>FitnessProfile</code> and <code>Workout</code>). Further research revealed that I needed to create a generic AbstractRepository that could be used to create a concrete repository (a repository class that is instantiated) for each domain object. This resulted in the following implementation:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Entity</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;Entity&quot;</span><span class="p">,</span> <span class="n">FitnessProfile</span><span class="p">,</span> <span class="n">Workout</span><span class="p">)</span>
 
-athlete_name,sport,status,date,time_trial_name,time_trial_distance,time_trial_time
-John Doe,Boxing,True,2022/05/12,2km time trial,2000,510
-John Doe,Boxing,True,2023/06/18,5m flying sprint,5,0.67
-Jane Smith,Hockey,True,2022/07/03,2km time trial,2000,460
-Jane Smith,Hockey,True,2022/08/22,5m flying sprint,5,0.52
 
-# conditioning_workouts.csv
+<span class="k">class</span> <span class="nc">AbstractRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for persistence layer.&quot;&quot;&quot;</span>
 
-workout_name,work_interval_time,work_interval_percentage_mas,work_interval_percentage_asr,rest_interval_time,rest_interval_percentage_mas,rest_interval_percentage_asr
-Passive Long Intervals - Normal,2,100,0,2,0,0
-Passive Long Intervals - Extensive,2,100,0,1,0,0
-Passive Long Intervals - Intensive,2,100,0,3,0,0
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Entity</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a single entity from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Persistence layer needs to implement a get method.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Entity</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sequence of entities from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Persistence layer needs to implement a get_all method.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Entity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a single entity record to persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Persistence layer needs to implement an add method&quot;</span><span class="p">)</span>
 </code></pre></div>
 
-<p>The fitness_assessments.csv file contains multiple records of 2km time trial and 5m flying sprint records for each athlete. I needed to ingest the data and group by athlete name. Then I needed to find the latest 2km time trial and 5m flying sprint records and use these to create a FitnessProfile object.</p>
-<p>I'll often be prescribing conditioning sessions by sport. I need the ability to filter the records by sport. I believe I should do this when loading the data into memory. I can then create FitnessProfile objects and assign to an attribute in the CsvRepository class.</p>
-<p>The groupby function from itertools may be useful here.</p>
+<h3>Abstract Repository: Iteration 4</h3>
+<p>In the third iteration of <code>AbstractRepository</code> I used <code>typing.TypeVar</code> to define a new type that would allow either a <code>FitnessProfile</code> or <code>Workout</code> type. Although <code>FitnessProfile</code> or <code>Workout</code> are the only domain objects that currently exist in the project, I wanted to ensure that <code>AbstractRepository</code> could accept additional types at a later date.</p>
+<p>To achieve this I created a generic type <code>T</code> which I used in the <code>AbstractRepository</code> class definition. This means that any subclass of <code>AbstractRepository</code> will work with a specific type of entity defined by <code>T</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">AbstractRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for persistence layer.&quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a single entity from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Persistence layer needs to implement a get method.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sequence of entities from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Persistence layer needs to implement a get_all method.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a single entity record to persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Persistence layer needs to implement an add method.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>As an example, if we have a <code>CSVFitnessProfileRepository</code> that implements the <code>AbstractRepository</code> interface I can define it as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CsvFitnessProfileRepository</span><span class="p">(</span><span class="n">AbstractRepository</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CSV implementation of FitnessProfile repository.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise CsvRepository with fitness profiles.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            folder: The directory path for the folder containing the CSV files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;fitness_assessments.csv&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fitness_profiles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># logic to load csv data</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FitnessProfile</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a single entity from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sequence of entities from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">FitnessProfile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a single entity record to persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+</code></pre></div>
+
+<p>By passing <code>AbstractRepository[FitnessProfile]</code> in the class definition, the repository expects to work with objects of type <code>FitnessProfile</code>. The simple change from <code>Entity = TypeVar("Entity", FitnessProfile, Workout)</code> to <code>T = TypeVar("T")</code> provides the extensibility to create concrete repositories if new domain objects/entities are created without changing existing code.</p>
+<p>The following GitHub <a href="https://github.com/michaelwknott/esd/issues/15">issue</a> outlines the progression in my though patterns and provides links to useful blog post that supported the above implementation of the Repository pattern.</p>
     </article>
 
         <div class="tags">
