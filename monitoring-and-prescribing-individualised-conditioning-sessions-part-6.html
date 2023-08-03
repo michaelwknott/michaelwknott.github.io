@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 6</title>
+
+            <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Full Atom Feed" />
+            <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Categories Atom Feed" />
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/tomorrow_night.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+        <meta name="description" content="Implementing the Concrete Repositories for the Persistence Layer">
+
+        <meta name="author" content="Michael Knott">
+
+        <meta name="tags" content="projects">
+        <meta name="tags" content="esd">
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="Michael Knott">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/michael-knott.html">
+	<meta property="og:url" content="/monitoring-and-prescribing-individualised-conditioning-sessions-part-6.html">
+	<meta property="og:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 6">
+	<meta property="article:published_time" content="2023-08-03 16:00:00+01:00">
+            <meta property="og:description" content="Implementing the Concrete Repositories for the Persistence Layer">
+
+            <meta property="og:image" content="/static/cool-background-black.png">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@michaelwknott">
+        <meta name="twitter:title" content="Monitoring and Prescribing Individualised Conditioning Sessions: Part 6">
+
+            <meta name="twitter:image" content="/static/cool-background-black.png">
+
+            <meta name="twitter:description" content="Implementing the Concrete Repositories for the Persistence Layer">
+</head>
+
+<body class="article-monitoring-and-prescribing-individualised-conditioning-sessions-part-6">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Michael Knott</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                            <li><a href="/pages/about.html">About</a></li>
+                            <li><a href="/pages/reading-list.html">Reading List</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/static/cool-background-black.png')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Monitoring and Prescribing Individualised Conditioning Sessions: Part 6</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/michael-knott.html">Michael Knott</a>
+                             on Thu 03 August 2023
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <h2>Creating the CSV Repositories</h2>
+<p>In the previous <a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-5.html">post</a> I outlined the implementation of <code>AbstractRepository</code>. With this in place I needed to create the concrete repositories to manage interactions with the csv files.</p>
+<h3>Dummy Data</h3>
+<p>I started by creating two csv files with dummy fitness results and workouts. The first line of the csv files contains headers and is followed by athlete fitness or workout training variables.</p>
+<div class="highlight"><pre><span></span><code># fitness_assessments.csv
+
+athlete_name,sport,status,date,time_trial_name,time_trial_distance,time_trial_time
+John Doe,Boxing,True,2022/05/12,2km time trial,2000,510
+John Doe,Boxing,True,2023/06/18,5m flying sprint,5,0.67
+Jane Smith,Hockey,True,2022/07/03,2km time trial,2000,460
+Jane Smith,Hockey,True,2022/08/22,5m flying sprint,5,0.52
+
+# conditioning_workouts.csv
+
+workout_name,work_interval_time,work_interval_percentage_mas,work_interval_percentage_asr,rest_interval_time,rest_interval_percentage_mas,rest_interval_percentage_asr
+Passive Long Intervals - Normal,2,100,0,2,0,0
+Passive Long Intervals - Extensive,2,100,0,1,0,0
+Passive Long Intervals - Intensive,2,100,0,3,0,0
+</code></pre></div>
+
+<h3>CsvFitnessProfileRepository</h3>
+<p>The fitness_assessments.csv file contains multiple records of 2km time trial and 5m flying sprint records for each athlete. I needed to ingest the data and group by athlete name. Then I needed to find the latest 2km time trial and 5m flying sprint records and use these to create a FitnessProfile object.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CsvFitnessProfileRepository</span><span class="p">(</span><span class="n">AbstractRepository</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]):</span>
+<span class="sd">&quot;&quot;&quot;CSV implementation of FitnessProfile repository.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise CsvRepository with fitness profiles.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: The filepath for the fitness assessment CSV files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fitness_profiles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FitnessProfile</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>  <span class="c1"># skip header row</span>
+
+            <span class="c1"># group reader by name</span>
+            <span class="n">athlete_records</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="n">athlete_records</span><span class="p">[</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+
+            <span class="c1"># find latest 2km and 5m for each athlete</span>
+            <span class="k">for</span> <span class="n">athlete_name</span><span class="p">,</span> <span class="n">athlete_results</span> <span class="ow">in</span> <span class="n">athlete_records</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">latest_2km</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                    <span class="n">result</span>
+                    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">athlete_results</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;2km time trial&quot;</span>
+                <span class="p">)</span>
+                <span class="n">latest_5m</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                    <span class="n">result</span>
+                    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">athlete_results</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;5m flying sprint&quot;</span>
+                <span class="p">)</span>
+
+                <span class="c1"># create FitnessProfile for each athlete</span>
+                <span class="n">profile</span> <span class="o">=</span> <span class="n">FitnessProfile</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">athlete_name</span><span class="p">,</span>
+                    <span class="n">time_trial_distance</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">latest_2km</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+                    <span class="n">sprint_distance</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">latest_5m</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span>
+                    <span class="n">time_trial_time</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">latest_2km</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span>
+                    <span class="n">sprint_time</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">latest_5m</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span>
+                <span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fitness_profiles</span><span class="p">[</span><span class="n">athlete_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">profile</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FitnessProfile</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a single entity from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fitness_profiles</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sequence of entities from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fitness_profiles</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</code></pre></div>
+
+<h3>A Quick Note on Keeping Things Simple...</h3>
+<p>I haven't implemented the <code>add</code> method as I removed it from the <code>AbstractRepository</code>. As I'm moving through the project I've realised that I'm trying to implement functionality that I don't currently need to create an MVP. This is slowing down the project and moving my attention away from learning the design patterns. My goal is to create an MVP implemented with the minimum required functionality and the design patterns I'd like to learn. Once I have a working application I can revisit the additional functionality. See <a href="https://github.com/michaelwknott/esd/issues/8">issue 8</a> and <a href="https://github.com/michaelwknott/esd/issues/9">issue 9</a> for previous examples of functionality that I have moved to the backlog.</p>
+<h3>CsvWorkoutRepository</h3>
+<p>The conditioning_workouts.csv file contains the training variables for each conditioning workout. Again, I needed to ingest the csv data and create a <code>Workout</code> object. One nice addition to the class is the <code>_convert_types</code> method. This provides a cleaner way of converting the data types of each csv filed prior to instantiating each <code>Workout</code> instance. I was introduced to this approach through David Beazley's <a href="https://dabeaz-course.github.io/practical-python/Notes/Contents.html">Practical Programming</a> course. Specifically, see <a href="https://dabeaz-course.github.io/practical-python/Notes/02_Working_with_data/07_Objects.html">exercise 2.24</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CsvWorkoutRepository</span><span class="p">(</span><span class="n">AbstractRepository</span><span class="p">[</span><span class="n">Workout</span><span class="p">]):</span>
+<span class="sd">&quot;&quot;&quot;CSV implementation of Workout repository.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise CsvRepository with workouts.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: The filepath for the workouts CSV file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workouts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Workout</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_convert_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">func</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">func</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">record</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>  <span class="c1"># skip header row</span>
+
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+                <span class="n">converted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_types</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+                <span class="n">workout</span> <span class="o">=</span> <span class="n">Workout</span><span class="p">(</span><span class="o">*</span><span class="n">converted</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_workouts</span><span class="p">[</span><span class="n">workout</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">workout</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workout</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a single entity from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workouts</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Workout</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sequence of entities from the persistence layer.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_workouts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</code></pre></div>
+
+<p>With the creation of the two repositories I now have the csv data stored in <code>FitnessProfile</code> and <code>Workout</code> objects and available in working memory. The next step is to create a service layer which outlines the use case for the data. For the MVP this will be calculating individual target distances for conditioning workouts.</p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/projects.html">projects</a>, <a href="/tag/esd.html">esd</a></p>
+        </div>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://twitter.com/michaelwknott">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/michaelwknott">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/michael-knott-a8005916/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>. <br />        &copy;  Michael Knott
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
