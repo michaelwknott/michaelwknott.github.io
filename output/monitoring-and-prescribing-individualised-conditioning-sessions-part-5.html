@@ -296,7 +296,7 @@
 </code></pre></div>
 
 <p>By passing <code>AbstractRepository[FitnessProfile]</code> in the class definition, the repository expects to work with objects of type <code>FitnessProfile</code>. The simple change from <code>Entity = TypeVar("Entity", FitnessProfile, Workout)</code> to <code>T = TypeVar("T")</code> provides the extensibility to create concrete repositories if new domain objects/entities are created without changing existing code.</p>
-<p>The following GitHub <a href="https://github.com/michaelwknott/esd/issues/15">issue</a> outlines the progression in my though patterns and provides links to useful blog post that supported the above implementation of the Repository pattern.</p>
+<p>The following GitHub <a href="https://github.com/michaelwknott/esd/issues/15">issue</a> outlines the progression in my thought patterns and provides links to useful blog post that supported the above implementation of the Repository pattern.</p>
     </article>
 
         <div class="tags">

@@ -208,4 +208,4 @@ As an example, if we have a `CSVFitnessProfileRepository` that implements the `A
 
 By passing `AbstractRepository[FitnessProfile]` in the class definition, the repository expects to work with objects of type `FitnessProfile`. The simple change from `Entity = TypeVar("Entity", FitnessProfile, Workout)` to `T = TypeVar("T")` provides the extensibility to create concrete repositories if new domain objects/entities are created without changing existing code.
 
-The following GitHub [issue](https://github.com/michaelwknott/esd/issues/15) outlines the progression in my though patterns and provides links to useful blog post that supported the above implementation of the Repository pattern.
+The following GitHub [issue](https://github.com/michaelwknott/esd/issues/15) outlines the progression in my thought patterns and provides links to useful blog post that supported the above implementation of the Repository pattern.

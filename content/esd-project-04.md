@@ -3,12 +3,12 @@ Date: 2023-07-18 10:00
 Category: ESD
 Tags: projects, esd
 Authors: Michael Knott
-Summary: Prescribing Individualised Conditioning Sessions using MAS
+Summary: Domain Logic: Prescribing Individualised Conditioning Sessions using MAS
 Status: published
 
 [Part 1](https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-1.html) covered project rationale, [Part 2](https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-2.html) outlined my project set-up workflow and [Part 3](https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-3.html) showed my use of GitHub Projects. This post outlines my implementation of the domain logic for prescribing individualised conditioning sessions.
 
-## Prescribing Individualised Conditioning Sessions
+## Creating the Domain Logic to Prescribe Individualised Conditioning Sessions
 
 I decided to start the project by implementing the functionality to prescribe individualised conditioning sessions based upon assessment results. This involved calculating each athletes Maximum Aerobic Speed (MAS), Anaerobic Speed Reserve (ASR) and Maximum Sprinting Speed (MSS) from their fitness assessment data and using these metrics with workout training variables to calculate target work and rest interval distances.
 
