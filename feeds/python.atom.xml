@@ -1,5 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott - Python</title><link href="/" rel="alternate"></link><link href="/feeds/python.atom.xml" rel="self"></link><id>/</id><updated>2023-06-30T14:30:00+01:00</updated><subtitle>Python Developer</subtitle><entry><title>TIL: Negative Operands and the Python Modulo Operator</title><link href="/til-negative-operands-and-the-python-modulo-operator.html" rel="alternate"></link><published>2023-06-30T14:30:00+01:00</published><updated>2023-06-30T14:30:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-06-30:/til-negative-operands-and-the-python-modulo-operator.html</id><summary type="html">&lt;p&gt;Calculating the Remainder using the Python modulo Operator with a Negative Operand&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Using the Modulo Operator to Find the Correct Index in a Circular List&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott - Python</title><link href="/" rel="alternate"></link><link href="/feeds/python.atom.xml" rel="self"></link><id>/</id><updated>2023-08-11T12:30:00+01:00</updated><subtitle>Python Developer</subtitle><entry><title>TIL: Using `__post_init__` with Python Dataclasses</title><link href="/til-using-__post_init__-with-python-dataclasses.html" rel="alternate"></link><published>2023-08-11T12:30:00+01:00</published><updated>2023-08-11T12:30:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-08-11:/til-using-__post_init__-with-python-dataclasses.html</id><summary type="html">&lt;p&gt;Using &lt;code&gt;__post_init__&lt;/code&gt; to initiate dependent fields&lt;/p&gt;</summary><content type="html">&lt;h2&gt;dataclass &lt;code&gt;__post_init__&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;Today I learnt that you can use &lt;code&gt;__post_init__&lt;/code&gt; to initiate fields that depend upon other fields within a dataclass.&lt;/p&gt;
+&lt;p&gt;Within a project I'm currently working on I have the following dataclass:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dataclasses&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;dataclass&lt;/span&gt;
+
+&lt;span class="nd"&gt;@dataclass&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Represents an athlete&amp;#39;s fitness profile.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Attributes:&lt;/span&gt;
+&lt;span class="sd"&gt;        name: A str of the athlete&amp;#39;s name.&lt;/span&gt;
+&lt;span class="sd"&gt;        time_trial_distance: An int of the time trial distance in meters.&lt;/span&gt;
+&lt;span class="sd"&gt;        time_trial_time: An int of the time taken to complete the 2km time trial.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Properties:&lt;/span&gt;
+&lt;span class="sd"&gt;        max_aerobic_speed: A float representing MAS in meters per second.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+    &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;
+    &lt;span class="n"&gt;time_trial_distance&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;
+    &lt;span class="n"&gt;time_trial_time&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@property&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;max_aerobic_speed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Maximal Aerobic Speed in m/s (rounded to 2 decimal places).&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;time_trial_time&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;time_trial_distance&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;time_trial_time&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Within the &lt;code&gt;FitnessProfile&lt;/code&gt; I'm using a property to dynamically calculate &lt;code&gt;max_aerobic_speed&lt;/code&gt; which depends upon the &lt;code&gt;time_trial_distance&lt;/code&gt; and &lt;code&gt;time_trial_time&lt;/code&gt; fields in the dataclass. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;from&lt;span class="w"&gt; &lt;/span&gt;post_init&lt;span class="w"&gt; &lt;/span&gt;import&lt;span class="w"&gt; &lt;/span&gt;FitnessProfile
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;profile&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;John Smith&amp;quot;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;480&lt;/span&gt;,&lt;span class="o"&gt;)&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile
+FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;John Smith&amp;#39;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_distance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;480&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile.max_aerobic_speed
+&lt;span class="m"&gt;4&lt;/span&gt;.17
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Using a property means that if either &lt;code&gt;time_trial_distance&lt;/code&gt; or &lt;code&gt;time_trial_time&lt;/code&gt; are updated after an instance is instantiated then &lt;code&gt;max_aerobic_speed&lt;/code&gt; will use the updated values to provide an updated value.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# current profile&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile
+FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;John Smith&amp;#39;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_distance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;480&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# update time_trial_time&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile.time_trial_time&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;450&lt;/span&gt;
+
+&lt;span class="c1"&gt;# updated profile with new time_trial_time&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile
+FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;John Smith&amp;#39;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_distance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;450&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# max_aerobic_speed using updated time_trial_time&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile.max_aerobic_speed
+&lt;span class="m"&gt;4&lt;/span&gt;.44
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;However, within the current project I'm not going to be updating fields within &lt;code&gt;FitnessProfile&lt;/code&gt; once the dataclass instance has been instantiated. Therefore an alternative is to use the &lt;code&gt;__post_init__&lt;/code&gt; to initialise the &lt;code&gt;max_aerobic_speed&lt;/code&gt; field.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dataclasses&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;dataclass&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;field&lt;/span&gt;
+
+&lt;span class="nd"&gt;@dataclass&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Represents an athlete&amp;#39;s fitness profile.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Attributes:&lt;/span&gt;
+&lt;span class="sd"&gt;        name: A str of the athlete&amp;#39;s name.&lt;/span&gt;
+&lt;span class="sd"&gt;        time_trial_distance: An int of the time trial distance in meters.&lt;/span&gt;
+&lt;span class="sd"&gt;        time_trial_time: An int of the time taken to complete the 2km time trial.&lt;/span&gt;
+&lt;span class="sd"&gt;        max_aerobic_speed: A float representing MAS in meters per second.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+    &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;
+    &lt;span class="n"&gt;time_trial_distance&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;
+    &lt;span class="n"&gt;time_trial_time&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;
+    &lt;span class="n"&gt;max_aerobic_speed&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;field&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__post_init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;max_aerobic_speed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;round&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;time_trial_distance&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;time_trial_time&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Using the updated &lt;code&gt;FitnessProfile&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;from&lt;span class="w"&gt; &lt;/span&gt;post_init&lt;span class="w"&gt; &lt;/span&gt;import&lt;span class="w"&gt; &lt;/span&gt;FitnessProfile
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;profile&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;John Smith&amp;quot;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;480&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile
+FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;John Smith&amp;#39;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_distance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;480&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;max_aerobic_speed&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;.17&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This is fine for my use case but be aware that if I update either &lt;code&gt;time_trial_distance&lt;/code&gt; or &lt;code&gt;time_trial_time&lt;/code&gt; then &lt;code&gt;max_aerobic_speed&lt;/code&gt; won't be updated using the new field values:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# initial profile&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;profile&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;John Smith&amp;quot;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;480&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile
+FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;John Smith&amp;#39;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_distance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;480&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;max_aerobic_speed&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;.17&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# update time_trial_time&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile.time_trial_time&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;450&lt;/span&gt;
+
+&lt;span class="c1"&gt;# updated profile with new time_trial_time&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile
+FitnessProfile&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;John Smith&amp;#39;&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_distance&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;2000&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;time_trial_time&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;450&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;max_aerobic_speed&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;4&lt;/span&gt;.17&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# unchanged max_aerobic_speed field&lt;/span&gt;
+&amp;gt;&amp;gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;profile.max_aerobic_speed
+&lt;span class="m"&gt;4&lt;/span&gt;.17
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Python"></category><category term="TIL"></category><category term="Python"></category><category term="dataclass"></category></entry><entry><title>TIL: Negative Operands and the Python Modulo Operator</title><link href="/til-negative-operands-and-the-python-modulo-operator.html" rel="alternate"></link><published>2023-06-30T14:30:00+01:00</published><updated>2023-06-30T14:30:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-06-30:/til-negative-operands-and-the-python-modulo-operator.html</id><summary type="html">&lt;p&gt;Calculating the Remainder using the Python modulo Operator with a Negative Operand&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Using the Modulo Operator to Find the Correct Index in a Circular List&lt;/h2&gt;
 &lt;p&gt;I've been using a fixed length Python list as the underlying storage for my own implementation of a Deque. I'm using the list in a circular fashion so that elements can wrap around the end of the list. This ensures time efficiency when adding elements to the front of the Deque (no need to shift each current element one place to the right) and space efficiency after adding and deleting multiple elements (avoiding the situation where there are a small number of elements in a list with a large capacity).&lt;/p&gt;
 &lt;p&gt;For ease of example, I've simplified the code to the following (see end of article for full ArrayDeque implementation):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;# An integer referencing the index of the front of the list
