@@ -1,5 +1,5 @@
 Title: TIL: Timing Function Execution
-Date: 2023-08-12 12:30
+Date: 2023-08-11 15:30
 Category: Python
 Tags: TIL, Python, context manager
 Authors: Michael Knott

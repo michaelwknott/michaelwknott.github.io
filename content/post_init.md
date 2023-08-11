@@ -1,5 +1,5 @@
 Title: TIL: Using `__post_init__` with Python Dataclasses 
-Date: 2023-08-11 12:30
+Date: 2023-08-02 12:30
 Category: Python
 Tags: TIL, Python, dataclass
 Authors: Michael Knott
