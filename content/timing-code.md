@@ -1,5 +1,6 @@
 Title: TIL: Timing Function Execution
 Date: 2023-08-11 15:30
+Modified: 2023-08-13 20:00
 Category: Python
 Tags: TIL, Python, context manager
 Authors: Michael Knott
@@ -8,7 +9,7 @@ Status: Published
 
 ## Timing Code
 
-Recently a colleague presented on ways to time code execution using `time.perf_counter{}` to make informed decisions on code performance in terms of speed. This led me to think about creating some utilities that simplify the process. I've included examples of a context manager and decorator below:
+Recently a colleague presented on ways to time code execution using `time.perf_counter{}` to make informed decisions on code performance in terms of speed. This led me to think about creating some utilities that simplify the process. I've included examples of a context manager, a decorator and the `timeit` function below:
 
 ### Timing Code with a Context Manager
 
@@ -147,4 +148,40 @@ One thing I learnt while implementing the context manager is that you need to re
 
 ### Using @wraps to return the original function name
 
-The `@wraps` decorator is required to return the wrapped functions name when calling `unique_nums_using_set.__name__` or `unique_nums_using_fromkeys.__name__` instead of returning `wrapper` as the name. `@wraps` updates the the metadata of the wrapper function to return the metadata of the original function. 
+The `@wraps` decorator is required to return the wrapped functions name when calling `unique_nums_using_set.__name__` or `unique_nums_using_fromkeys.__name__` instead of returning `wrapper` as the name. `@wraps` updates the the metadata of the wrapper function to return the metadata of the original function.
+
+### Timing Code with `timeit`
+
+As the `timeit` function is used to measure small snippets of Python code, I've passed the expressions using `set()` and `dict.fromkeys` directly to the `timeit` function. 
+
+    :::python
+    import random
+    from timeit import timeit
+
+    nums = [random.randint(0, 10) for _ in range(1000000)]
+
+    set_time = timeit(
+        stmt="list(set(nums))", setup="from __main__ import nums", number=100
+    )
+
+    fromkeys_time = timeit(
+        stmt="list(dict.fromkeys(nums))", setup="from __main__ import nums", number=100
+    )
+
+    print(f"Time using set(): {set_time:.2f} seconds")
+    print(f"Time using dict.fromkeys(): {fromkeys_time:.2f} seconds")
+
+    # terminal output
+    Time using set(): 1.54 seconds
+    Time using dict.fromkeys(): 2.85 seconds
+
+The statement I've passed to the `timeit` `setup` parameter seems clumsy. Another alternative is to use the `globals` parameter to allow the `timeit` function to access `nums`.
+
+    :::python
+    set_time = timeit(
+        stmt="list(set(nums))", globals=globals(), number=100
+    )
+
+    fromkeys_time = timeit(
+        stmt="list(dict.fromkeys(nums))", globals=globals(), number=100
+    )
