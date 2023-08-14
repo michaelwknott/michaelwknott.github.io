@@ -9,8 +9,6 @@
 
         <title>TIL: Timing Function Execution</title>
 
-            <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Full Atom Feed" />
-            <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Categories Atom Feed" />
         <!-- Bootstrap Core CSS -->
         <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
 
@@ -103,6 +101,7 @@
                                 <a href="/author/michael-knott.html">Michael Knott</a>
                              on Fri 11 August 2023
                         </span>
+                            <span class="meta">Updated on Sun 13 August 2023</span>
                         
                     </div>
                 </div>
@@ -117,7 +116,7 @@
     <!-- Post Content -->
     <article>
         <h2>Timing Code</h2>
-<p>Recently a colleague presented on ways to time code execution using <code>time.perf_counter{}</code> to make informed decisions on code performance in terms of speed. This led me to think about creating some utilities that simplify the process. I've included examples of a context manager and decorator below:</p>
+<p>Recently a colleague presented on ways to time code execution using <code>time.perf_counter{}</code> to make informed decisions on code performance in terms of speed. This led me to think about creating some utilities that simplify the process. I've included examples of a context manager, a decorator and the <code>timeit</code> function below:</p>
 <h3>Timing Code with a Context Manager</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -251,7 +250,39 @@
 </code></pre></div>
 
 <h3>Using @wraps to return the original function name</h3>
-<p>The <code>@wraps</code> decorator is required to return the wrapped functions name when calling <code>unique_nums_using_set.__name__</code> or <code>unique_nums_using_fromkeys.__name__</code> instead of returning <code>wrapper</code> as the name. <code>@wraps</code> updates the the metadata of the wrapper function to return the metadata of the original function. </p>
+<p>The <code>@wraps</code> decorator is required to return the wrapped functions name when calling <code>unique_nums_using_set.__name__</code> or <code>unique_nums_using_fromkeys.__name__</code> instead of returning <code>wrapper</code> as the name. <code>@wraps</code> updates the the metadata of the wrapper function to return the metadata of the original function.</p>
+<h3>Timing Code with <code>timeit</code></h3>
+<p>As the <code>timeit</code> function is used to measure small snippets of Python code, I've passed the expressions using <code>set()</code> and <code>dict.fromkeys</code> directly to the <code>timeit</code> function. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">timeit</span>
+
+<span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)]</span>
+
+<span class="n">set_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="o">=</span><span class="s2">&quot;list(set(nums))&quot;</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="s2">&quot;from __main__ import nums&quot;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+
+<span class="n">fromkeys_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="o">=</span><span class="s2">&quot;list(dict.fromkeys(nums))&quot;</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="s2">&quot;from __main__ import nums&quot;</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time using set(): </span><span class="si">{</span><span class="n">set_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time using dict.fromkeys(): </span><span class="si">{</span><span class="n">fromkeys_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+
+<span class="c1"># terminal output</span>
+<span class="n">Time</span> <span class="n">using</span> <span class="nb">set</span><span class="p">():</span> <span class="mf">1.54</span> <span class="n">seconds</span>
+<span class="n">Time</span> <span class="n">using</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">():</span> <span class="mf">2.85</span> <span class="n">seconds</span>
+</code></pre></div>
+
+<p>The statement I've passed to the <code>timeit</code> <code>setup</code> parameter seems clumsy. Another alternative is to use the <code>globals</code> parameter to allow the <code>timeit</code> function to access <code>nums</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">set_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="o">=</span><span class="s2">&quot;list(set(nums))&quot;</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">(),</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+
+<span class="n">fromkeys_time</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span>
+    <span class="n">stmt</span><span class="o">=</span><span class="s2">&quot;list(dict.fromkeys(nums))&quot;</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">(),</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+</code></pre></div>
     </article>
 
         <div class="tags">
