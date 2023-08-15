@@ -162,7 +162,7 @@ With the data stored as `Workout` objects I implemented `get` and `get_all` meth
     
     ...
 
-    def get(self, id: str) -> Workout:
+        def get(self, id: str) -> Workout:
             """Get a single entity from the persistence layer."""
             return self._workouts[id]
 
