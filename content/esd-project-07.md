@@ -1,3 +1,4 @@
+Title: Monitoring and Prescribing Individualised Conditioning Sessions: Part 7
 Date: 2023-08-14 16:00
 Category: ESD
 Tags: projects, esd
@@ -228,7 +229,7 @@ The methods have an underscore suffix as they will be called internally by `prin
         return table
 
 The service layer now has the required functionality to meet my first use case. The next step is to create a presentation layer that accepts user input and communicates with the service layer to create  the required output.
- 
+
 ### The Complete `WorkoutService` Implementation
 
 For completeness I've included the full implementation below.
