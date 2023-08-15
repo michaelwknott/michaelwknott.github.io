@@ -9,7 +9,7 @@ With the ability to communicate with the [csv file persistence layer](https://mi
 
 ### Creating an In-memory Repository to Test the Service Layer
 
-To make it easier to test the service layer I created concrete repositories for FitnessProfile and Workout domain entities. `FakeFitnessProfileRepository` and `FakeFitnessProfileRepository` can be passed test data which avoids using data from the actual persistence layer and affecting the state of the application.
+To make it easier to test the service layer I created concrete repositories for `FitnessProfile` and `Workout` domain entities. Although I currently only require read access to the persistence layer, using `FakeFitnessProfileRepository` and `FakeFitnessProfileRepository` avoids using data from the actual persistence layer (currently csv files). This would be more important if I was writing back to the persistence layer as using the production persistence layer for tests has the potential to affect the state of the application.
 
     :::python
     from esd.adapters.repository import AbstractRepository
@@ -80,7 +80,7 @@ For steps 1 and 2 I needed to be able to communicate with the persistance layer.
         self.workout_repository = workout_repository
         self.fitness_profile_repository = fitness_profile_repository
 
-To get the required workout I created a `get_workout` method that calls the `workout_repository` `get` method to return a single `Workout` entity. The `Workout` object contains the training variables which will be used along each athlete's `FitnessProfile` to calculate individual work and rest interval distances. The calculations multiply an athlete's  Maximum Aerobic Speed (MAS) in meters per second by the work or rest interval time in seconds. As the `Workout` object contains work and rest interval times in minutes I also created a helper function to convert minutes to seconds. 
+To get the required workout I created a `get_workout` method that calls the `workout_repository` `get` method to return a single `Workout` entity. The `Workout` object contains the training variables which will be used along each athlete's `FitnessProfile` to calculate individual work and rest interval distances. The calculations multiply an athlete's Maximum Aerobic Speed (MAS) in meters per second by the work or rest interval time in seconds. As the `Workout` object contains work and rest interval times in minutes I also created a helper function to convert minutes to seconds. 
 
     :::python
     class WorkoutService:
@@ -130,7 +130,7 @@ To get the required `FitnessProfiles` I created a `get_fitness_profiles` method 
         """
         return self.fitness_profile_repository.get_all()
 
-The previous steps have collected the required data. Step 3 uses this data to calculate the individual work and rest interval distances. I've taken the `calculate_work_interval_distances` and `calculate_rest_interval_distances` that was previously in the domain model and moved them into the service layer.
+The previous steps have collected the required data. Step 3 uses this data to calculate the individual work and rest interval distances. I've taken the `calculate_work_interval_distances` and `calculate_rest_interval_distances` functions that was previously in the domain model and moved them into the service layer.
 
     :::python
     class WorkoutService:
@@ -190,7 +190,7 @@ The previous steps have collected the required data. Step 3 uses this data to ca
             rest_distances[profile.name] = rest_interval_distance
         return rest_distances
 
-The methods have an underscore suffix as they will be called internally by the `print_workout_table` that provides the functionality to print a table containing athlete's names, work interval distances and rest interval distances to the terminal.
+The methods have an underscore suffix as they will be called internally by `print_workout_table`. This method provides the functionality to print a table containing athlete's names, work interval distances and rest interval distances to the terminal.
 
     :::python
     def print_workout_table(
@@ -227,6 +227,8 @@ The methods have an underscore suffix as they will be called internally by the `
         console.print(table)
         return table
 
+The service layer now has the required functionality to meet my first use case. The next step is to create a presentation layer that accepts user input and communicates with the service layer to create  the required output.
+ 
 ### The Complete `WorkoutService` Implementation
 
 For completeness I've included the full implementation below.
