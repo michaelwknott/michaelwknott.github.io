@@ -116,9 +116,9 @@
     <!-- Post Content -->
     <article>
         <h2>Creating the CSV Repositories</h2>
-<p>In the previous <a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-5.html">post</a> I outlined the implementation of <code>AbstractRepository</code>. With this in place I needed to create the concrete repositories to manage interactions with the csv files.</p>
+<p>In the previous <a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-5.html">post</a> I outlined the implementation of <code>AbstractRepository</code>. With this in place I needed to create the concrete repositories to manage interactions with the csv files containing fitness assessment results and conditioning workouts.</p>
 <h3>Dummy Data</h3>
-<p>I started by creating two csv files with dummy fitness results and workouts. The first line of the csv files contains headers and is followed by athlete fitness or workout training variables.</p>
+<p>I started by creating two csv files with dummy fitness results and workouts. The first line of the csv files contains headers and is followed by athlete fitness assessment data or workout training variables.</p>
 <div class="highlight"><pre><span></span><code># fitness_assessments.csv
 
 athlete_name,sport,status,date,time_trial_name,time_trial_distance,time_trial_time
@@ -136,7 +136,7 @@ Passive Long Intervals - Intensive,2,100,0,3,0,0
 </code></pre></div>
 
 <h3>CsvFitnessProfileRepository</h3>
-<p>The fitness_assessments.csv file contains multiple records of 2km time trial and 5m flying sprint records for each athlete. I needed to ingest the data and group by athlete name. Then I needed to find the latest 2km time trial and 5m flying sprint records and use these to create a FitnessProfile object.</p>
+<p>The fitness_assessments.csv file contains multiple records of 2km time trial and 5m flying sprint records for each athlete. I needed to ingest the data and group by athlete name. To group the data I originally planned to use the <code>groupby</code> function from itertools but went with a <code>defaultdict</code> from the collections module due to <code>groupby</code> requiring the data to be sorted (see <a href="https://michaelwknott.github.io/grouping-data-using-itertools-groupby.html">link</a>). With the data grouped, I needed to find the latest 2km time trial and 5m flying sprint records and use these to create a FitnessProfile object. The <code>_load</code> method takes care of this functionality:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CsvFitnessProfileRepository</span><span class="p">(</span><span class="n">AbstractRepository</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]):</span>
 <span class="sd">&quot;&quot;&quot;CSV implementation of FitnessProfile repository.&quot;&quot;&quot;</span>
 
@@ -183,6 +183,22 @@ Passive Long Intervals - Intensive,2,100,0,3,0,0
                 <span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_fitness_profiles</span><span class="p">[</span><span class="n">athlete_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">profile</span>
+</code></pre></div>
+
+<p>With the data ingested and stored as <code>FitnessProfile</code> objects I need to complete the <code>AbstractRepository</code> interface by adding the <code>get</code> and <code>get_all</code> methods:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CsvFitnessProfileRepository</span><span class="p">(</span><span class="n">AbstractRepository</span><span class="p">[</span><span class="n">FitnessProfile</span><span class="p">]):</span>
+<span class="sd">&quot;&quot;&quot;CSV implementation of FitnessProfile repository.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise CsvRepository with fitness profiles.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: The filepath for the fitness assessment CSV files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fitness_profiles</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FitnessProfile</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">()</span>
+
+    <span class="o">...</span>
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FitnessProfile</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a single entity from the persistence layer.&quot;&quot;&quot;</span>
@@ -193,10 +209,11 @@ Passive Long Intervals - Intensive,2,100,0,3,0,0
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fitness_profiles</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 </code></pre></div>
 
+<p>The <code>get</code> method is passed the athlete's name which is used for the key lookup in the <code>_fitness_profiles</code> attribute to return a single <code>FitnessProfile</code>. The <code>get_all</code> method returns all the values from the <code>_fitness_profiles</code> attribute as a list.</p>
 <h3>A Quick Note on Keeping Things Simple...</h3>
 <p>I haven't implemented the <code>add</code> method as I removed it from the <code>AbstractRepository</code>. As I'm moving through the project I've realised that I'm trying to implement functionality that I don't currently need to create an MVP. This is slowing down the project and moving my attention away from learning the design patterns. My goal is to create an MVP implemented with the minimum required functionality and the design patterns I'd like to learn. Once I have a working application I can revisit the additional functionality. See <a href="https://github.com/michaelwknott/esd/issues/8">issue 8</a> and <a href="https://github.com/michaelwknott/esd/issues/9">issue 9</a> for previous examples of functionality that I have moved to the backlog.</p>
 <h3>CsvWorkoutRepository</h3>
-<p>The conditioning_workouts.csv file contains the training variables for each conditioning workout. Again, I needed to ingest the csv data and create a <code>Workout</code> object. One nice addition to the class is the <code>_convert_types</code> method. This provides a cleaner way of converting the data types of each csv filed prior to instantiating each <code>Workout</code> instance. I was introduced to this approach through David Beazley's <a href="https://dabeaz-course.github.io/practical-python/Notes/Contents.html">Practical Programming</a> course. Specifically, see <a href="https://dabeaz-course.github.io/practical-python/Notes/02_Working_with_data/07_Objects.html">exercise 2.24</a>.</p>
+<p>The conditioning_workouts.csv file contains the training variables for each conditioning workout. Again, I needed to ingest the csv data and create a <code>Workout</code> object. One nice addition to the class is the <code>_convert_types</code> method. This provides a cleaner way of converting the data types of each csv file prior to instantiating each <code>Workout</code> instance. I was introduced to this approach through David Beazley's <a href="https://dabeaz-course.github.io/practical-python/Notes/Contents.html">Practical Programming</a> course. Specifically, see <a href="https://dabeaz-course.github.io/practical-python/Notes/02_Working_with_data/07_Objects.html">exercise 2.24</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CsvWorkoutRepository</span><span class="p">(</span><span class="n">AbstractRepository</span><span class="p">[</span><span class="n">Workout</span><span class="p">]):</span>
 <span class="sd">&quot;&quot;&quot;CSV implementation of Workout repository.&quot;&quot;&quot;</span>
 
@@ -223,8 +240,25 @@ Passive Long Intervals - Intensive,2,100,0,3,0,0
                 <span class="n">converted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_types</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
                 <span class="n">workout</span> <span class="o">=</span> <span class="n">Workout</span><span class="p">(</span><span class="o">*</span><span class="n">converted</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_workouts</span><span class="p">[</span><span class="n">workout</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">workout</span>
+</code></pre></div>
 
-    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workout</span><span class="p">:</span>
+<p>With the data stored as <code>Workout</code> objects I implemented <code>get</code> and <code>get_all</code> methods. As with the previous repository, the <code>get</code> method is passed a string containing the workout name to be used as the key in the <code>_workouts</code> attribute and <code>get_all</code> returns a list containing all <code>Workout</code> objects from the <code>_workouts</code> attribute.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CsvWorkoutRepository</span><span class="p">(</span><span class="n">AbstractRepository</span><span class="p">[</span><span class="n">Workout</span><span class="p">]):</span>
+<span class="sd">&quot;&quot;&quot;CSV implementation of Workout repository.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise CsvRepository with workouts.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: The filepath for the workouts CSV file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_workouts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Workout</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">()</span>
+
+<span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Workout</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a single entity from the persistence layer.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workouts</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
 
