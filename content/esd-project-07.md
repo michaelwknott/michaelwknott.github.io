@@ -72,14 +72,14 @@ For steps 1 and 2 I needed to be able to communicate with the persistance layer.
     class WorkoutService:
     """Service class for workout related operations."""
 
-    def __init__(
-        self,
-        workout_repository: AbstractRepository[Workout],
-        fitness_profile_repository: AbstractRepository[FitnessProfile],
-    ):
-        """Initialise WorkoutService with repositories."""
-        self.workout_repository = workout_repository
-        self.fitness_profile_repository = fitness_profile_repository
+        def __init__(
+            self,
+            workout_repository: AbstractRepository[Workout],
+            fitness_profile_repository: AbstractRepository[FitnessProfile],
+        ):
+            """Initialise WorkoutService with repositories."""
+            self.workout_repository = workout_repository
+            self.fitness_profile_repository = fitness_profile_repository
 
 To get the required workout I created a `get_workout` method that calls the `workout_repository` `get` method to return a single `Workout` entity. The `Workout` object contains the training variables which will be used along each athlete's `FitnessProfile` to calculate individual work and rest interval distances. The calculations multiply an athlete's Maximum Aerobic Speed (MAS) in meters per second by the work or rest interval time in seconds. As the `Workout` object contains work and rest interval times in minutes I also created a helper function to convert minutes to seconds. 
 
@@ -87,33 +87,33 @@ To get the required workout I created a `get_workout` method that calls the `wor
     class WorkoutService:
     """Service class for workout related operations."""
 
-    def __init__(
-        self,
-        workout_repository: AbstractRepository[Workout],
-        fitness_profile_repository: AbstractRepository[FitnessProfile],
-    ):
-        """Initialise WorkoutService with repositories."""
-        self.workout_repository = workout_repository
-        self.fitness_profile_repository = fitness_profile_repository
+        def __init__(
+            self,
+            workout_repository: AbstractRepository[Workout],
+            fitness_profile_repository: AbstractRepository[FitnessProfile],
+        ):
+            """Initialise WorkoutService with repositories."""
+            self.workout_repository = workout_repository
+            self.fitness_profile_repository = fitness_profile_repository
 
-    def get_workout(self, id: str) -> Workout:
-        """Get a workout from the repository.
+        def get_workout(self, id: str) -> Workout:
+            """Get a workout from the repository.
 
-        Returns:
-            A workout.
-        """
-        return self.workout_repository.get(id)
-    
-    def _convert_minutes_to_seconds(self, work_interval_time: int) -> int:
-        """Convert minutes to seconds.
+            Returns:
+                A workout.
+            """
+            return self.workout_repository.get(id)
+        
+        def _convert_minutes_to_seconds(self, work_interval_time: int) -> int:
+            """Convert minutes to seconds.
 
-        Args:
-            work_interval_time: The work interval time in minutes.
+            Args:
+                work_interval_time: The work interval time in minutes.
 
-        Returns:
-            The work interval time in seconds.
-        """
-        return work_interval_time * 60
+            Returns:
+                The work interval time in seconds.
+            """
+            return work_interval_time * 60
 
 To get the required `FitnessProfiles` I created a `get_fitness_profiles` method which calls the `get_all()` method from the `fitness_profile_repository`. This return a list of `FitnessProfiles` which will be used alongside the `Workout` object to calculate the individual work and rest interval distances.
 
@@ -123,13 +123,13 @@ To get the required `FitnessProfiles` I created a `get_fitness_profiles` method 
     
     ...
     
-    def get_fitness_profiles(self) -> list[FitnessProfile]:
-        """Get all fitness profiles from the repository.
+        def get_fitness_profiles(self) -> list[FitnessProfile]:
+            """Get all fitness profiles from the repository.
 
-        Returns:
-            A list of fitness profiles.
-        """
-        return self.fitness_profile_repository.get_all()
+            Returns:
+                A list of fitness profiles.
+            """
+            return self.fitness_profile_repository.get_all()
 
 The previous steps have collected the required data. Step 3 uses this data to calculate the individual work and rest interval distances. I've taken the `calculate_work_interval_distances` and `calculate_rest_interval_distances` functions that was previously in the domain model and moved them into the service layer.
 
@@ -139,94 +139,99 @@ The previous steps have collected the required data. Step 3 uses this data to ca
 
     ...
 
-    def _calculate_work_interval_distances(
-        self, workout: Workout, fitness_profiles: list[FitnessProfile]
-    ) -> dict[str, float]:
-        """Calculate work interval distances for each athlete.
+        def _calculate_work_interval_distances(
+            self, workout: Workout, fitness_profiles: list[FitnessProfile]
+        ) -> dict[str, float]:
+            """Calculate work interval distances for each athlete.
 
-        Args:
-            workout: The training variables for the workout.
-            fitness_profiles: The fitness profile for each athlete completing the
-                workout.
+            Args:
+                workout: The training variables for the workout.
+                fitness_profiles: The fitness profile for each athlete completing the
+                    workout.
 
-        Returns:
-            A dictionary of athlete names mapped to work interval distances.
-        """
-        work_distances = {}
-        for profile in fitness_profiles:
-            work_interval_mas = (
-                profile.max_aerobic_speed * workout.work_interval_percentage_mas
-            )
-            work_interval_distance = round(
-                work_interval_mas
-                * self._convert_minutes_to_seconds(workout.work_interval_time),
-                0,
-            )
-            work_distances[profile.name] = work_interval_distance
-        return work_distances
+            Returns:
+                A dictionary of athlete names mapped to work interval distances.
+            """
+            work_distances = {}
+            for profile in fitness_profiles:
+                work_interval_mas = (
+                    profile.max_aerobic_speed * workout.work_interval_percentage_mas
+                )
+                work_interval_distance = round(
+                    work_interval_mas
+                    * self._convert_minutes_to_seconds(workout.work_interval_time),
+                    0,
+                )
+                work_distances[profile.name] = work_interval_distance
+            return work_distances
 
-    def _calculate_rest_interval_distances(
-        self, workout: Workout, fitness_profiles: list[FitnessProfile]
-    ) -> dict[str, float]:
-        """Calculate rest interval distances for each athlete.
+        def _calculate_rest_interval_distances(
+            self, workout: Workout, fitness_profiles: list[FitnessProfile]
+        ) -> dict[str, float]:
+            """Calculate rest interval distances for each athlete.
 
-        Args:
-            workout: The training variables for the workout.
-            fitness_profiles: The fitness profile for each athlete completing the
-                workout.
+            Args:
+                workout: The training variables for the workout.
+                fitness_profiles: The fitness profile for each athlete completing the
+                    workout.
 
-        Returns:
-            A dictionary of athlete names mapped to rest interval distances.
-        """
-        rest_distances = {}
-        for profile in fitness_profiles:
-            rest_interval_mas = (
-                profile.max_aerobic_speed * workout.rest_interval_percentage_mas
-            )
-            rest_interval_distance = round(
-                rest_interval_mas
-                * self._convert_minutes_to_seconds(workout.rest_interval_time),
-                0,
-            )
-            rest_distances[profile.name] = rest_interval_distance
-        return rest_distances
+            Returns:
+                A dictionary of athlete names mapped to rest interval distances.
+            """
+            rest_distances = {}
+            for profile in fitness_profiles:
+                rest_interval_mas = (
+                    profile.max_aerobic_speed * workout.rest_interval_percentage_mas
+                )
+                rest_interval_distance = round(
+                    rest_interval_mas
+                    * self._convert_minutes_to_seconds(workout.rest_interval_time),
+                    0,
+                )
+                rest_distances[profile.name] = rest_interval_distance
+            return rest_distances
 
 The methods have an underscore suffix as they will be called internally by `print_workout_table`. This method provides the functionality to print a table containing athlete's names, work interval distances and rest interval distances to the terminal.
 
     :::python
-    def print_workout_table(
-        self, workout: Workout, fitness_profiles: list[FitnessProfile]
-    ) -> Table:
-        """Print a table of names, work interval and rest interval distances.
+    class WorkoutService:
+    """Service class for workout related operations."""
 
-        Args:
-            workout: The training variables for the workout.
-            fitness_profiles: The fitness profile for each athlete completing the
-                workout.
-        """
-        work_distances = self._calculate_work_interval_distances(
-            workout, fitness_profiles
-        )
-        rest_distances = self._calculate_rest_interval_distances(
-            workout, fitness_profiles
-        )
+    ...
 
-        console = Console()
-        date = datetime.now().strftime("%d/%m/%Y")
-        table = Table(title=f"{workout.name} - {date}")
-        table.add_column("Athlete Name", justify="left")
-        table.add_column("Work Distance (m)", justify="center")
-        table.add_column("Rest Distance (m)", justify="center")
+        def print_workout_table(
+            self, workout: Workout, fitness_profiles: list[FitnessProfile]
+        ) -> Table:
+            """Print a table of names, work interval and rest interval distances.
 
-        for athlete in work_distances:
-            table.add_row(
-                athlete,
-                f"{work_distances[athlete]}m",
-                f"{rest_distances[athlete]}m",
+            Args:
+                workout: The training variables for the workout.
+                fitness_profiles: The fitness profile for each athlete completing the
+                    workout.
+            """
+            work_distances = self._calculate_work_interval_distances(
+                workout, fitness_profiles
+            )
+            rest_distances = self._calculate_rest_interval_distances(
+                workout, fitness_profiles
             )
 
-        console.print(table)
-        return table
+            console = Console()
+            date = datetime.now().strftime("%d/%m/%Y")
+            table = Table(title=f"{workout.name} - {date}")
+            table.add_column("Athlete Name", justify="left")
+            table.add_column("Work Distance (m)", justify="center")
+            table.add_column("Rest Distance (m)", justify="center")
+
+            for athlete in work_distances:
+                table.add_row(
+                    athlete,
+                    f"{work_distances[athlete]}m",
+                    f"{rest_distances[athlete]}m",
+                )
+
+            console.print(table)
+            return table
 
 The service layer now has the required functionality to meet my first use case. The next step is to create a presentation layer that accepts user input and communicates with the service layer to create  the required output.
 
@@ -237,135 +242,135 @@ For completeness I've included the full implementation below.
     :::python
     from datetime import datetime
 
-from rich.console import Console
-from rich.table import Table
+    from rich.console import Console
+    from rich.table import Table
 
-from esd.adapters.repository import AbstractRepository
-from esd.domain.athlete import FitnessProfile
-from esd.domain.session import Workout
+    from esd.adapters.repository import AbstractRepository
+    from esd.domain.athlete import FitnessProfile
+    from esd.domain.session import Workout
 
 
-class WorkoutService:
-    """Service class for workout related operations."""
+    class WorkoutService:
+        """Service class for workout related operations."""
 
-    def __init__(
-        self,
-        workout_repository: AbstractRepository[Workout],
-        fitness_profile_repository: AbstractRepository[FitnessProfile],
-    ):
-        """Initialise WorkoutService with repositories."""
-        self.workout_repository = workout_repository
-        self.fitness_profile_repository = fitness_profile_repository
+        def __init__(
+            self,
+            workout_repository: AbstractRepository[Workout],
+            fitness_profile_repository: AbstractRepository[FitnessProfile],
+        ):
+            """Initialise WorkoutService with repositories."""
+            self.workout_repository = workout_repository
+            self.fitness_profile_repository = fitness_profile_repository
 
-    def _convert_minutes_to_seconds(self, work_interval_time: int) -> int:
-        """Convert minutes to seconds.
+        def _convert_minutes_to_seconds(self, work_interval_time: int) -> int:
+            """Convert minutes to seconds.
 
-        Args:
-            work_interval_time: The work interval time in minutes.
+            Args:
+                work_interval_time: The work interval time in minutes.
 
-        Returns:
-            The work interval time in seconds.
-        """
-        return work_interval_time * 60
+            Returns:
+                The work interval time in seconds.
+            """
+            return work_interval_time * 60
 
-    def get_workout(self, id: str) -> Workout:
-        """Get a workout from the repository.
+        def get_workout(self, id: str) -> Workout:
+            """Get a workout from the repository.
 
-        Returns:
-            A workout.
-        """
-        return self.workout_repository.get(id)
+            Returns:
+                A workout.
+            """
+            return self.workout_repository.get(id)
 
-    def get_fitness_profiles(self) -> list[FitnessProfile]:
-        """Get all fitness profiles from the repository.
+        def get_fitness_profiles(self) -> list[FitnessProfile]:
+            """Get all fitness profiles from the repository.
 
-        Returns:
-            A list of fitness profiles.
-        """
-        return self.fitness_profile_repository.get_all()
+            Returns:
+                A list of fitness profiles.
+            """
+            return self.fitness_profile_repository.get_all()
 
-    def _calculate_work_interval_distances(
-        self, workout: Workout, fitness_profiles: list[FitnessProfile]
-    ) -> dict[str, float]:
-        """Calculate work interval distances for each athlete.
+        def _calculate_work_interval_distances(
+            self, workout: Workout, fitness_profiles: list[FitnessProfile]
+        ) -> dict[str, float]:
+            """Calculate work interval distances for each athlete.
 
-        Args:
-            workout: The training variables for the workout.
-            fitness_profiles: The fitness profile for each athlete completing the
-                workout.
+            Args:
+                workout: The training variables for the workout.
+                fitness_profiles: The fitness profile for each athlete completing the
+                    workout.
 
-        Returns:
-            A dictionary of athlete names mapped to work interval distances.
-        """
-        work_distances = {}
-        for profile in fitness_profiles:
-            work_interval_mas = (
-                profile.max_aerobic_speed * workout.work_interval_percentage_mas
+            Returns:
+                A dictionary of athlete names mapped to work interval distances.
+            """
+            work_distances = {}
+            for profile in fitness_profiles:
+                work_interval_mas = (
+                    profile.max_aerobic_speed * workout.work_interval_percentage_mas
+                )
+                work_interval_distance = round(
+                    work_interval_mas
+                    * self._convert_minutes_to_seconds(workout.work_interval_time),
+                    0,
+                )
+                work_distances[profile.name] = work_interval_distance
+            return work_distances
+
+        def _calculate_rest_interval_distances(
+            self, workout: Workout, fitness_profiles: list[FitnessProfile]
+        ) -> dict[str, float]:
+            """Calculate rest interval distances for each athlete.
+
+            Args:
+                workout: The training variables for the workout.
+                fitness_profiles: The fitness profile for each athlete completing the
+                    workout.
+
+            Returns:
+                A dictionary of athlete names mapped to rest interval distances.
+            """
+            rest_distances = {}
+            for profile in fitness_profiles:
+                rest_interval_mas = (
+                    profile.max_aerobic_speed * workout.rest_interval_percentage_mas
+                )
+                rest_interval_distance = round(
+                    rest_interval_mas
+                    * self._convert_minutes_to_seconds(workout.rest_interval_time),
+                    0,
+                )
+                rest_distances[profile.name] = rest_interval_distance
+            return rest_distances
+
+        def print_workout_table(
+            self, workout: Workout, fitness_profiles: list[FitnessProfile]
+        ) -> Table:
+            """Print a table of names, work interval and rest interval distances.
+
+            Args:
+                workout: The training variables for the workout.
+                fitness_profiles: The fitness profile for each athlete completing the
+                    workout.
+            """
+            work_distances = self._calculate_work_interval_distances(
+                workout, fitness_profiles
             )
-            work_interval_distance = round(
-                work_interval_mas
-                * self._convert_minutes_to_seconds(workout.work_interval_time),
-                0,
-            )
-            work_distances[profile.name] = work_interval_distance
-        return work_distances
-
-    def _calculate_rest_interval_distances(
-        self, workout: Workout, fitness_profiles: list[FitnessProfile]
-    ) -> dict[str, float]:
-        """Calculate rest interval distances for each athlete.
-
-        Args:
-            workout: The training variables for the workout.
-            fitness_profiles: The fitness profile for each athlete completing the
-                workout.
-
-        Returns:
-            A dictionary of athlete names mapped to rest interval distances.
-        """
-        rest_distances = {}
-        for profile in fitness_profiles:
-            rest_interval_mas = (
-                profile.max_aerobic_speed * workout.rest_interval_percentage_mas
-            )
-            rest_interval_distance = round(
-                rest_interval_mas
-                * self._convert_minutes_to_seconds(workout.rest_interval_time),
-                0,
-            )
-            rest_distances[profile.name] = rest_interval_distance
-        return rest_distances
-
-    def print_workout_table(
-        self, workout: Workout, fitness_profiles: list[FitnessProfile]
-    ) -> Table:
-        """Print a table of names, work interval and rest interval distances.
-
-        Args:
-            workout: The training variables for the workout.
-            fitness_profiles: The fitness profile for each athlete completing the
-                workout.
-        """
-        work_distances = self._calculate_work_interval_distances(
-            workout, fitness_profiles
-        )
-        rest_distances = self._calculate_rest_interval_distances(
-            workout, fitness_profiles
-        )
-
-        console = Console()
-        date = datetime.now().strftime("%d/%m/%Y")
-        table = Table(title=f"{workout.name} - {date}")
-        table.add_column("Athlete Name", justify="left")
-        table.add_column("Work Distance (m)", justify="center")
-        table.add_column("Rest Distance (m)", justify="center")
-
-        for athlete in work_distances:
-            table.add_row(
-                athlete,
-                f"{work_distances[athlete]}m",
-                f"{rest_distances[athlete]}m",
+            rest_distances = self._calculate_rest_interval_distances(
+                workout, fitness_profiles
             )
 
-        console.print(table)
-        return table
+            console = Console()
+            date = datetime.now().strftime("%d/%m/%Y")
+            table = Table(title=f"{workout.name} - {date}")
+            table.add_column("Athlete Name", justify="left")
+            table.add_column("Work Distance (m)", justify="center")
+            table.add_column("Rest Distance (m)", justify="center")
+
+            for athlete in work_distances:
+                table.add_row(
+                    athlete,
+                    f"{work_distances[athlete]}m",
+                    f"{rest_distances[athlete]}m",
+                )
+
+            console.print(table)
+            return table
