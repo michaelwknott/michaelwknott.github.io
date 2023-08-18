@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2023-08-14T16:00:00+01:00</updated><subtitle>Python Developer</subtitle><entry><title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 7</title><link href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-7.html" rel="alternate"></link><published>2023-08-14T16:00:00+01:00</published><updated>2023-08-14T16:00:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-08-14:/monitoring-and-prescribing-individualised-conditioning-sessions-part-7.html</id><summary type="html">&lt;p&gt;Implementing a Service Layer to Separate the Domain and presentation Layers&lt;/p&gt;</summary><content type="html">&lt;p&gt;With the ability to communicate with the &lt;a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-6.html"&gt;csv file persistence layer&lt;/a&gt;, the next step in the project was to implement a service layer to make it easier to swap out presentation layers. The service layer achieves this by acting as an abstraction between the domain logic and the presentation layer. This means the presentation layer will communicate with the service layer to initiate the required domain logic and the service layer will communicate with the persistence layer to retrieve the necessary data.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Michael Knott</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2023-08-17T15:00:00+01:00</updated><subtitle>Python Developer</subtitle><entry><title>Monitoring and Prescribing Individualised Conditioning Sessions: Part 7</title><link href="/monitoring-and-prescribing-individualised-conditioning-sessions-part-7.html" rel="alternate"></link><published>2023-08-14T16:00:00+01:00</published><updated>2023-08-17T15:00:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-08-14:/monitoring-and-prescribing-individualised-conditioning-sessions-part-7.html</id><summary type="html">&lt;p&gt;Implementing a Service Layer to Separate the Domain and presentation Layers&lt;/p&gt;</summary><content type="html">&lt;p&gt;The previous post outlined the implementation of the &lt;a href="https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-6.html"&gt;csv file persistence layer&lt;/a&gt;. With this in place, the next step in the project was to implement a service layer to make it easier to swap out presentation layers. The service layer achieves this by acting as an abstraction between the domain logic and the presentation layer. This means the presentation layer will communicate with the service layer to initiate the required domain logic and the service layer will communicate with the persistence layer to retrieve the necessary data.&lt;/p&gt;
 &lt;h3&gt;Creating an In-memory Repository to Test the Service Layer&lt;/h3&gt;
-&lt;p&gt;To make it easier to test the service layer I created concrete repositories for &lt;code&gt;FitnessProfile&lt;/code&gt; and &lt;code&gt;Workout&lt;/code&gt; domain entities. Although I currently only require read access to the persistence layer, using &lt;code&gt;FakeFitnessProfileRepository&lt;/code&gt; and &lt;code&gt;FakeFitnessProfileRepository&lt;/code&gt; avoids using data from the actual persistence layer (currently csv files). This would be more important if I was writing back to the persistence layer as using the production persistence layer for tests has the potential to affect the state of the application.&lt;/p&gt;
+&lt;p&gt;To test the service layer I created in-memory concrete repositories for &lt;code&gt;FitnessProfile&lt;/code&gt; and &lt;code&gt;Workout&lt;/code&gt; domain entities. Using &lt;code&gt;FakeFitnessProfileRepository&lt;/code&gt; and &lt;code&gt;FakeWorkoutRepository&lt;/code&gt; whilst testing the service layer avoids using data from the production persistence layer (currently csv files). This reduces the chances of negatively affecting the persistence layer when performing read or write operations during tests. The fake in-memory repositories are implemented as follows:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;esd.adapters.repository&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;AbstractRepository&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;esd.domain.athlete&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;FitnessProfile&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;esd.domain.session&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;
@@ -44,14 +44,17 @@
 &lt;p&gt;So for now, my use case is as follows:&lt;/p&gt;
 &lt;p&gt;A coach wants to prescribe individual conditioning workouts for their athletes. They use a CLI tool to select a workout and receive work and rest interval distances for each individual athlete as output in the console. The coach can then use this information to set up the workout.&lt;/p&gt;
 &lt;h3&gt;Creating the Service Layer&lt;/h3&gt;
-&lt;p&gt;To achieve the first use case requires a number of steps:&lt;/p&gt;
+&lt;p&gt;To achieve the first use case requires a number of steps each consisting of a single action:&lt;/p&gt;
 &lt;ol&gt;
+&lt;li&gt;Get all the workout names to display to the user&lt;/li&gt;
 &lt;li&gt;Get the required &lt;code&gt;Workout object&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Get the required &lt;code&gt;FitnessProfiles&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Calculate the individual work and rest interval distances using the &lt;code&gt;Workout&lt;/code&gt; and &lt;code&gt;FitnessProfile&lt;/code&gt; objects&lt;/li&gt;
 &lt;li&gt;Return an output in the terminal that shows work and rest interval distances for each athlete&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;For steps 1 and 2 I needed to be able to communicate with the persistance layer. To achieve this the  &lt;code&gt;WorkoutService&lt;/code&gt; &lt;code&gt;__init__&lt;/code&gt; method  initialises the &lt;code&gt;workout_repository&lt;/code&gt; and &lt;code&gt;fitness_profile_repository&lt;/code&gt; attributes with class instances that implements the &lt;code&gt;AbstractRepository&lt;/code&gt; interface for &lt;code&gt;Workout&lt;/code&gt; and &lt;code&gt;FitnessProfile&lt;/code&gt; objects.&lt;/p&gt;
+&lt;p&gt;The first 4 steps are general actions that will be required by all presentation layers. Step 5 is an action that is specific to the CLI presentation layer. To allow extensibility of the application without having to amend previously implemented code I have divided the actions into general and specific service classes. The general actions used across all presentation layers will be implemented in &lt;code&gt;WorkoutService&lt;/code&gt; and the specific actions in&lt;code&gt;CLIService&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Creating &lt;code&gt;WorkoutService&lt;/code&gt; for General Use Case Actions&lt;/h3&gt;
+&lt;p&gt;For steps 1, 2 and 3 I needed to be able to communicate with the persistance layer. To achieve this the  &lt;code&gt;WorkoutService&lt;/code&gt; &lt;code&gt;__init__&lt;/code&gt; method  initialises the &lt;code&gt;workout_repository&lt;/code&gt; and &lt;code&gt;fitness_profile_repository&lt;/code&gt; attributes with class instances that implements the &lt;code&gt;AbstractRepository&lt;/code&gt; interface for &lt;code&gt;Workout&lt;/code&gt; and &lt;code&gt;FitnessProfile&lt;/code&gt; objects.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;WorkoutService&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Service class for workout related operations.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 
@@ -65,7 +68,7 @@
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fitness_profile_repository&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fitness_profile_repository&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;To get the required workout I created a &lt;code&gt;get_workout&lt;/code&gt; method that calls the &lt;code&gt;workout_repository&lt;/code&gt; &lt;code&gt;get&lt;/code&gt; method to return a single &lt;code&gt;Workout&lt;/code&gt; entity. The &lt;code&gt;Workout&lt;/code&gt; object contains the training variables which will be used along each athlete's &lt;code&gt;FitnessProfile&lt;/code&gt; to calculate individual work and rest interval distances. The calculations multiply an athlete's Maximum Aerobic Speed (MAS) in meters per second by the work or rest interval time in seconds. As the &lt;code&gt;Workout&lt;/code&gt; object contains work and rest interval times in minutes I also created a helper function to convert minutes to seconds. &lt;/p&gt;
+&lt;p&gt;To address step 1 I created the &lt;code&gt;get_workout_names&lt;/code&gt; method to return a list of workout names. These names will be displayed to the user for selection of a single workout. For step 2, the selected workout name is passed to the &lt;code&gt;get_selected_workout&lt;/code&gt; method to return a single &lt;code&gt;Workout&lt;/code&gt; entity. The &lt;code&gt;Workout&lt;/code&gt; object contains the training variables which are used along each athlete's &lt;code&gt;FitnessProfile&lt;/code&gt; to calculate individual work and rest interval distances. The calculations multiply an athlete's Maximum Aerobic Speed (MAS) in meters per second by the work or rest interval time in seconds. As the &lt;code&gt;Workout&lt;/code&gt; object contains work and rest interval times in minutes I also created a helper function to convert minutes to seconds. &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;WorkoutService&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Service class for workout related operations.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 
@@ -78,13 +81,28 @@
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_repository&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;workout_repository&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fitness_profile_repository&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fitness_profile_repository&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_workout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Get a workout from the repository.&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_workout_names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Get all workout names from the repository.&lt;/span&gt;
+
+&lt;span class="sd"&gt;        Workout names are displayed to the user to select the required workout.&lt;/span&gt;
 
 &lt;span class="sd"&gt;        Returns:&lt;/span&gt;
-&lt;span class="sd"&gt;            A workout.&lt;/span&gt;
+&lt;span class="sd"&gt;            A list of workout names.&lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;workouts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;workout&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;workouts&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_selected_workout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;selected_workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Get the selected workout from the repository.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Args:&lt;/span&gt;
+&lt;span class="sd"&gt;        selected_workout: The name of the selected workout.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    Returns:&lt;/span&gt;
+&lt;span class="sd"&gt;        A workout.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;selected_workout&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_convert_minutes_to_seconds&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;work_interval_time&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Convert minutes to seconds.&lt;/span&gt;
@@ -98,7 +116,7 @@
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;work_interval_time&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;60&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;To get the required &lt;code&gt;FitnessProfiles&lt;/code&gt; I created a &lt;code&gt;get_fitness_profiles&lt;/code&gt; method which calls the &lt;code&gt;get_all()&lt;/code&gt; method from the &lt;code&gt;fitness_profile_repository&lt;/code&gt;. This return a list of &lt;code&gt;FitnessProfiles&lt;/code&gt; which will be used alongside the &lt;code&gt;Workout&lt;/code&gt; object to calculate the individual work and rest interval distances.&lt;/p&gt;
+&lt;p&gt;For step 3, the required &lt;code&gt;FitnessProfiles&lt;/code&gt; are returned by &lt;code&gt;get_fitness_profiles&lt;/code&gt;. This method calls &lt;code&gt;get_all()&lt;/code&gt; from the &lt;code&gt;fitness_profile_repository&lt;/code&gt;. The list of returned &lt;code&gt;FitnessProfiles&lt;/code&gt; are used alongside the &lt;code&gt;Workout&lt;/code&gt; object to calculate the individual work and rest interval distances.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;WorkoutService&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Service class for workout related operations.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 
@@ -113,13 +131,13 @@
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fitness_profile_repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;The previous steps have collected the required data. Step 3 uses this data to calculate the individual work and rest interval distances. I've taken the &lt;code&gt;calculate_work_interval_distances&lt;/code&gt; and &lt;code&gt;calculate_rest_interval_distances&lt;/code&gt; functions that was previously in the domain model and moved them into the service layer.&lt;/p&gt;
+&lt;p&gt;The previous steps retrieve the required data. Step 4 uses the data to calculate the individual work and rest interval distances. I've taken the &lt;code&gt;calculate_work_interval_distances&lt;/code&gt; and &lt;code&gt;calculate_rest_interval_distances&lt;/code&gt; functions that were previously in the domain model and moved them into the service layer.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;WorkoutService&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Service class for workout related operations.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 
 &lt;span class="o"&gt;...&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_calculate_work_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_work_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
 &lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Calculate work interval distances for each athlete.&lt;/span&gt;
@@ -145,7 +163,7 @@
             &lt;span class="n"&gt;work_distances&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;profile&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;work_interval_distance&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;work_distances&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_calculate_rest_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_rest_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
 &lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Calculate rest interval distances for each athlete.&lt;/span&gt;
@@ -172,13 +190,28 @@
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;rest_distances&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;The methods have an underscore suffix as they will be called internally by &lt;code&gt;print_workout_table&lt;/code&gt;. This method provides the functionality to print a table containing athlete's names, work interval distances and rest interval distances to the terminal.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;WorkoutService&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Service class for workout related operations.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;h3&gt;Creating &lt;code&gt;CLIService&lt;/code&gt; for Specific Use Case Actions&lt;/h3&gt;
+&lt;p&gt;Step 5 requires work and rest interval distances to be printed in the terminal for each athlete. As this action is specific to the CLI presentation layer I created &lt;code&gt;CLIService&lt;/code&gt; to encapsulate this behaviour. &lt;code&gt;CLIService&lt;/code&gt; is initialised with an instance of &lt;code&gt;WorkoutService&lt;/code&gt; and defines the &lt;code&gt;create_and_display_table&lt;/code&gt; method. This provides &lt;code&gt;CLIService&lt;/code&gt; with access to general use case actions and the action specific to the CLI presentation layer.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# cli_service.py&lt;/span&gt;
 
-&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;print_workout_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rich.console&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Console&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rich.table&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Table&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;esd.domain.athlete&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;FitnessProfile&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;esd.domain.session&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;esd.service_layer.service&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;WorkoutService&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CLIService&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Service class for CLI related operations.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;workout_service&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;WorkoutService&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Initialise CLIService with WorkoutService.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_service&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;workout_service&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create_and_display_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Table&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
 &lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Print a table of names, work interval and rest interval distances.&lt;/span&gt;
@@ -188,10 +221,10 @@
 &lt;span class="sd"&gt;            fitness_profiles: The fitness profile for each athlete completing the&lt;/span&gt;
 &lt;span class="sd"&gt;                workout.&lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-        &lt;span class="n"&gt;work_distances&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_calculate_work_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;work_distances&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_service&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;calculate_work_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
             &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;
         &lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;rest_distances&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_calculate_rest_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;rest_distances&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_service&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;calculate_rest_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
             &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;
         &lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -213,13 +246,13 @@
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;table&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;The service layer now has the required functionality to meet my first use case. The next step is to create a presentation layer that accepts user input and communicates with the service layer to create  the required output.&lt;/p&gt;
-&lt;h3&gt;The Complete &lt;code&gt;WorkoutService&lt;/code&gt; Implementation&lt;/h3&gt;
-&lt;p&gt;For completeness I've included the full implementation below.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;
-
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rich.console&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Console&lt;/span&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rich.table&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Table&lt;/span&gt;
+&lt;h3&gt;Extending the Service Layer&lt;/h3&gt;
+&lt;p&gt;It is now straightforward to extend the service layer for additional presentation layers. For example, if I wanted to create API endpoints, I could create an &lt;code&gt;APIService&lt;/code&gt; class that implements the required functionality for the API. The &lt;code&gt;APIService&lt;/code&gt; class would be initialised with an instance of &lt;code&gt;WorkoutService&lt;/code&gt; and would define the required methods for the API. The &lt;code&gt;WorkoutService&lt;/code&gt; class would remain unchanged. &lt;/p&gt;
+&lt;h3&gt;Next Steps&lt;/h3&gt;
+&lt;p&gt;The service layer now has the required functionality to meet my first use case. The next step is to create a CLI presentation layer that accepts user input and communicates with &lt;code&gt;CLIService&lt;/code&gt; to create the required output.&lt;/p&gt;
+&lt;h3&gt;The Complete &lt;code&gt;WorkoutService&lt;/code&gt; Implementations&lt;/h3&gt;
+&lt;p&gt;For completeness I've included the full implementation of &lt;code&gt;WorkoutService&lt;/code&gt; below.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# service.py&lt;/span&gt;
 
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;esd.adapters.repository&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;AbstractRepository&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;esd.domain.athlete&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;FitnessProfile&lt;/span&gt;
@@ -249,13 +282,28 @@
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;work_interval_time&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;60&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_workout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Get a workout from the repository.&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_selected_workout&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;selected_workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Get the selected workout from the repository.&lt;/span&gt;
+
+&lt;span class="sd"&gt;        Args:&lt;/span&gt;
+&lt;span class="sd"&gt;            selected_workout: The name of the selected workout.&lt;/span&gt;
 
 &lt;span class="sd"&gt;        Returns:&lt;/span&gt;
 &lt;span class="sd"&gt;            A workout.&lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;selected_workout&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_workout_names&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Get all workout names from the repository.&lt;/span&gt;
+
+&lt;span class="sd"&gt;        Workout names are displayed to the user to select the required workout.&lt;/span&gt;
+
+&lt;span class="sd"&gt;        Returns:&lt;/span&gt;
+&lt;span class="sd"&gt;            A list of workout names.&lt;/span&gt;
+&lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+        &lt;span class="n"&gt;workouts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workout_repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;workout&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;workouts&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_fitness_profiles&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
 &lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Get all fitness profiles from the repository.&lt;/span&gt;
@@ -265,7 +313,7 @@
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fitness_profile_repository&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_all&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_calculate_work_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_work_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
 &lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Calculate work interval distances for each athlete.&lt;/span&gt;
@@ -291,7 +339,7 @@
             &lt;span class="n"&gt;work_distances&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;profile&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;work_interval_distance&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;work_distances&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_calculate_rest_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;calculate_rest_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
 &lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Calculate rest interval distances for each athlete.&lt;/span&gt;
@@ -316,40 +364,6 @@
             &lt;span class="p"&gt;)&lt;/span&gt;
             &lt;span class="n"&gt;rest_distances&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;profile&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rest_interval_distance&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;rest_distances&lt;/span&gt;
-
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;print_workout_table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;FitnessProfile&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-    &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Table&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Print a table of names, work interval and rest interval distances.&lt;/span&gt;
-
-&lt;span class="sd"&gt;        Args:&lt;/span&gt;
-&lt;span class="sd"&gt;            workout: The training variables for the workout.&lt;/span&gt;
-&lt;span class="sd"&gt;            fitness_profiles: The fitness profile for each athlete completing the&lt;/span&gt;
-&lt;span class="sd"&gt;                workout.&lt;/span&gt;
-&lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
-        &lt;span class="n"&gt;work_distances&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_calculate_work_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-            &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;
-        &lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;rest_distances&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_calculate_rest_interval_distances&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-            &lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fitness_profiles&lt;/span&gt;
-        &lt;span class="p"&gt;)&lt;/span&gt;
-
-        &lt;span class="n"&gt;console&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Console&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-        &lt;span class="n"&gt;date&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;datetime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strftime&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s2"&gt;/%m/%Y&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;table&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Table&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;workout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt; - &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;date&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;table&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_column&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Athlete Name&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;justify&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;left&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;table&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_column&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Work Distance (m)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;justify&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;center&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;table&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_column&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Rest Distance (m)&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;justify&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;center&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;athlete&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;work_distances&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-            &lt;span class="n"&gt;table&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_row&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-                &lt;span class="n"&gt;athlete&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;work_distances&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;athlete&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;m&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-                &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;rest_distances&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;athlete&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;m&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-            &lt;span class="p"&gt;)&lt;/span&gt;
-
-        &lt;span class="n"&gt;console&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;table&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;table&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="ESD"></category><category term="projects"></category><category term="esd"></category></entry><entry><title>TIL: Timing Function Execution</title><link href="/til-timing-function-execution.html" rel="alternate"></link><published>2023-08-11T15:30:00+01:00</published><updated>2023-08-13T20:00:00+01:00</updated><author><name>Michael Knott</name></author><id>tag:None,2023-08-11:/til-timing-function-execution.html</id><summary type="html">&lt;p&gt;Utilities to time function execution&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Timing Code&lt;/h2&gt;
 &lt;p&gt;Recently a colleague presented on ways to time code execution using &lt;code&gt;time.perf_counter{}&lt;/code&gt; to make informed decisions on code performance in terms of speed. This led me to think about creating some utilities that simplify the process. I've included examples of a context manager, a decorator and the &lt;code&gt;timeit&lt;/code&gt; function below:&lt;/p&gt;
 &lt;h3&gt;Timing Code with a Context Manager&lt;/h3&gt;
