@@ -7,6 +7,8 @@ Authors: Michael Knott
 Summary: Implementing a Service Layer to Separate the Domain and presentation Layers
 Status: published
 
+## Service Layer
+
 The previous post outlined the implementation of the [csv file persistence layer](https://michaelwknott.github.io/monitoring-and-prescribing-individualised-conditioning-sessions-part-6.html). With this in place, the next step in the project was to implement a service layer to make it easier to swap out presentation layers. The service layer achieves this by acting as an abstraction between the domain logic and the presentation layer. This means the presentation layer will communicate with the service layer to initiate the required domain logic and the service layer will communicate with the persistence layer to retrieve the necessary data.
 
 ### Creating an In-memory Repository to Test the Service Layer
@@ -56,7 +58,7 @@ From my understanding the service layer contains all the functions or methods re
 
 So for now, my use case is as follows:
 
-A coach wants to prescribe individual conditioning workouts for their athletes. They use a CLI tool to select a workout and receive work and rest interval distances for each individual athlete as output in the console. The coach can then use this information to set up the workout.
+*A coach wants to prescribe individual conditioning workouts for their athletes. They use a CLI tool to select a workout and receive work and rest interval distances for each individual athlete as output in the console. The coach can then use this information to set up the workout.*
 
 ### Creating the Service Layer
 
@@ -87,7 +89,7 @@ For steps 1, 2 and 3 I needed to be able to communicate with the persistance lay
             self.workout_repository = workout_repository
             self.fitness_profile_repository = fitness_profile_repository
 
-To address step 1 I created the `get_workout_names` method to return a list of workout names. These names will be displayed to the user for selection of a single workout. For step 2, the selected workout name is passed to the `get_selected_workout` method to return a single `Workout` entity. The `Workout` object contains the training variables which are used along each athlete's `FitnessProfile` to calculate individual work and rest interval distances. The calculations multiply an athlete's Maximum Aerobic Speed (MAS) in meters per second by the work or rest interval time in seconds. As the `Workout` object contains work and rest interval times in minutes I also created a helper function to convert minutes to seconds. 
+To address step 1, I created the `get_workout_names` method to return a list of workout names. These names will be displayed to the user for selection of a single workout. For step 2, the selected workout name is passed to the `get_selected_workout` method to return a single `Workout` entity. The `Workout` object contains the training variables which are used along each athlete's `FitnessProfile` to calculate individual work and rest interval distances. The calculations multiply an athlete's Maximum Aerobic Speed (MAS) in meters per second by the work or rest interval time in seconds. As the `Workout` object contains work and rest interval times in minutes I also created a helper function to convert minutes to seconds. 
 
     :::python
     class WorkoutService:

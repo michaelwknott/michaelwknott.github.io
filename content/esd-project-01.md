@@ -8,11 +8,13 @@ Summary: Project Overview
 Status: published
 
 ## Upskilling in Python
+
 I've been using Python for approximately two years. I feel comfortable with the basics and creating projects for myself. To take the next step I believe I need to create projects which allow collaboration with other developers and involve users other than myself.
 
 I've recently been reading [Practices of the Python Pro](https://thepythonpro.com/) by Dane Hillard and [Architecture Patterns with Python](https://www.cosmicpython.com/book/preface.html) by Harry Percival and Bob Gregory. Both books outline key principles, techniques and design patterns for developing Python applications. My plan is to utilise the ideas outlined in these books whilst developing this project. I realise this may result in over-engineering of the project but I believe this is acceptable to further my knowledge and skills.
 
 ### Project Overview
+
 Within my current role I support several athletes that require the prescription of conditioning sessions as part of their training plan. To provide effective support involves three tasks:
 
 1. Recording assessment data related to athlete's fitness qualities
@@ -32,6 +34,7 @@ The goal of this project is to streamline and automate the process to save me ti
 However, I want to ensure that I structure the project in an appropriate manner to extend it's functionality at a later date if additional functionality is required.
 
 ## Project Structure
+
 I plan to use a three-layered architecture for the project. The three layers consist of a presentation layer to interface with the user, a business model layer containing the logic to implement the required workflows associated with monitoring and prescribing individualised conditioning sessions and a persistance layer to load and store the required data.
 
 ![Three layered architecture]({static}/images/three_layered_architecture.png "Three layered architecture"){style="display: block; margin: 0 auto"}
