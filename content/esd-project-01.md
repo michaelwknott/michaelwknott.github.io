@@ -1,6 +1,6 @@
 Title: Monitoring and Prescribing Individualised Conditioning Sessions: Part 1
 Date: 2023-06-23 11:30
-Modified: 2023-07-17 10:16
+Modified: 2023-08-23 13:00
 Category: ESD
 Tags: projects, esd
 Authors: Michael Knott
@@ -8,8 +8,6 @@ Summary: Project Overview
 Status: published
 
 ## Upskilling in Python
-
-I've been using Python for approximately two years. I feel comfortable with the basics and creating projects for myself. To take the next step I believe I need to create projects which allow collaboration with other developers and involve users other than myself.
 
 I've recently been reading [Practices of the Python Pro](https://thepythonpro.com/) by Dane Hillard and [Architecture Patterns with Python](https://www.cosmicpython.com/book/preface.html) by Harry Percival and Bob Gregory. Both books outline key principles, techniques and design patterns for developing Python applications. My plan is to utilise the ideas outlined in these books whilst developing this project. I realise this may result in over-engineering of the project but I believe this is acceptable to further my knowledge and skills.
 
