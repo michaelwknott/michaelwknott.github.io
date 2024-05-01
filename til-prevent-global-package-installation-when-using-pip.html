@@ -117,8 +117,7 @@
     <!-- Post Content -->
     <article>
         <h2>Setting the <code>PIP_REQUIRE_VIRTUALENV</code> environment variable</h2>
-<p>After several instances of accidentally installing packages into the global Python environment, I decided to look for a way to prevent this from happening.
-A quick Google search revealed that you can set the <code>PIP_REQUIRE_VIRTUALENV</code> environment variable to <code>true</code> to prevent pip from installing packages globally.</p>
+<p>After several instances of accidentally installing packages into the global Python environment, I decided to look for a way to prevent this from happening. A quick Google search revealed that you can set the <code>PIP_REQUIRE_VIRTUALENV</code> environment variable to <code>true</code> to prevent pip from installing packages globally.</p>
 <p>To ensure this runs every time I open a new terminal session, I added the following line to my <code>.bashrc</code> file:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Prevent global package installation when using pip</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">PIP_REQUIRE_VIRTUALENV</span><span class="o">=</span><span class="nb">true</span>
