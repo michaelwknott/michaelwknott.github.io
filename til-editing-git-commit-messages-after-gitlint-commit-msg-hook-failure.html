@@ -2,14 +2,15 @@
 <html lang="en">
 
 <head>
-        <meta charset="utf-8">
+            <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-        <title>Michael Knott - Tag Python</title>
+        <title>TIL: Editing Git Commit Messages after Gitlint commit-msg Hook Failure</title>
 
             <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Full Atom Feed" />
+            <link href="/feeds/{slug}.atom.xml" type="application/atom+xml" rel="alternate" title="Michael Knott Categories Atom Feed" />
         <!-- Bootstrap Core CSS -->
         <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
 
@@ -32,16 +33,37 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-                <meta property="og:locale" content="">
+
+
+        <meta name="description" content="A shortcut to save time when editing Git commit messages after a Gitlint commit-msg hook failure">
+
+        <meta name="author" content="Michael Knott">
+
+        <meta name="tags" content="TIL">
+        <meta name="tags" content="Python">
+        <meta name="tags" content="gitlint">
+
+	                <meta property="og:locale" content="">
 		<meta property="og:site_name" content="Michael Knott">
-            <meta name="twitter:card" content="summary_large_image">
-            <meta name="twitter:site" content="@michaelwknott">
-            <meta name="twitter:title" content="Michael Knott">
-            <meta name="twitter:description" content="Python Developer">
-                <meta name="twitter:image" content="/static/cool-background-black.png">
+
+	<meta property="og:type" content="article">
+            <meta property="article:author" content="/author/michael-knott.html">
+	<meta property="og:url" content="/til-editing-git-commit-messages-after-gitlint-commit-msg-hook-failure.html">
+	<meta property="og:title" content="TIL: Editing Git Commit Messages after Gitlint commit-msg Hook Failure">
+	<meta property="article:published_time" content="2024-05-08 11:00:00+01:00">
+            <meta property="og:description" content="A shortcut to save time when editing Git commit messages after a Gitlint commit-msg hook failure">
+
+            <meta property="og:image" content="/static/cool-background-black.png">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@michaelwknott">
+        <meta name="twitter:title" content="TIL: Editing Git Commit Messages after Gitlint commit-msg Hook Failure">
+
+            <meta name="twitter:image" content="/static/cool-background-black.png">
+
+            <meta name="twitter:description" content="A shortcut to save time when editing Git commit messages after a Gitlint commit-msg hook failure">
 </head>
 
-<body class="tag-python">
+<body class="article-til-editing-git-commit-messages-after-gitlint-commit-msg-hook-failure">
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
@@ -70,12 +92,18 @@
         <!-- /.container -->
     </nav>
 
+    <!-- Page Header -->
         <header class="intro-header" style="background-image: url('/static/cool-background-black.png')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="page-heading">
-                        <h1>Tag Python</h1>
+                    <div class="post-heading">
+                        <h1>TIL: Editing Git Commit Messages after Gitlint commit-msg Hook Failure</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/michael-knott.html">Michael Knott</a>
+                             on Wed 08 May 2024
+                        </span>
+                        
                     </div>
                 </div>
             </div>
@@ -86,90 +114,22 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <div class="post-preview">
-            <a href="/til-editing-git-commit-messages-after-gitlint-commit-msg-hook-failure.html" rel="bookmark" title="Permalink to TIL: Editing Git Commit Messages after Gitlint commit-msg Hook Failure">
-                <h2 class="post-title">
-                    TIL: Editing Git Commit Messages after Gitlint commit-msg Hook Failure
-                </h2>
-            </a>
-                <p class="article-summary">
-                    A shortcut to save time when editing Git commit messages after a Gitlint commit-msg hook failure
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Wed 08 May 2024
-            </p>
+    <!-- Post Content -->
+    <article>
+        <h2>Editing Git Commit Messages after Gitlint commit-msg Hook Failure</h2>
+<p>In the course of working on a project that utilizes <a href="https://jorisroovers.com/gitlint/latest/">Gitlint</a> with <a href="https://pre-commit.com/">pre-commit</a>, I encountered a situation where the Gitlint commit-msg hook would fail due to a commit message not meeting the required format. Initially, it seemed as though I had lost my previous commit message, which meant I had to waste time retyping the message.</p>
+<p>However, I discovered a handy command that solves the issue thanks to this <a href="https://github.com/jorisroovers/gitlint/issues/90#issuecomment-511425183">issue thread</a> in the Gitlint GitHub repository.</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>commit<span class="w"> </span>--edit<span class="w"> </span>--file<span class="w"> </span>.git/COMMIT_EDITMSG
+</code></pre></div>
+
+<p>This command opens up the text editor with the previous commit message already populated, allowing for easy editing and saving a lot of time. </p>
+    </article>
+
+        <div class="tags">
+            <p>tags: <a href="/tag/til.html">TIL</a>, <a href="/tag/python.html">Python</a>, <a href="/tag/gitlint.html">gitlint</a></p>
         </div>
-        <div class="post-preview">
-            <a href="/til-prevent-global-package-installation-when-using-pip.html" rel="bookmark" title="Permalink to TIL: Prevent global package installation when using pip">
-                <h2 class="post-title">
-                    TIL: Prevent global package installation when using pip
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Setting PIP_REQUIRE_VIRTUALENV=true to prevent global package installation
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Wed 01 May 2024
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/til-timing-function-execution.html" rel="bookmark" title="Permalink to TIL: Timing Function Execution">
-                <h2 class="post-title">
-                    TIL: Timing Function Execution
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Utilities to time function execution
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Fri 11 August 2023
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/til-using-__post_init__-with-python-dataclasses.html" rel="bookmark" title="Permalink to TIL: Using `__post_init__` with Python Dataclasses">
-                <h2 class="post-title">
-                    TIL: Using `__post_init__` with Python Dataclasses
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Using __post_init__ to initiate dependent fields
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Wed 02 August 2023
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/grouping-data-using-itertools-groupby.html" rel="bookmark" title="Permalink to Grouping Data using Itertools groupby">
-                <h2 class="post-title">
-                    Grouping Data using Itertools groupby
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Grouping athlete data using Itertools groupby
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Fri 21 July 2023
-            </p>
-        </div>
-        <div class="post-preview">
-            <a href="/til-negative-operands-and-the-python-modulo-operator.html" rel="bookmark" title="Permalink to TIL: Negative Operands and the Python Modulo Operator">
-                <h2 class="post-title">
-                    TIL: Negative Operands and the Python Modulo Operator
-                </h2>
-            </a>
-                <p class="article-summary">
-                    Calculating the Remainder using the Python modulo Operator with a Negative Operand
-                </p>
-            <p class="post-meta">Posted by
-                    <a href="/author/michael-knott.html">Michael Knott</a>
-                 on Fri 30 June 2023
-            </p>
-        </div>
+
+    <hr>
 
             </div>
         </div>
